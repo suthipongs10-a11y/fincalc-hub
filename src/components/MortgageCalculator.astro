@@ -1,0 +1,427 @@
+---
+/**
+ * Flagship mortgage calculator island. Vanilla TS in the inline module
+ * script; all math lives in src/lib/mortgage.js. State is mirrored into the
+ * URL query string so results are shareable (?price=...&rate=...).
+ */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Mortgage calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,26rem)_1fr]">
+    <!-- Inputs -->
+    <form id="mc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="price" class="mc-label">Home price</label>
+        <div class="mc-wrap"><span class="mc-prefix">$</span>
+          <input id="price" inputmode="decimal" value="400,000" class="mc-input mc-input--pre" />
+        </div>
+      </div>
+
+      <div>
+        <label for="down" class="mc-label">Down payment</label>
+        <div class="flex gap-2">
+          <div class="mc-wrap flex-1">
+            <span class="mc-prefix" id="down-prefix">$</span>
+            <input id="down" inputmode="decimal" value="80,000" class="mc-input mc-input--pre" />
+          </div>
+          <div class="flex rounded-md border border-navy-200" role="group" aria-label="Down payment unit">
+            <button type="button" id="down-dollar" aria-pressed="true" class="mc-toggle rounded-l-[5px]">$</button>
+            <button type="button" id="down-pct" aria-pressed="false" class="mc-toggle rounded-r-[5px]">%</button>
+          </div>
+        </div>
+        <p id="down-hint" class="mt-1 text-xs text-navy-600">20.0% of home price</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="rate" class="mc-label">Interest rate</label>
+          <div class="mc-wrap">
+            <input id="rate" inputmode="decimal" value="6.5" class="mc-input mc-input--suf" />
+            <span class="mc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="term" class="mc-label">Loan term</label>
+          <select id="term" class="mc-input">
+            <option value="30" selected>30 years</option>
+            <option value="20">20 years</option>
+            <option value="15">15 years</option>
+            <option value="10">10 years</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset class="rounded-lg border border-navy-100 p-3">
+        <legend class="px-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">Taxes, insurance & fees</legend>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="tax" class="mc-label">Property tax / yr</label>
+            <div class="mc-wrap">
+              <input id="tax" inputmode="decimal" value="1.1" class="mc-input mc-input--suf" />
+              <span class="mc-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label for="ins" class="mc-label">Home insurance / yr</label>
+            <div class="mc-wrap"><span class="mc-prefix">$</span>
+              <input id="ins" inputmode="decimal" value="1,800" class="mc-input mc-input--pre" />
+            </div>
+          </div>
+          <div>
+            <label for="pmi" class="mc-label">PMI rate / yr</label>
+            <div class="mc-wrap">
+              <input id="pmi" inputmode="decimal" value="0.5" class="mc-input mc-input--suf" />
+              <span class="mc-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label for="hoa" class="mc-label">HOA / month</label>
+            <div class="mc-wrap"><span class="mc-prefix">$</span>
+              <input id="hoa" inputmode="decimal" value="0" class="mc-input mc-input--pre" />
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 text-xs text-navy-600">PMI applies automatically when your down payment is under 20% and drops off at 78% loan-to-value.</p>
+      </fieldset>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="extra" class="mc-label">Extra payment / month</label>
+          <div class="mc-wrap"><span class="mc-prefix">$</span>
+            <input id="extra" inputmode="decimal" value="0" class="mc-input mc-input--pre" />
+          </div>
+        </div>
+        <div>
+          <label for="start" class="mc-label">First payment</label>
+          <input id="start" type="month" class="mc-input" />
+        </div>
+      </div>
+
+      <p id="mc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="rounded-md bg-navy-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-700">
+          Copy shareable link
+        </button>
+        <button type="button" id="print" class="rounded-md border border-navy-200 px-4 py-2 text-sm font-semibold text-navy-800 transition-colors hover:bg-navy-50">
+          Print results
+        </button>
+      </div>
+    </form>
+
+    <!-- Results -->
+    <div id="mc-results" class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">Your estimated monthly payment</h2>
+      <p class="mt-1 text-4xl font-bold text-navy-900" id="total" aria-live="polite">—</p>
+      <div id="stack" class="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-navy-100" aria-hidden="true"></div>
+
+      <dl id="breakdown" class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3"></dl>
+
+      <div class="mt-6 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">Loan amount</p>
+          <p id="loan" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">Total interest paid</p>
+          <p id="tint" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">Payoff date</p>
+          <p id="payoff" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+      </div>
+
+      <p id="savings" class="mt-3 hidden rounded-lg bg-accent-50 p-3 text-sm font-medium text-accent-800"></p>
+
+      <h3 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Loan balance over time</h3>
+      <div id="chart-box" class="mt-2 overflow-x-auto">
+        <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Line chart of remaining loan balance by year"></svg>
+      </div>
+      <p id="chart-legend" class="mt-1 text-xs text-navy-600"></p>
+    </div>
+  </div>
+
+  <!-- Amortization schedule -->
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">Amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <p class="mt-1 text-sm text-navy-600">Yearly totals — open any year for the month-by-month detail.</p>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<style>
+  .mc-label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--color-navy-800); margin-bottom: 0.25rem; }
+  .mc-wrap { position: relative; }
+  .mc-prefix, .mc-suffix { position: absolute; top: 50%; transform: translateY(-50%); color: var(--color-navy-600); font-size: 0.875rem; pointer-events: none; }
+  .mc-prefix { left: 0.75rem; }
+  .mc-suffix { right: 0.75rem; }
+  .mc-input { width: 100%; border: 1px solid var(--color-navy-200); border-radius: 0.375rem; padding: 0.5rem 0.75rem; font-size: 0.9375rem; color: var(--color-navy-900); background: white; }
+  .mc-input:focus { outline: 2px solid var(--color-navy-500); outline-offset: 1px; }
+  .mc-input--pre { padding-left: 1.75rem; }
+  .mc-input--suf { padding-right: 2rem; }
+  .mc-toggle { padding: 0 0.875rem; font-size: 0.875rem; font-weight: 600; color: var(--color-navy-700); background: white; }
+  .mc-toggle[aria-pressed='true'] { background: var(--color-navy-900); color: white; }
+</style>
+
+<script>
+  import { computeMortgage } from '../lib/mortgage.js';
+
+  const $ = (id: string) => document.getElementById(id) as HTMLElement;
+  const inp = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const fmt2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (el: HTMLInputElement) => {
+    const v = parseFloat(el.value.replace(/[$,%\s,]/g, ''));
+    return Number.isFinite(v) ? v : 0;
+  };
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  let downIsDollar = true;
+
+  function setDownMode(dollar: boolean) {
+    const price = num(inp('price'));
+    const cur = num(inp('down'));
+    if (dollar !== downIsDollar && price > 0) {
+      inp('down').value = dollar
+        ? Math.round((cur / 100) * price).toLocaleString('en-US')
+        : (Math.round(((cur / price) * 100) * 10) / 10).toString();
+    }
+    downIsDollar = dollar;
+    $('down-prefix').textContent = dollar ? '$' : '%';
+    $('down-dollar').setAttribute('aria-pressed', String(dollar));
+    $('down-pct').setAttribute('aria-pressed', String(!dollar));
+    recalc();
+  }
+
+  function readInputs() {
+    const price = num(inp('price'));
+    const downRaw = num(inp('down'));
+    const down = downIsDollar ? downRaw : (downRaw / 100) * price;
+    const [sy, sm] = (inp('start').value || defaultStart()).split('-').map(Number);
+    return {
+      homePrice: price,
+      downPayment: down,
+      annualRate: num(inp('rate')),
+      termYears: parseInt(inp('term').value, 10),
+      taxRate: num(inp('tax')),
+      insuranceAnnual: num(inp('ins')),
+      pmiRate: num(inp('pmi')),
+      hoaMonthly: num(inp('hoa')),
+      extraMonthly: num(inp('extra')),
+      startYear: sy,
+      startMonth: sm,
+    };
+  }
+
+  function defaultStart() {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  function validate(i: ReturnType<typeof readInputs>): string | null {
+    if (i.homePrice <= 0) return 'Enter a home price above $0.';
+    if (i.downPayment < 0 || i.downPayment >= i.homePrice) return 'Down payment must be between $0 and the home price.';
+    if (i.annualRate < 0 || i.annualRate > 25) return 'Enter an interest rate between 0% and 25%.';
+    if (i.taxRate < 0 || i.taxRate > 10) return 'Property tax rate must be between 0% and 10%.';
+    return null;
+  }
+
+  function recalc() {
+    const i = readInputs();
+    const err = validate(i);
+    const errEl = $('mc-error');
+    if (err) {
+      errEl.textContent = err;
+      errEl.classList.remove('hidden');
+      return;
+    }
+    errEl.classList.add('hidden');
+
+    const r = computeMortgage(i);
+    $('total').textContent = fmt2.format(r.totalMonthly);
+    $('loan').textContent = fmt.format(r.loan);
+    $('tint').textContent = fmt.format(r.totalInterest);
+    $('payoff').textContent = r.payoff ? `${MONTHS[r.payoff.month - 1]} ${r.payoff.year}` : '—';
+    if (i.homePrice > 0) {
+      $('down-hint').textContent = downIsDollar
+        ? `${((i.downPayment / i.homePrice) * 100).toFixed(1)}% of home price`
+        : `${fmt.format(i.downPayment)}`;
+    }
+
+    const parts = [
+      { label: 'Principal & interest', v: r.monthlyPI, cls: 'bg-navy-900' },
+      { label: 'Property tax', v: r.monthlyTax, cls: 'bg-navy-500' },
+      { label: 'Home insurance', v: r.monthlyIns, cls: 'bg-navy-300' },
+      { label: 'PMI', v: r.monthlyPMI, cls: 'bg-amber-400' },
+      { label: 'HOA', v: r.hoaMonthly, cls: 'bg-navy-200' },
+      { label: 'Extra payment', v: r.extraMonthly, cls: 'bg-accent-500' },
+    ].filter((p) => p.v > 0.004);
+
+    $('stack').innerHTML = parts
+      .map((p) => `<div class="${p.cls}" style="width:${((p.v / r.totalMonthly) * 100).toFixed(2)}%"></div>`)
+      .join('');
+    $('breakdown').innerHTML = parts
+      .map(
+        (p) => `<div class="flex items-center justify-between gap-2 border-b border-navy-50 py-1">
+          <dt class="flex items-center gap-2 text-navy-700"><span class="inline-block h-2.5 w-2.5 rounded-sm ${p.cls}"></span>${p.label}</dt>
+          <dd class="font-semibold text-navy-900">${fmt2.format(p.v)}</dd></div>`
+      )
+      .join('');
+
+    const sav = $('savings');
+    if (r.savings && r.savings.monthsSaved > 0) {
+      const yrs = Math.floor(r.savings.monthsSaved / 12);
+      const mos = r.savings.monthsSaved % 12;
+      sav.textContent = `Your extra ${fmt.format(r.extraMonthly)}/month pays the loan off ${yrs ? `${yrs} yr ` : ''}${mos} mo early and saves ${fmt.format(r.savings.interestSaved)} in interest.`;
+      sav.classList.remove('hidden');
+    } else {
+      sav.classList.add('hidden');
+    }
+
+    drawChart(r, i);
+    renderSchedule(r);
+    syncUrl(i);
+  }
+
+  function drawChart(r: any, i: any) {
+    const W = 640, H = 240, PL = 56, PB = 26, PT = 10, PR = 10;
+    const months = Math.max(r.rows.length, 12);
+    const maxY = r.loan || 1;
+    const x = (m: number) => PL + (m / months) * (W - PL - PR);
+    const y = (v: number) => PT + (1 - v / maxY) * (H - PT - PB);
+    const path = (rows: any[]) =>
+      `M${x(0)},${y(rows.length ? r.loan : 0)}` + rows.map((row: any, idx: number) => `L${x(idx + 1)},${y(row.balance)}`).join('');
+
+    let base = '';
+    let legend = 'Remaining balance by year.';
+    if (r.extraMonthly > 0) {
+      const b = computeMortgage({ ...i, extraMonthly: 0 });
+      base = `<path d="${path(b.rows)}" fill="none" stroke="var(--color-navy-300)" stroke-width="2" stroke-dasharray="5 4"/>`;
+      legend = 'Solid: with extra payments · Dashed: without.';
+    }
+
+    const yearTicks: string[] = [];
+    const step = months > 240 ? 60 : months > 120 ? 36 : 24;
+    for (let m = 0; m <= months; m += step) {
+      yearTicks.push(
+        `<line x1="${x(m)}" y1="${H - PB}" x2="${x(m)}" y2="${H - PB + 4}" stroke="var(--color-navy-300)"/>` +
+          `<text x="${x(m)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--color-navy-600)">${Math.round(m / 12)}y</text>`
+      );
+    }
+    const gridY = [0.25, 0.5, 0.75, 1].map(
+      (f) =>
+        `<line x1="${PL}" y1="${y(maxY * f)}" x2="${W - PR}" y2="${y(maxY * f)}" stroke="var(--color-navy-100)"/>` +
+        `<text x="${PL - 6}" y="${y(maxY * f) + 4}" text-anchor="end" font-size="11" fill="var(--color-navy-600)">$${Math.round((maxY * f) / 1000)}k</text>`
+    );
+
+    $('chart').innerHTML =
+      gridY.join('') +
+      yearTicks.join('') +
+      `<line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="var(--color-navy-300)"/>` +
+      base +
+      `<path d="${path(r.rows)}" fill="none" stroke="var(--color-navy-900)" stroke-width="2.5"/>`;
+    $('chart-legend').textContent = legend;
+  }
+
+  function renderSchedule(r: any) {
+    const byYear = new Map<number, any[]>();
+    for (const row of r.rows) {
+      if (!byYear.has(row.year)) byYear.set(row.year, []);
+      byYear.get(row.year)!.push(row);
+    }
+    const cell = 'px-2 py-1.5 text-right tabular-nums';
+    let html = `<div class="grid grid-cols-[1fr_repeat(3,minmax(5.5rem,auto))] gap-x-2 border-b border-navy-200 px-2 pb-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">
+      <span>Year</span><span class="text-right">Principal</span><span class="text-right">Interest</span><span class="text-right">Balance</span></div>`;
+    for (const [year, rows] of byYear) {
+      const p = rows.reduce((s: number, x: any) => s + x.principal, 0);
+      const it = rows.reduce((s: number, x: any) => s + x.interest, 0);
+      const end = rows[rows.length - 1].balance;
+      const monthRows = rows
+        .map(
+          (m: any) => `<tr class="border-t border-navy-50">
+            <td class="px-2 py-1.5 text-navy-700">${MONTHS[m.month - 1]} ${m.year}</td>
+            <td class="${cell}">${fmt2.format(m.principal)}</td>
+            <td class="${cell}">${fmt2.format(m.interest)}</td>
+            <td class="${cell}">${fmt2.format(m.balance)}</td></tr>`
+        )
+        .join('');
+      html += `<details class="rounded-md border border-navy-100">
+        <summary class="grid cursor-pointer grid-cols-[1fr_repeat(3,minmax(5.5rem,auto))] gap-x-2 px-2 py-2 text-sm hover:bg-navy-50 [&::-webkit-details-marker]:hidden">
+          <span class="font-semibold text-navy-900">${year}</span>
+          <span class="text-right tabular-nums">${fmt.format(p)}</span>
+          <span class="text-right tabular-nums">${fmt.format(it)}</span>
+          <span class="text-right font-semibold tabular-nums">${fmt.format(end)}</span>
+        </summary>
+        <table class="w-full text-sm"><tbody>${monthRows}</tbody></table>
+      </details>`;
+    }
+    $('schedule').innerHTML = html;
+  }
+
+  const PARAM_MAP: [string, string][] = [
+    ['price', 'price'], ['down', 'down'], ['rate', 'rate'], ['term', 'term'],
+    ['tax', 'tax'], ['ins', 'ins'], ['pmi', 'pmi'], ['hoa', 'hoa'],
+    ['extra', 'extra'], ['start', 'start'],
+  ];
+
+  function syncUrl(i: any) {
+    const q = new URLSearchParams();
+    for (const [param, id] of PARAM_MAP) q.set(param, inp(id).value.replace(/,/g, ''));
+    q.set('downType', downIsDollar ? 'dollar' : 'percent');
+    history.replaceState(null, '', `${location.pathname}?${q}`);
+  }
+
+  function loadFromUrl() {
+    const q = new URLSearchParams(location.search);
+    if (q.get('downType') === 'percent') {
+      downIsDollar = false;
+      $('down-prefix').textContent = '%';
+      $('down-dollar').setAttribute('aria-pressed', 'false');
+      $('down-pct').setAttribute('aria-pressed', 'true');
+    }
+    for (const [param, id] of PARAM_MAP) {
+      const v = q.get(param);
+      if (v !== null && v !== '') inp(id).value = v;
+    }
+  }
+
+  // Wire up
+  inp('start').value = defaultStart();
+  loadFromUrl();
+  let t: number | undefined;
+  document.getElementById('mc-form')!.addEventListener('input', () => {
+    clearTimeout(t);
+    t = window.setTimeout(recalc, 150);
+  });
+  $('down-dollar').addEventListener('click', () => setDownMode(true));
+  $('down-pct').addEventListener('click', () => setDownMode(false));
+  $('share').addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    try {
+      await navigator.clipboard.writeText(location.href);
+      btn.textContent = 'Link copied ✓';
+    } catch {
+      btn.textContent = location.href.length > 40 ? 'Copy from address bar' : location.href;
+    }
+    setTimeout(() => (btn.textContent = 'Copy shareable link'), 2500);
+  });
+  $('print').addEventListener('click', () => window.print());
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll<HTMLDetailsElement>('#schedule details').forEach((d) => (d.dataset.wasOpen = String(d.open), d.open = true));
+  });
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll<HTMLDetailsElement>('#schedule details').forEach((d) => (d.open = d.dataset.wasOpen === 'true'));
+  });
+  $('expand-all').addEventListener('click', (e) => {
+    const details = document.querySelectorAll<HTMLDetailsElement>('#schedule details');
+    const anyClosed = Array.from(details).some((d) => !d.open);
+    details.forEach((d) => (d.open = anyClosed));
+    (e.currentTarget as HTMLElement).textContent = anyClosed ? 'Collapse all years' : 'Expand all years';
+  });
+  recalc();
+</script>

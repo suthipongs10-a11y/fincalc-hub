@@ -3,11 +3,30 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M0 complete (reviewed ✅). SEO/keyword research done →
-  SEO_PLAN.md added — awaiting owner review of the plan before M1.
-- **Last commit:** `Plan: long-tail keyword map + SEO architecture (SEO_PLAN.md)`
-- **Build status:** `npm run build` clean (5 pages). Lighthouse (mobile, home):
-  Performance 100 / Accessibility 100 / Best Practices 100 / SEO 100.
+- **Milestone:** M1 complete — awaiting owner review before M2.
+- **Last commit:** `M1: mortgage calculator (flagship) — PITI, amortization,
+  extra payments, share/print`
+- **Build status:** `npm run build` clean (6 pages) · `npm test` all math
+  checks pass · Lighthouse mobile /mortgage-calculator/: 100/100/100/100.
+
+## M1 gate checklist (self-audit)
+- [x] PITI breakdown incl. PMI (auto-applies <20% down, auto-cancels at 78%
+      LTV) + HOA, with stacked-bar + line-item breakdown
+- [x] Down-payment %/$ toggle (converts both directions, live hint)
+- [x] Full amortization schedule — yearly rows expandable to monthly,
+      expand/collapse all
+- [x] Payoff chart (pure SVG, no chart lib) with with/without-extra overlay
+- [x] Extra-payment support + interest/time-saved banner
+- [x] Shareable URL state (query params, replaceState) + copy button
+- [x] Print-friendly (print styles; schedule auto-expands on print)
+- [x] 9-question FAQ + WebApplication/BreadcrumbList/FAQPage JSON-LD
+      (parse-validated in built HTML) — per approved schema policy
+- [x] 2 AD_SLOT markers (above-fold right, below results)
+- [x] Math verified vs published references: `tests/mortgage-check.mjs`
+      (Case A/B/C + PMI threshold + extra-payment closed-form) — see
+      tests/manual.md
+- [x] Lighthouse mobile 100 across all categories
+- [x] Homepage/footer now link the live tool (config-driven status: 'live')
 
 ## M0 gate checklist (self-audit)
 - [x] `npm run build` clean — 5 static pages generated
@@ -33,10 +52,11 @@
   cookies (so no rewrite needed at ad launch)
 
 ## Next actions
-1. Owner: review SEO_PLAN.md (keyword map ≈610 keywords, ≈145 pages, 4
-   clusters, phasing proposal M2.5/M3.5/M4.5/M4.75)
-2. After approval → start M1: /mortgage-calculator/ per BUILD_PLAN.md,
-   using SEO_PLAN.md §1.4 on-page checklist + T1 keyword targets
+1. Owner: review M1 (/mortgage-calculator/) — math, UX, copy
+2. After approval → M2: loan-payoff, debt-snowball, refinance, auto-loan
+   (T13/T14/T19/T21 keyword targets in SEO_PLAN.md) + homepage as directory
+3. Owner action anytime: deploy to Cloudflare Pages (README steps) so GSC
+   can start collecting data early — recommended before M2 finishes
 
 ## Pending decisions (owner)
 - [ ] Domain name — candidates to check availability:
@@ -60,6 +80,14 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — Owner approved SEO_PLAN (phasing + schema policy). Folded
+  into BUILD_PLAN.md (M2.5/M3.5/M4.5/M4.75) and CLAUDE.md §4.5. Built M1:
+  flagship /mortgage-calculator/ — engine in src/lib/mortgage.js (plain JS,
+  Node-verifiable), vanilla-TS island UI, SVG chart, URL-state sharing,
+  print support, 1,900+ words supporting content, FAQ×9, schema per new
+  policy. All math checks pass (`npm test`); Lighthouse 100×4. Fixed: $
+  prefix overlapping input text (scoped-style specificity), dt/dd a11y.
+  Stopped for owner review.
 - 2026-07-11 — Competitor/opportunity analysis (COMPETITOR_ANALYSIS.md):
   live SERP sampling shows variant-calculator keywords have page-1 slots
   held by white-label bank widgets → HIGH opportunity tier confirmed.

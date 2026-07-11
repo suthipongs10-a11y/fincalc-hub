@@ -20,7 +20,7 @@ export const TOOLS = [
     name: 'Mortgage Calculator',
     description:
       'Estimate your full monthly payment — principal, interest, property taxes, insurance, PMI, and HOA — with a complete amortization schedule.',
-    status: 'coming-soon',
+    status: 'live',
   },
   {
     slug: 'loan-payoff-calculator',

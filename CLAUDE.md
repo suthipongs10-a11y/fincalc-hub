@@ -53,8 +53,11 @@ RPM-positive, zero manual content maintenance.
    author entity, and cited data sources. AdSense is strict on finance niches.
 4. **Performance:** Lighthouse ≥ 95 on mobile for every template. Ads come later;
    don't pre-optimize ad slots, but leave `<!-- AD_SLOT -->` comment markers.
-5. **SEO per page:** unique title/meta, FAQPage + SoftwareApplication schema
-   (JSON-LD), breadcrumbs, internal links between related tools.
+5. **SEO per page:** unique title/meta, WebApplication + BreadcrumbList schema
+   (JSON-LD; Article+Person on guides), breadcrumbs, internal links between
+   related tools per SEO_PLAN.md. FAQ content on-page is mandatory; FAQPage
+   markup optional (Google removed FAQ rich results 2026-05-07 — owner
+   approved this change 2026-07-11, supersedes the old FAQPage rule).
 6. All UI copy in **US English**. Currency USD. Date format MM/DD/YYYY.
 
 ## 5. Workflow rules (owner's standard pattern)
