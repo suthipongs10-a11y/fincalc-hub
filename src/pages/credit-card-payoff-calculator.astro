@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import CreditCardPayoffCalculator from '../components/CreditCardPayoffCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Credit Card Payoff Calculator — Time or Payment, Your Choice | Payoff Logic';
+const description =
+  'Free credit card payoff calculator that answers both questions: how long a fixed payment takes, or what payment clears the card by your target date — with a payment ladder showing +$50/+$100 effects.';
+
+const faqs = [
+  { q: 'How long will it take to pay off my credit card?', a: 'Divide-and-guess doesn’t work because interest compounds while you pay. Enter your balance, APR, and a fixed monthly payment above: a $5,000 balance at 24% with $200/month takes about 2 years 9 months and roughly $1,600 of interest. The ladder table shows how +$50 or +$100 changes that.' },
+  { q: 'What payment do I need to be debt-free by a target date?', a: 'Switch the calculator to goal mode and enter the months: it computes the exact fixed payment using the same amortization math as a loan. Paying a FIXED amount — rather than the card’s declining minimum — is the single biggest accelerator.' },
+  { q: 'Why does paying only the minimum take decades?', a: 'Minimums are typically interest + 1% of the balance and shrink as the balance shrinks, stretching the timeline enormously. Your statement’s “minimum payment warning” box shows the issuer’s own projection. See our guide on the minimum-payment trap for the mechanics.' },
+  { q: 'Should I use a balance transfer instead?', a: 'A 0% transfer (typical fee 3–5%) stops interest for 12–21 months — mathematically strong if you can clear the balance within the promo window. Compute the payment needed here with goal mode set to the promo length, add the fee, and compare.' },
+  { q: 'Which card should I pay first if I have several?', a: 'Highest APR first (avalanche) minimizes interest; smallest balance first (snowball) builds momentum. Our debt snowball calculator compares both on your actual cards, with payoff dates.' },
+  { q: 'Does carrying a small balance help my credit score?', a: 'No — that’s a persistent myth. Utilization is reported whether or not you pay interest; paying in full builds the same history for free.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Credit Card Payoff Calculator',
+  path: '/credit-card-payoff-calculator/',
+  description,
+  crumbName: 'Credit Card Payoff Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Credit Card Payoff Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Credit Card Payoff Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Two questions, one tool: how long your payment takes, or what payment hits
+          your target date — plus a ladder showing exactly what +$50 or +$100 a month
+          buys you. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="payoff" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: credit-card-payoff, above-fold right (desktop sidebar) -->
+    <CreditCardPayoffCalculator />
+    <!-- AD_SLOT: credit-card-payoff, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">The one rule: fix your payment</h2>
+        <p class="mt-3">
+          Card minimums decline as your balance declines — a design that stretches
+          payoff into decades. Freezing your payment at any fixed number converts the
+          card into a normal amortizing loan with a real end date. That's the entire
+          trick, and the ladder above prices each step of aggression. For the mechanics
+          of daily compounding and the grace period, read
+          <a href="/guides/how-credit-card-interest-works/" class="font-medium text-navy-900 underline hover:text-navy-600">how credit card interest works</a>;
+          for multiple cards, sequence them with the
+          <a href="/debt-snowball-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">debt snowball calculator</a>.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="credit-card-payoff-calculator" slugs={['debt-snowball-calculator', 'debt-consolidation-calculator', 'loan-payoff-calculator', 'personal-loan-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice. Card issuers’ exact daily-accrual results differ slightly from monthly models. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

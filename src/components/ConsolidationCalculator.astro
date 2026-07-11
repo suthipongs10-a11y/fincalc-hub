@@ -1,0 +1,141 @@
+---
+/** Debt consolidation island: current debts vs one new loan (incl. same-budget row). */
+const DEFAULT_DEBTS = [
+  { name: 'Credit card A', bal: '6,000', rate: '24', min: '180' },
+  { name: 'Credit card B', bal: '4,000', rate: '19', min: '120' },
+  { name: 'Store card', bal: '1,500', rate: '27', min: '45' },
+];
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Debt consolidation calculator">
+  <form id="calc-form" class="border-b border-navy-100 p-5 sm:p-6" novalidate>
+    <div class="grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-end gap-2 text-xs font-semibold tracking-wide text-navy-600 uppercase">
+      <span>Debt</span><span>Balance</span><span>APR %</span><span>Min / month</span><span></span>
+    </div>
+    <div id="debts" class="mt-2 space-y-2">
+      {DEFAULT_DEBTS.map((d) => (
+        <div class="debt-row grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-center gap-2">
+          <input aria-label="Debt name" class="fc-input d-name" value={d.name} />
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Balance" inputmode="decimal" class="fc-input fc-input--pre d-bal" value={d.bal} /></div>
+          <div class="fc-wrap"><input aria-label="APR" inputmode="decimal" class="fc-input fc-input--suf d-rate" value={d.rate} /><span class="fc-suffix">%</span></div>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Minimum payment" inputmode="decimal" class="fc-input fc-input--pre d-min" value={d.min} /></div>
+          <button type="button" aria-label="Remove debt" class="d-remove rounded-md px-2 py-2 text-navy-500 hover:bg-red-50 hover:text-red-700">✕</button>
+        </div>
+      ))}
+    </div>
+    <div class="mt-3 flex flex-wrap items-end gap-4">
+      <button type="button" id="add-debt" class="fc-btn fc-btn--ghost">+ Add debt</button>
+      <div><label for="extra" class="fc-label">Extra budget / month</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span><input id="extra" inputmode="decimal" value="100" class="fc-input fc-input--pre max-w-36" /></div></div>
+    </div>
+    <fieldset class="mt-4 rounded-lg border border-navy-100 p-3">
+      <legend class="px-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">Consolidation loan offer</legend>
+      <div class="grid grid-cols-3 gap-3">
+        <div><label for="new-rate" class="fc-label">APR</label>
+          <div class="fc-wrap"><input id="new-rate" inputmode="decimal" value="12" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="new-term" class="fc-label">Term</label>
+          <select id="new-term" class="fc-input"><option value="24">24 mo</option><option value="36" selected>36 mo</option><option value="48">48 mo</option><option value="60">60 mo</option></select></div>
+        <div><label for="fee" class="fc-label">Origination fee</label>
+          <div class="fc-wrap"><input id="fee" inputmode="decimal" value="3" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+      </div>
+    </fieldset>
+    <p id="calc-error" class="mt-3 hidden text-sm font-medium text-red-700" role="alert"></p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+      <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+    </div>
+  </form>
+
+  <div class="p-5 sm:p-6">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[520px] text-sm">
+        <thead><tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+          <th class="py-2 pr-2">Plan</th><th class="py-2 pr-2 text-right">Monthly outlay</th><th class="py-2 pr-2 text-right">Debt-free in</th><th class="py-2 text-right">Total interest + fees</th></tr></thead>
+        <tbody id="cmp" class="text-navy-800"></tbody>
+      </table>
+    </div>
+    <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white" aria-live="polite">—</p>
+    <p class="mt-3 text-xs leading-relaxed text-navy-600">
+      The fair comparison is the last row: same monthly budget, pointed at the new loan.
+      A longer consolidation term can show a lower payment yet cost more — the table
+      makes that visible instead of hiding it.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { consolidationCompare } from '../lib/tools-extra.js';
+  import { fmt0, num, byId, input, yrMo, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  function debtRow(name = '', bal = '', rate = '', min = '') {
+    const div = document.createElement('div');
+    div.className = 'debt-row grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-center gap-2';
+    div.innerHTML = `<input aria-label="Debt name" class="fc-input d-name" value="${name}" />
+      <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Balance" inputmode="decimal" class="fc-input fc-input--pre d-bal" value="${bal}" /></div>
+      <div class="fc-wrap"><input aria-label="APR" inputmode="decimal" class="fc-input fc-input--suf d-rate" value="${rate}" /><span class="fc-suffix">%</span></div>
+      <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Minimum payment" inputmode="decimal" class="fc-input fc-input--pre d-min" value="${min}" /></div>
+      <button type="button" aria-label="Remove debt" class="d-remove rounded-md px-2 py-2 text-navy-500 hover:bg-red-50 hover:text-red-700">✕</button>`;
+    return div;
+  }
+
+  function readDebts() {
+    return Array.from(document.querySelectorAll('.debt-row')).map((row, i) => ({
+      name: row.querySelector('.d-name').value.trim() || `Debt ${i + 1}`,
+      balance: num(row.querySelector('.d-bal')),
+      rate: num(row.querySelector('.d-rate')),
+      minPayment: num(row.querySelector('.d-min')),
+    })).filter((d) => d.balance > 0);
+  }
+
+  function recalc() {
+    const debts = readDebts();
+    const err = byId('calc-error');
+    let msg = null;
+    if (!debts.length) msg = 'Add at least one debt.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    const o = { debts, extraBudget: num(input('extra')), newRate: num(input('new-rate')), newTermMonths: parseInt(input('new-term').value, 10), fee: num(input('fee')) };
+    const r = consolidationCompare(o);
+    if (r.current.unpayable) { err.textContent = 'Current minimums + extra don’t cover the interest — balances would grow forever. Increase the extra budget.'; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    byId('cmp').innerHTML = [
+      ['Keep debts, avalanche method', fmt0.format(r.currentBudget), yrMo(r.current.months), fmt0.format(r.current.totalInterest)],
+      [`Consolidate, pay required (${fmt0.format(r.newPayment)})`, fmt0.format(r.newPayment), yrMo(r.newMonths), fmt0.format(r.newInterest)],
+      [`Consolidate, keep same budget`, fmt0.format(Math.max(r.newPayment, r.currentBudget)), yrMo(r.accelMonths), fmt0.format(r.accelInterest)],
+    ].map(([k, a, b, c], i) => `<tr class="border-b border-navy-50${i === 2 ? ' bg-accent-50 font-semibold' : ''}"><td class="py-2 pr-2">${k}</td><td class="py-2 pr-2 text-right tabular-nums">${a}</td><td class="py-2 pr-2 text-right tabular-nums">${b}</td><td class="py-2 text-right tabular-nums">${c}</td></tr>`).join('');
+
+    const diff = r.current.totalInterest - r.accelInterest;
+    byId('verdict').textContent = diff > 0
+      ? `At the same monthly budget, consolidating saves ${fmt0.format(diff)} (including the ${fmt0.format(r.feeAmount)} fee) and finishes ${yrMo(Math.max(0, r.current.months - r.accelMonths))} sooner. It works because ${o.newRate}% beats your blended card rate — the loan is a rate cut, not magic.`
+      : `This offer doesn't beat your current plan: at the same budget it costs ${fmt0.format(-diff)} MORE (fee included). Consolidation only wins when the new APR is meaningfully below your blended rate — negotiate the rate/fee or stick with the avalanche.`;
+
+    const q = new URLSearchParams();
+    q.set('extra', input('extra').value.replace(/,/g, ''));
+    q.set('new-rate', input('new-rate').value); q.set('new-term', input('new-term').value); q.set('fee', input('fee').value);
+    q.set('d', debts.map((d) => [encodeURIComponent(d.name), d.balance, d.rate, d.minPayment].join('~')).join('|'));
+    history.replaceState(null, '', `${location.pathname}?${q}`);
+  }
+
+  (function loadUrl() {
+    const q = new URLSearchParams(location.search);
+    for (const id of ['extra', 'new-rate', 'new-term', 'fee']) if (q.get(id)) input(id).value = q.get(id);
+    const d = q.get('d');
+    if (d) {
+      const box = byId('debts');
+      box.innerHTML = '';
+      for (const part of d.split('|')) {
+        const [name, bal, rate, min] = part.split('~');
+        box.appendChild(debtRow(decodeURIComponent(name || ''), bal || '', rate || '', min || ''));
+      }
+    }
+  })();
+  byId('add-debt').addEventListener('click', () => byId('debts').appendChild(debtRow()));
+  byId('debts').addEventListener('click', (e) => {
+    const btn = e.target.closest('.d-remove');
+    if (btn) { btn.closest('.debt-row').remove(); recalc(); }
+  });
+  onInput('calc-form', recalc);
+  byId('calc-form').addEventListener('change', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

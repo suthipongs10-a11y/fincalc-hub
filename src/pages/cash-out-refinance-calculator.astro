@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import CashOutRefiCalculator from '../components/CashOutRefiCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Cash-Out Refinance Calculator — What the Cash Really Costs | Payoff Logic';
+const description =
+  'Free cash-out refinance calculator: new loan and payment, the 80% LTV cap check, and the honest number nobody shows — total lifetime cost per dollar of cash accessed.';
+
+const faqs = [
+  { q: 'How does a cash-out refinance work?', a: 'You replace your mortgage with a bigger one and pocket the difference. Owe $220,000 on a $420,000 home and take $50,000 cash: the new loan is ~$270,000 (plus costs), your payment reprices at today’s rate, and the clock usually restarts at 30 years.' },
+  { q: 'How much cash can I take out?', a: 'Most lenders cap the NEW loan at 80% of the home’s value (VA allows more). On a $420,000 home that’s a $336,000 max loan; subtract your current balance to find your maximum cash. The calculator flags you when you cross 80%.' },
+  { q: 'What does the cash actually cost?', a: 'More than the rate suggests: you pay the new rate on your ENTIRE balance (not just the cash), often for a restarted 30-year term, plus closing costs of 2–6%. The calculator totals every extra dollar you’ll pay versus keeping your current loan and divides by the cash — a per-dollar price that makes offers comparable.' },
+  { q: 'Cash-out refi vs. HELOC vs. home equity loan?', a: 'Cash-out reprices everything — great if your current rate is high, expensive if it’s low. A HELOC/home-equity loan adds a second, smaller loan and leaves your first mortgage untouched — usually smarter when you locked a low rate. Rule of thumb: current rate below today’s market → lean HELOC; above → compare both.' },
+  { q: 'Is cash-out money taxable?', a: 'No — it’s borrowed money, not income. Interest may be deductible only if the funds substantially improve the home (and you itemize); consolidation or other uses generally aren’t deductible. Confirm with a tax professional.' },
+  { q: 'Is using a cash-out refi to pay off credit cards smart?', a: 'It converts unsecured 24% debt into ~7% secured debt — mathematically strong, behaviorally risky: your house now secures old card spending, and re-run cards create double debt. Compare against a consolidation loan first, and only proceed with the spending fixed.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Cash-Out Refinance Calculator',
+  path: '/cash-out-refinance-calculator/',
+  description,
+  crumbName: 'Cash-Out Refinance Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Cash-Out Refinance Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Cash-Out Refinance Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          The number lenders don't advertise: what each dollar of cash really costs
+          over the life of the new loan — plus the 80% LTV check and your new payment.
+          Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="breakeven" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: cash-out, above-fold right (desktop sidebar) -->
+    <CashOutRefiCalculator />
+    <!-- AD_SLOT: cash-out, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">The trap: repricing cheap debt to get cash</h2>
+        <p class="mt-3">
+          If you hold a 3–5% pandemic-era rate, a cash-out refinance at today's rates
+          reprices your entire balance upward to access a slice of equity — routinely
+          the most expensive way to borrow that money. That's when a HELOC or
+          home-equity loan (second lien, first mortgage untouched) wins decisively.
+          Cash-out shines in the opposite case: your current rate is at or above
+          market, so you'd benefit from a
+          <a href="/refinance-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">plain refinance</a>
+          anyway and the cash rides along at little marginal cost. The per-dollar cost
+          figure above tells you which world you're in.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="cash-out-refinance-calculator" slugs={['refinance-calculator', 'mortgage-calculator', 'debt-consolidation-calculator', 'mortgage-payoff-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice or a loan offer. LTV caps and pricing vary by lender and program. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

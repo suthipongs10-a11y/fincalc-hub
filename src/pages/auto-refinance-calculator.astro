@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import AutoRefiCalculator from '../components/AutoRefiCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Auto Refinance Calculator — Should You Refi Your Car Loan? | Payoff Logic';
+const description =
+  'Free auto refinance calculator: new payment, total savings with fees included, and an honest warning when a longer term makes a "cheaper" payment cost more overall.';
+
+const faqs = [
+  { q: 'Is refinancing a car loan worth it?', a: 'Usually yes when your credit has improved since the original loan or the dealer marked up your rate — both extremely common. Fees are tiny (typically $0–$150 in title/re-registration), so even a 1–2 point rate drop on a $20k+ balance saves hundreds. The calculator totals it with fees included.' },
+  { q: 'When can I refinance my car loan?', a: 'Any time after the title work settles (~60–90 days from purchase). Sweet spot: 6–24 months in, after on-time payments have lifted your score but before too much interest has already been paid. Very old or high-mileage cars may not qualify — lenders have vehicle-age caps.' },
+  { q: 'Does refinancing a car loan hurt my credit?', a: 'A hard inquiry and a new account cost a few points for a few months; rate-shopping within a 14–45 day window counts as one inquiry. The savings usually dwarf the temporary dip.' },
+  { q: 'Should I extend the term when I refinance?', a: 'Careful — that’s the trap this calculator is built to catch. A lower payment from a longer term can cost more in total; the verdict line tells you when that’s happening. Matching (or shortening) your remaining months keeps the comparison honest.' },
+  { q: 'Can I refinance if I owe more than the car is worth?', a: 'Harder but possible — many lenders allow up to 110–130% loan-to-value. Rates worsen with LTV, and rolling negative equity forward deepens the hole; sometimes paying the loan down first (loan payoff calculator) is the better first move.' },
+  { q: 'Where do I refinance a car loan?', a: 'Credit unions are consistently the sharpest pricing, followed by banks and online lenders. Get 2–3 quotes in one week (single inquiry window) and let them compete — the process is far simpler than a mortgage refi.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Auto Refinance Calculator',
+  path: '/auto-refinance-calculator/',
+  description,
+  crumbName: 'Auto Refinance Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Auto Refinance Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Auto Refinance Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Dealership loans are often marked up 1–2 points — if your credit has improved
+          since signing, check the refi math in 30 seconds. The verdict includes fees
+          and calls out the longer-term trap. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="car" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: auto-refi, above-fold right (desktop sidebar) -->
+    <AutoRefiCalculator />
+    <!-- AD_SLOT: auto-refi, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Why car refis are the most underused free money</h2>
+        <p class="mt-3">
+          Mortgage refinances cost thousands, so break-even math gates them. Car refis
+          cost almost nothing — which means even modest rate improvements clear the
+          bar, and the main reason people skip them is simply not knowing they exist.
+          The classic candidates: anyone who financed at the dealership (F&amp;I
+          offices legally add margin to the rate the lender quoted), anyone whose
+          credit score has climbed 40+ points since purchase, and anyone who took a
+          promotional-rate-or-rebate deal and picked the rebate. Match your remaining
+          term for the honest comparison, then consider sending the monthly savings
+          right back at the loan via the
+          <a href="/loan-payoff-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">loan payoff calculator</a> —
+          rate cut plus same payment equals a much earlier title in hand.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="auto-refinance-calculator" slugs={['auto-loan-calculator', 'car-affordability-calculator', 'loan-payoff-calculator', 'refinance-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice or a loan offer. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

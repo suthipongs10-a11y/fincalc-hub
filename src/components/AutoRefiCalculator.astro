@@ -1,0 +1,112 @@
+---
+/** Auto refinance island: new rate/term vs remaining loan. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Auto refinance calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="balance" class="fc-label">Loan balance</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="balance" inputmode="decimal" value="22,000" class="fc-input fc-input--pre" /></div></div>
+        <div><label for="cur-rate" class="fc-label">Current APR</label>
+          <div class="fc-wrap"><input id="cur-rate" inputmode="decimal" value="11" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="months-left" class="fc-label">Months remaining</label>
+          <input id="months-left" inputmode="numeric" value="48" class="fc-input" /></div>
+        <div><label for="new-rate" class="fc-label">New APR</label>
+          <div class="fc-wrap"><input id="new-rate" inputmode="decimal" value="7.5" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="new-term" class="fc-label">New term</label>
+          <select id="new-term" class="fc-input"><option value="36">36 months</option><option value="48" selected>48 months</option><option value="60">60 months</option><option value="72">72 months</option></select></div>
+        <div><label for="fees" class="fc-label">Refi fees (title/reg.)</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="fees" inputmode="decimal" value="100" class="fc-input fc-input--pre" /></div></div>
+      </div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+      <p class="rounded-lg bg-navy-50 p-3 text-xs leading-relaxed text-navy-700">
+        Auto refis are cheap (typically ~$0–$150 in fees) and fast — worth checking
+        whenever your credit has improved since the dealership loan, which often
+        carries a marked-up rate.
+      </p>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Current payment</p>
+          <p id="cur-pay" class="text-lg font-bold text-navy-900">—</p></div>
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">New payment</p>
+          <p id="new-pay" class="text-lg font-bold text-navy-900" aria-live="polite">—</p></div>
+        <div class="rounded-lg bg-accent-50 p-3"><p class="text-xs font-medium text-accent-800">Monthly change</p>
+          <p id="delta" class="text-lg font-bold text-accent-800">—</p></div>
+      </div>
+      <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white">—</p>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full min-w-[380px] text-sm">
+          <thead><tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+            <th class="py-2 pr-2"><span class="sr-only">Line</span></th><th class="py-2 pr-2 text-right">Keep loan</th><th class="py-2 text-right">Refinance</th></tr></thead>
+          <tbody id="cmp" class="text-navy-800"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">New loan amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { pmt, amortizeLoan } from '../lib/loan.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, renderYearSchedule, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['balance', 'cur-rate', 'months-left', 'new-rate', 'new-term', 'fees']);
+
+  function recalc() {
+    const balance = num(input('balance'));
+    const curRate = num(input('cur-rate'));
+    const monthsLeft = Math.round(num(input('months-left')));
+    const newRate = num(input('new-rate'));
+    const newTerm = parseInt(input('new-term').value, 10);
+    const fees = num(input('fees'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (balance <= 0) msg = 'Enter your loan balance.';
+    else if (monthsLeft <= 0 || monthsLeft > 96) msg = 'Months remaining must be 1–96.';
+    else if (curRate < 0 || curRate > 30 || newRate < 0 || newRate > 30) msg = 'APRs must be 0–30%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const curPay = pmt(balance, curRate, monthsLeft);
+    const newPay = pmt(balance + fees, newRate, newTerm);
+    const cur = amortizeLoan({ principal: balance, annualRate: curRate, payment: curPay, maxMonths: monthsLeft + 1 });
+    const nw = amortizeLoan({ principal: balance + fees, annualRate: newRate, payment: newPay, maxMonths: newTerm + 1 });
+
+    byId('cur-pay').textContent = fmt2.format(curPay);
+    byId('new-pay').textContent = fmt2.format(newPay);
+    const d = curPay - newPay;
+    byId('delta').textContent = (d >= 0 ? '−' : '+') + fmt2.format(Math.abs(d));
+    byId('cmp').innerHTML = [
+      ['Months to payoff', `${cur.months}`, `${nw.months}`],
+      ['Remaining interest', fmt0.format(cur.totalInterest), fmt0.format(nw.totalInterest + fees)],
+      ['Total remaining cost', fmt0.format(curPay * cur.months), fmt0.format(newPay * nw.months)],
+    ].map(([k, a, b]) => `<tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">${k}</td><td class="py-2 pr-2 text-right tabular-nums">${a}</td><td class="py-2 text-right tabular-nums font-semibold">${b}</td></tr>`).join('');
+
+    const save = curPay * cur.months - newPay * nw.months;
+    byId('verdict').textContent = save > 0
+      ? `Refinancing saves ${fmt0.format(save)} in total (fees included)${newTerm > monthsLeft ? ` — even with the longer term. Matching your current ${monthsLeft}-month timeline instead would save more; try it above.` : ` and keeps a similar timeline.`}`
+      : `This refi costs ${fmt0.format(-save)} MORE overall — the ${newTerm > monthsLeft ? 'longer term outweighs the rate cut' : 'rate/fees don’t improve on your current loan'}. A lower payment isn't the same as a cheaper loan.`;
+    renderYearSchedule(byId('schedule'), nw.rows);
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  byId('calc-form').addEventListener('change', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

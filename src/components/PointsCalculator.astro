@@ -1,0 +1,87 @@
+---
+/** Mortgage points island: cost vs rate reduction, break-even, lifetime. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Mortgage points calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div><label for="loan" class="fc-label">Loan amount</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span><input id="loan" inputmode="decimal" value="400,000" class="fc-input fc-input--pre" /></div></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="base" class="fc-label">Rate without points</label>
+          <div class="fc-wrap"><input id="base" inputmode="decimal" value="6.75" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="reduced" class="fc-label">Rate with points</label>
+          <div class="fc-wrap"><input id="reduced" inputmode="decimal" value="6.5" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="points" class="fc-label">Points purchased</label>
+          <input id="points" inputmode="decimal" value="1" class="fc-input" /></div>
+        <div><label for="term" class="fc-label">Term</label>
+          <select id="term" class="fc-input"><option value="30" selected>30 years</option><option value="15">15 years</option></select></div>
+      </div>
+      <p class="text-xs text-navy-600">1 point = 1% of the loan, paid at closing. A point typically buys ~0.25% off the rate — but the ratio varies; enter your lender's actual quote for both rates.</p>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Points cost</p>
+          <p id="cost" class="text-lg font-bold text-navy-900">—</p></div>
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Monthly savings</p>
+          <p id="mosave" class="text-lg font-bold text-navy-900" aria-live="polite">—</p></div>
+        <div class="rounded-lg bg-accent-50 p-3"><p class="text-xs font-medium text-accent-800">Break-even</p>
+          <p id="be" class="text-lg font-bold text-accent-800">—</p></div>
+      </div>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full min-w-[380px] text-sm">
+          <thead><tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+            <th class="py-2 pr-2"><span class="sr-only">Line</span></th><th class="py-2 pr-2 text-right">Without points</th><th class="py-2 text-right">With points</th></tr></thead>
+          <tbody id="cmp" class="text-navy-800"></tbody>
+        </table>
+      </div>
+      <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white">—</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { pointsBreakEven } from '../lib/tools-extra.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['loan', 'base', 'reduced', 'points', 'term']);
+
+  function recalc() {
+    const o = {
+      loan: num(input('loan')), baseRate: num(input('base')), reducedRate: num(input('reduced')),
+      points: num(input('points')), termYears: parseInt(input('term').value, 10),
+    };
+    const err = byId('calc-error');
+    let msg = null;
+    if (o.loan <= 0) msg = 'Enter a loan amount above $0.';
+    else if (o.reducedRate >= o.baseRate) msg = 'The with-points rate must be lower than the without-points rate.';
+    else if (o.points <= 0 || o.points > 5) msg = 'Points must be between 0 and 5.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const r = pointsBreakEven(o);
+    const n = o.termYears * 12;
+    byId('cost').textContent = fmt0.format(r.cost);
+    byId('mosave').textContent = fmt2.format(r.monthlySavings);
+    byId('be').textContent = yrMo(r.breakEvenMonths);
+    byId('cmp').innerHTML = [
+      ['Monthly payment', fmt2.format(r.payBase), fmt2.format(r.payReduced)],
+      ['Total interest', fmt0.format(r.payBase * n - o.loan), fmt0.format(r.payReduced * n - o.loan)],
+      ['Upfront cost', '—', fmt0.format(r.cost)],
+    ].map(([k, a, b]) => `<tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">${k}</td><td class="py-2 pr-2 text-right tabular-nums">${a}</td><td class="py-2 text-right tabular-nums font-semibold">${b}</td></tr>`).join('');
+    byId('verdict').textContent = `Keep the loan past ${yrMo(r.breakEvenMonths)} and the points pay for themselves; over the full term they save ${fmt0.format(r.lifetimeSavings)}. Sell or refinance before break-even and the ${fmt0.format(r.cost)} is gone — buy points only for a long-stay loan.`;
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  byId('calc-form').addEventListener('change', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

@@ -1,0 +1,120 @@
+---
+/** Shared island for simple amortizing loans (personal, student): amount + rate + term + extra. */
+interface Props {
+  amount?: string;
+  rate?: string;
+  terms?: { value: string; label: string; selected?: boolean }[];
+  extra?: string;
+  ariaLabel?: string;
+}
+const {
+  amount = '15,000',
+  rate = '11',
+  extra = '0',
+  ariaLabel = 'Loan calculator',
+  terms = [
+    { value: '24', label: '24 months' },
+    { value: '36', label: '36 months' },
+    { value: '48', label: '48 months', selected: true },
+    { value: '60', label: '60 months' },
+    { value: '84', label: '84 months' },
+    { value: '120', label: '120 months' },
+  ],
+} = Astro.props;
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label={ariaLabel}>
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div><label for="amount" class="fc-label">Loan amount</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span><input id="amount" inputmode="decimal" value={amount} class="fc-input fc-input--pre" /></div></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="rate" class="fc-label">Interest rate (APR)</label>
+          <div class="fc-wrap"><input id="rate" inputmode="decimal" value={rate} class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="term" class="fc-label">Term</label>
+          <select id="term" class="fc-input">
+            {terms.map((t) => <option value={t.value} selected={t.selected}>{t.label}</option>)}
+          </select></div>
+      </div>
+      <div><label for="extra" class="fc-label">Extra payment / month</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span><input id="extra" inputmode="decimal" value={extra} class="fc-input fc-input--pre" /></div></div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">Monthly payment</h2>
+      <p class="mt-1 text-4xl font-bold text-navy-900" id="payment" aria-live="polite">—</p>
+      <div class="mt-6 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Total interest</p>
+          <p id="tint" class="text-lg font-bold text-navy-900">—</p></div>
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Total repaid</p>
+          <p id="total" class="text-lg font-bold text-navy-900">—</p></div>
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">Payoff time</p>
+          <p id="months" class="text-lg font-bold text-navy-900">—</p></div>
+      </div>
+      <p id="savings" class="mt-3 hidden rounded-lg bg-accent-50 p-3 text-sm font-medium text-accent-800"></p>
+      <h3 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Balance over time</h3>
+      <div class="mt-2 overflow-x-auto">
+        <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Loan balance by year"></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">Amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { pmt, amortizeLoan } from '../lib/loan.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, renderYearSchedule, drawBalanceChart, rowsToSeries, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['amount', 'rate', 'term', 'extra']);
+
+  function recalc() {
+    const amount = num(input('amount'));
+    const rate = num(input('rate'));
+    const term = parseInt(input('term').value, 10);
+    const extra = num(input('extra'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (amount <= 0) msg = 'Enter a loan amount above $0.';
+    else if (rate < 0 || rate > 40) msg = 'Enter an APR between 0% and 40%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const payment = pmt(amount, rate, term);
+    const base = amortizeLoan({ principal: amount, annualRate: rate, payment });
+    const boosted = amortizeLoan({ principal: amount, annualRate: rate, payment, extraMonthly: extra });
+
+    byId('payment').textContent = fmt2.format(payment) + (extra > 0 ? ` (+${fmt0.format(extra)} extra)` : '');
+    byId('tint').textContent = fmt0.format(boosted.totalInterest);
+    byId('total').textContent = fmt0.format(amount + boosted.totalInterest);
+    byId('months').textContent = yrMo(boosted.months);
+    const sav = byId('savings');
+    if (extra > 0) {
+      sav.textContent = `Extra ${fmt0.format(extra)}/month finishes ${yrMo(base.months - boosted.months)} sooner and saves ${fmt0.format(base.totalInterest - boosted.totalInterest)} in interest.`;
+      sav.classList.remove('hidden');
+    } else sav.classList.add('hidden');
+
+    drawBalanceChart(byId('chart'), extra > 0
+      ? [{ values: rowsToSeries(base.rows, amount), dashed: true }, { values: rowsToSeries(boosted.rows, amount) }]
+      : [{ values: rowsToSeries(base.rows, amount) }], amount);
+    renderYearSchedule(byId('schedule'), boosted.rows);
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  byId('calc-form').addEventListener('change', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

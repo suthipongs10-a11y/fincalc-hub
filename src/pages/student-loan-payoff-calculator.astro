@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import GenericLoanCalculator from '../components/GenericLoanCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Student Loan Payoff Calculator — Extra Payments & Time Saved | Payoff Logic';
+const description =
+  'Free student loan payoff calculator: payment for any balance and rate, the full schedule, and exactly what extra monthly payments save in years and interest.';
+
+const faqs = [
+  { q: 'How long will it take to pay off my student loans?', a: 'The federal standard plan is 120 months (10 years); your servicer sets the payment so the balance amortizes to zero. Enter your balance and rate above with a 120-month term to see the schedule — then add an extra amount to watch years disappear.' },
+  { q: 'Do extra payments work on student loans?', a: 'Yes — federal and private student loans have no prepayment penalties. One caution: instruct your servicer to apply extras to the CURRENT loan’s principal, not as an early next payment ("pay ahead" status), and target the highest-rate loan in your group first.' },
+  { q: 'Should I pay off student loans early or invest?', a: 'Compare the loan rate to expected after-tax returns. At 4–5% federal rates the case for investing (or just capturing an employer 401(k) match first) is strong; at 7–9% (grad/private), prepayment is a solid guaranteed return. Also weigh federal protections you give up by rushing: income-driven plans and potential forgiveness.' },
+  { q: 'Does this calculator work for income-driven repayment (IDR)?', a: 'Not directly — IDR payments track your income, not amortization, and remaining balances may be forgiven after 20–25 years. This tool models fixed-payment plans (standard/private/refinanced). If you’re on IDR and aiming for forgiveness, extra payments may even be counterproductive; check your plan first.' },
+  { q: 'Should I refinance student loans?', a: 'Private refinancing can cut the rate for strong credit — but refinancing FEDERAL loans forfeits IDR, deferment, and forgiveness permanently. Refinance private loans freely; refinance federal only if you’re certain you won’t need the safety net.' },
+  { q: 'Which loan should I pay first with multiple student loans?', a: 'Highest rate first (avalanche) saves the most; smallest first (snowball) motivates. Run the comparison with your real loans in the debt snowball calculator.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Student Loan Payoff Calculator',
+  path: '/student-loan-payoff-calculator/',
+  description,
+  crumbName: 'Student Loan Payoff Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Student Loan Payoff Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Student Loan Payoff Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Your payment, total interest, and full schedule on any fixed-payment student
+          loan — and what an extra $50 or $100 a month saves. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="payoff" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: student-loan, above-fold right (desktop sidebar) -->
+    <GenericLoanCalculator amount="35,000" rate="6.5" extra="100" ariaLabel="Student loan payoff calculator" terms={[{ value: '60', label: '60 months' }, { value: '120', label: '120 months (standard)', selected: true }, { value: '180', label: '180 months' }, { value: '240', label: '240 months' }]} />
+    <!-- AD_SLOT: student-loan, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Before you accelerate: the federal-loan checklist</h2>
+        <p class="mt-3">
+          Student loans are the one debt where <em>faster isn't automatically
+          better</em>. If you're pursuing PSLF or on an income-driven plan headed for
+          forgiveness, extra principal can be money donated to the servicer. If you're
+          on the standard plan (or private loans) with no forgiveness path, the math is
+          the ordinary amortization above and extras work beautifully — target the
+          highest rate first (see
+          <a href="/guides/snowball-vs-avalanche/" class="font-medium text-navy-900 underline hover:text-navy-600">snowball vs avalanche</a>),
+          keep the employer match and emergency fund ahead of acceleration, and confirm
+          extras post as principal-only.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="student-loan-payoff-calculator" slugs={['loan-payoff-calculator', 'debt-snowball-calculator', 'personal-loan-calculator', 'debt-consolidation-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice. IDR/forgiveness rules change; verify with your servicer and studentaid.gov. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

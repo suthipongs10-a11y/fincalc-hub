@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import RentVsBuyCalculator from '../components/RentVsBuyCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Rent vs. Buy Calculator — Cumulative Cost with a Crossover Year | Payoff Logic';
+const description =
+  'Free rent vs. buy calculator that shows the cumulative net cost of each path year by year — including equity, appreciation, buying and selling costs — and the year buying overtakes renting.';
+
+const faqs = [
+  { q: 'Is it cheaper to rent or buy?', a: 'It depends almost entirely on how long you stay. Buying carries heavy one-time costs (down payment, ~3% buying costs, ~7% selling costs) that need years of equity and appreciation to earn back. With typical inputs the crossover lands around years 4–7; short stays favor renting, long stays favor buying. The calculator computes your crossover year from your actual numbers.' },
+  { q: 'What does the "net cost of owning" include?', a: 'Everything out of pocket — down payment, buying costs, mortgage payments, property tax, insurance, and maintenance — MINUS the equity you would walk away with if you sold that year (value grown by your appreciation assumption, less ~7% selling costs and the loan balance). That makes it directly comparable to cumulative rent.' },
+  { q: 'What is the 5% rule for renting vs buying?', a: 'A popular shortcut: multiply the home price by 5% and divide by 12 — if rent is below that, renting is arguably cheaper once maintenance, taxes, and cost of capital are counted. It’s a decent sanity check but ignores your timeline, which dominates the real answer; use the year-by-year table instead.' },
+  { q: 'What appreciation rate should I assume?', a: 'Long-run US home appreciation has averaged roughly 3–4% per year nominal, with huge local and decade-to-decade variation. Test 0% and 5% to see how sensitive your answer is — if the verdict flips easily, the honest conclusion is "close call," and non-financial factors should decide.' },
+  { q: 'Does this include the tax deduction for mortgage interest?', a: 'No — since the standard deduction doubled, most homeowners no longer itemize, so we default to no deduction rather than overstating buying. If you do itemize, the effect improves buying modestly.' },
+  { q: 'What about investing the down payment instead?', a: 'A renter who invests the would-be down payment can offset part of buying’s equity advantage. We keep that out of the base model for transparency (assumption-heavy); if you want it, mentally credit renting with your expected after-tax return on the down payment.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Rent vs Buy Calculator',
+  path: '/rent-vs-buy-calculator/',
+  description,
+  crumbName: 'Rent vs Buy Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Rent vs Buy Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Rent vs. Buy Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Not a vibe check — a year-by-year table of what each path actually costs,
+          counting equity, appreciation, and the transaction costs everyone forgets.
+          The answer is usually a <em>year</em>, not a side. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="piti" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: rent-vs-buy, above-fold right (desktop sidebar) -->
+    <RentVsBuyCalculator />
+    <!-- AD_SLOT: rent-vs-buy, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Why the timeline dominates everything</h2>
+        <p class="mt-3">
+          Buying front-loads enormous costs: a down payment that stops earning
+          elsewhere, ~3% in closing costs on the way in, and ~7% in agent commissions
+          and fees on the way out. Equity and appreciation repay those costs — but
+          slowly, because early mortgage payments are mostly interest (see
+          <a href="/guides/how-amortization-works/" class="font-medium text-navy-900 underline hover:text-navy-600">how amortization works</a>).
+          That's why almost every honest model produces a crossover year rather than a
+          universal winner. Before the crossover, renting is genuinely cheaper — not
+          "throwing money away." After it, ownership compounds in your favor. If you're
+          confident you'll stay 10+ years and the payment fits (check the
+          <a href="/house-affordability-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">affordability calculator</a>),
+          buying usually wins; if a move within ~5 years is plausible, renting usually
+          does.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="rent-vs-buy-calculator" slugs={['house-affordability-calculator', 'mortgage-calculator', 'down-payment-calculator', '15-year-mortgage-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice. Long-horizon assumptions (appreciation, rent growth) drive the result; stress-test them. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

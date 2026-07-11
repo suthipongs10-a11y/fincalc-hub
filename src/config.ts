@@ -101,6 +101,38 @@ export const TOOLS: Tool[] = [
     cluster: 'mortgage',
   },
   {
+    slug: 'down-payment-calculator',
+    name: 'Down Payment Calculator',
+    description:
+      'Every tier from 3.5% to 20% compared: cash needed, payment, PMI — and what your savings cover.',
+    status: 'live',
+    cluster: 'mortgage',
+  },
+  {
+    slug: 'pmi-calculator',
+    name: 'PMI Calculator',
+    description:
+      'Your monthly PMI, the exact month it cancels at 78% LTV, and how extra payments remove it sooner.',
+    status: 'live',
+    cluster: 'mortgage',
+  },
+  {
+    slug: 'mortgage-points-calculator',
+    name: 'Mortgage Points Calculator',
+    description:
+      'Price the rate buy-down: points cost, monthly savings, break-even month, lifetime value.',
+    status: 'live',
+    cluster: 'mortgage',
+  },
+  {
+    slug: 'rent-vs-buy-calculator',
+    name: 'Rent vs. Buy Calculator',
+    description:
+      'Year-by-year net cost of each path — equity, appreciation, and transaction costs included — with your crossover year.',
+    status: 'live',
+    cluster: 'mortgage',
+  },
+  {
     slug: 'loan-payoff-calculator',
     name: 'Loan Payoff Calculator',
     description:
@@ -108,6 +140,38 @@ export const TOOLS: Tool[] = [
     status: 'live',
     cluster: 'debt',
     core: true,
+  },
+  {
+    slug: 'credit-card-payoff-calculator',
+    name: 'Credit Card Payoff Calculator',
+    description:
+      'How long your payment takes — or the payment that hits your target date — with a +$50/+$100 ladder.',
+    status: 'live',
+    cluster: 'debt',
+  },
+  {
+    slug: 'debt-consolidation-calculator',
+    name: 'Debt Consolidation Calculator',
+    description:
+      'Your debts vs. a real loan offer at the same monthly budget — fees counted, longer-term tricks exposed.',
+    status: 'live',
+    cluster: 'debt',
+  },
+  {
+    slug: 'personal-loan-calculator',
+    name: 'Personal Loan Calculator',
+    description:
+      'Payment, total interest, and full schedule for any personal loan — plus early-payoff savings.',
+    status: 'live',
+    cluster: 'debt',
+  },
+  {
+    slug: 'student-loan-payoff-calculator',
+    name: 'Student Loan Payoff Calculator',
+    description:
+      'Fixed-plan student loan math with extra-payment savings — and when NOT to prepay (IDR/forgiveness).',
+    status: 'live',
+    cluster: 'debt',
   },
   {
     slug: 'debt-snowball-calculator',
@@ -128,6 +192,14 @@ export const TOOLS: Tool[] = [
     core: true,
   },
   {
+    slug: 'cash-out-refinance-calculator',
+    name: 'Cash-Out Refinance Calculator',
+    description:
+      'What the cash really costs per dollar borrowed — plus the 80% LTV check and your new payment.',
+    status: 'live',
+    cluster: 'refinance',
+  },
+  {
     slug: 'auto-loan-calculator',
     name: 'Auto Loan Calculator',
     description:
@@ -135,5 +207,21 @@ export const TOOLS: Tool[] = [
     status: 'live',
     cluster: 'auto',
     core: true,
+  },
+  {
+    slug: 'car-affordability-calculator',
+    name: 'Car Affordability Calculator',
+    description:
+      'Turn a monthly budget into a maximum sticker price — tax-aware, with down payment and trade-in.',
+    status: 'live',
+    cluster: 'auto',
+  },
+  {
+    slug: 'auto-refinance-calculator',
+    name: 'Auto Refinance Calculator',
+    description:
+      'Check the refi math on your car loan in 30 seconds — fees included, longer-term trap flagged.',
+    status: 'live',
+    cluster: 'auto',
   },
 ];

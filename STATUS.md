@@ -3,13 +3,25 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M4 complete (autonomous overnight run per owner
+- **Milestone:** M4.5 complete (23 tools total, 120 pages) (autonomous overnight run per owner
   instruction 2026-07-11: continue milestone-by-milestone without waiting
   for per-gate review). M3.5 + images + M4 shipped. Next: M4.5.
-- **Last commit:** `M4: 10 guides + guides index + Article schema`
-- **Build status:** `npm run build` clean (**109 pages** + sitemap) · all
+- **Last commit:** `M4.5: remaining 11 tools (T9-T12, T15-T18, T20, T22-T23)`
+- **Build status:** `npm run build` clean (**120 pages** + sitemap) · all
   test suites pass · Lighthouse mobile 100×4 spot-checked on every new
   template. Live at https://payofflogic.com.
+
+## M4.5 gate checklist (self-audit)
+- [x] 11 tools: down-payment, PMI, points, rent-vs-buy, credit-card
+      payoff (dual mode + ladder), consolidation (same-budget fair row),
+      personal loan, student loan (IDR caveats), cash-out refi
+      (cost-per-dollar + LTV cap), car affordability (tax-aware inverse
+      solver), auto refinance (longer-term trap flagged)
+- [x] Engines in src/lib/tools-extra.js — 21 checks (tests/m45-check.mjs):
+      identities vs pmt, LTV/fee math, bisection solvers, rent-vs-buy
+      invariants
+- [x] All 23 tools in homepage directory (clusters) + curated RelatedTools
+- [x] Lighthouse 100×4 spot-checked (rent-vs-buy, consolidation)
 
 ## M4 gate checklist (self-audit; owner review still required for accuracy sign-off)
 - [x] 10 guides live under /guides/ (amortization, PMI, extra payments,

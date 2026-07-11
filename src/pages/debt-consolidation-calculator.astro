@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import ConsolidationCalculator from '../components/ConsolidationCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Debt Consolidation Calculator — Does This Offer Actually Save Money? | Payoff Logic';
+const description =
+  'Free debt consolidation calculator that compares your current debts against a specific loan offer — fee included, at the SAME monthly budget — so a longer term can’t hide a worse deal.';
+
+const faqs = [
+  { q: 'Does debt consolidation save money?', a: 'Only when the new APR (including origination fee) is meaningfully below your blended current rate. The calculator’s bottom row makes the fair comparison: same monthly budget pointed at the new loan. If that row doesn’t beat your current plan, the offer isn’t a deal.' },
+  { q: 'Why compare at the same monthly budget?', a: 'Because lenders advertise lower PAYMENTS, which usually come from longer TERMS — you can pay less per month and far more overall. Holding your total budget constant isolates what the interest-rate change is actually worth.' },
+  { q: 'What APR do consolidation loans charge?', a: 'Typically 8–20% for good credit (personal loans), plus origination fees of 1–8% often deducted upfront. Balance-transfer cards offer 0% for 12–21 months with a 3–5% fee — a different structure the same logic applies to.' },
+  { q: 'Does consolidation hurt my credit?', a: 'Briefly (hard inquiry, new account), then usually helps: card utilization drops to zero and an installment loan diversifies the mix. The real risk is behavioral — re-running the cards up and carrying both debts.' },
+  { q: 'Consolidation loan vs. balance transfer — which is better?', a: 'Transfers win if the balance fits the promo window and you can clear it in time (compute the required payment in our credit-card payoff calculator, goal mode). Loans win for larger balances and longer timelines with a fixed schedule.' },
+  { q: 'Should I use home equity to consolidate?', a: 'Cheapest rate, biggest risk: you convert unsecured card debt into debt secured by your house. Miss card payments and your credit suffers; miss home-equity payments and foreclosure is possible. Model it in the cash-out refinance calculator and treat it as a last resort, not a rate optimization.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Debt Consolidation Calculator',
+  path: '/debt-consolidation-calculator/',
+  description,
+  crumbName: 'Debt Consolidation Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Debt Consolidation Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Debt Consolidation Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Enter your real debts and a real loan offer — see whether consolidating
+          actually saves money at the <em>same monthly budget</em>, with the origination
+          fee counted. Longer terms can't hide here. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="snowball" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: consolidation, above-fold right (desktop sidebar) -->
+    <ConsolidationCalculator />
+    <!-- AD_SLOT: consolidation, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Consolidation is a rate cut, not a debt cut</h2>
+        <p class="mt-3">
+          The loan doesn't reduce what you owe — it repackages it (plus a fee) at a
+          hopefully-lower rate. That's genuinely valuable when the rate drop is real:
+          converting 24% card compounding into a 12% fixed schedule is a big win. It's
+          worthless or negative when the "win" is just a longer term. Our comparison
+          shows the current plan (avalanche method — see
+          <a href="/guides/snowball-vs-avalanche/" class="font-medium text-navy-900 underline hover:text-navy-600">the method guide</a>),
+          the offer as quoted, and the offer at your current budget — the only row
+          that's apples-to-apples. And the iron rule after consolidating: the emptied
+          cards stay at zero, or you'll end up servicing both debts at once.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="debt-consolidation-calculator" slugs={['debt-snowball-calculator', 'credit-card-payoff-calculator', 'personal-loan-calculator', 'cash-out-refinance-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice or a loan offer. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

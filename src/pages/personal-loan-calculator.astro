@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import GenericLoanCalculator from '../components/GenericLoanCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Personal Loan Calculator — Payment, Interest & Early Payoff | Payoff Logic';
+const description =
+  'Free personal loan calculator: monthly payment for any amount, rate, and term, total interest, full amortization schedule, and what extra payments save.';
+
+const faqs = [
+  { q: 'What is the monthly payment on a $10,000 personal loan?', a: 'At 11% APR: about $327/month for 36 months ($1,776 total interest) or $217/month for 60 months ($3,045 interest). The calculator shows any combination instantly — and how much a longer term really costs.' },
+  { q: 'What APR should I expect on a personal loan?', a: 'Roughly 7–12% for excellent credit, 12–20% for good, and 20–36% below that (many lenders cap at 35.99%). Personal loans are unsecured, so rates run above car loans or mortgages but well below credit cards for most borrowers.' },
+  { q: 'Do personal loans have origination fees?', a: 'Often 1–8%, deducted from the amount you receive. If you need $10,000 in hand with a 5% fee, borrow ~$10,527. The APR (not the interest rate) reflects the fee — compare offers by APR.' },
+  { q: 'Can I pay a personal loan off early?', a: 'Almost always without penalty — check the note. Add an extra monthly amount above to see the time and interest saved; the mechanics match any amortizing loan.' },
+  { q: 'Is a personal loan good for consolidating credit cards?', a: 'When the loan APR is meaningfully below your blended card APR, yes — it converts compounding card debt into a fixed schedule. Our debt consolidation calculator compares your actual cards against a specific offer, fee included.' },
+  { q: 'Does a personal loan hurt my credit?', a: 'A hard inquiry and a new account trim a few points briefly; on-time payments and lower card utilization usually help within months. The risk isn’t the loan — it’s re-running the cards up after consolidating.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Personal Loan Calculator',
+  path: '/personal-loan-calculator/',
+  description,
+  crumbName: 'Personal Loan Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Personal Loan Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Personal Loan Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Payment, total interest, and the full amortization schedule for any personal
+          loan — plus what an extra monthly payment saves. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="payoff" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: personal-loan, above-fold right (desktop sidebar) -->
+    <GenericLoanCalculator amount="10,000" rate="11" ariaLabel="Personal loan calculator" terms={[{ value: '24', label: '24 months' }, { value: '36', label: '36 months', selected: true }, { value: '48', label: '48 months' }, { value: '60', label: '60 months' }, { value: '84', label: '84 months' }]} />
+    <!-- AD_SLOT: personal-loan, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Reading a personal-loan offer like an underwriter</h2>
+        <p class="mt-3">
+          Compare offers on three numbers: <strong>APR</strong> (includes origination
+          fees — the only fair comparison), <strong>term</strong> (longer = lower
+          payment, more interest; the calculator quantifies the trade), and
+          <strong>prepayment terms</strong> (should be penalty-free). A fourth check if
+          you're consolidating: the loan only helps if its APR beats your blended card
+          rate — verify with the
+          <a href="/debt-consolidation-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">consolidation calculator</a>,
+          and keep the cards at zero afterward, or you'll carry both debts.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="personal-loan-calculator" slugs={['loan-payoff-calculator', 'debt-consolidation-calculator', 'credit-card-payoff-calculator', 'debt-snowball-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice or a loan offer. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>

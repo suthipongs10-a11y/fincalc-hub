@@ -1,0 +1,95 @@
+---
+/** Cash-out refinance island: cash accessed vs its true cost. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Cash-out refinance calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,22rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="balance" class="fc-label">Current balance</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="balance" inputmode="decimal" value="220,000" class="fc-input fc-input--pre" /></div></div>
+        <div><label for="value" class="fc-label">Home value</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="value" inputmode="decimal" value="420,000" class="fc-input fc-input--pre" /></div></div>
+        <div><label for="cur-rate" class="fc-label">Current rate</label>
+          <div class="fc-wrap"><input id="cur-rate" inputmode="decimal" value="6.25" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="cur-years" class="fc-label">Years remaining</label>
+          <input id="cur-years" inputmode="decimal" value="24" class="fc-input" /></div>
+        <div><label for="cash" class="fc-label">Cash you want out</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="cash" inputmode="decimal" value="50,000" class="fc-input fc-input--pre" /></div></div>
+        <div><label for="new-rate" class="fc-label">New rate</label>
+          <div class="fc-wrap"><input id="new-rate" inputmode="decimal" value="6.75" class="fc-input fc-input--suf" /><span class="fc-suffix">%</span></div></div>
+        <div><label for="new-term" class="fc-label">New term</label>
+          <select id="new-term" class="fc-input"><option value="30" selected>30 years</option><option value="20">20 years</option><option value="15">15 years</option></select></div>
+        <div><label for="costs" class="fc-label">Closing costs</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input id="costs" inputmode="decimal" value="6,000" class="fc-input fc-input--pre" /></div></div>
+      </div>
+      <label class="flex items-start gap-2 text-sm text-navy-700">
+        <input id="finance-costs" type="checkbox" checked class="mt-0.5" />
+        <span>Roll closing costs into the loan</span>
+      </label>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">New loan</p>
+          <p id="principal" class="text-lg font-bold text-navy-900">—</p></div>
+        <div class="rounded-lg bg-navy-50 p-3"><p class="text-xs font-medium text-navy-600">New payment</p>
+          <p id="payment" class="text-lg font-bold text-navy-900" aria-live="polite">—</p></div>
+        <div class="rounded-lg bg-amber-50 p-3"><p class="text-xs font-medium text-amber-900">Payment change</p>
+          <p id="delta" class="text-lg font-bold text-amber-900">—</p></div>
+      </div>
+      <p id="ltv-note" class="mt-3 text-sm text-navy-700">—</p>
+      <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white">—</p>
+      <p class="mt-3 text-xs leading-relaxed text-navy-600">
+        Most lenders cap cash-out refis at 80% loan-to-value. Compare against a HELOC or
+        home-equity loan before committing: a cash-out reprices your ENTIRE balance at
+        the new rate, which is expensive when your current rate is lower.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { cashOutRefi } from '../lib/tools-extra.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['balance', 'value', 'cur-rate', 'cur-years', 'cash', 'new-rate', 'new-term', 'costs', 'finance-costs']);
+
+  function recalc() {
+    const o = {
+      balance: num(input('balance')), currentRate: num(input('cur-rate')), remainingYears: num(input('cur-years')),
+      cash: num(input('cash')), newRate: num(input('new-rate')), newTermYears: parseInt(input('new-term').value, 10),
+      closingCosts: num(input('costs')), financeCosts: input('finance-costs').checked,
+    };
+    const value = num(input('value'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (o.balance <= 0 || value <= 0) msg = 'Enter your balance and home value.';
+    else if (o.remainingYears <= 0 || o.remainingYears > 40) msg = 'Years remaining must be 1–40.';
+    else if (o.cash <= 0) msg = 'Enter the cash amount you want out.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const r = cashOutRefi(o);
+    const ltv = (r.newPrincipal / value) * 100;
+    byId('principal').textContent = fmt0.format(r.newPrincipal);
+    byId('payment').textContent = fmt2.format(r.newPayment);
+    const d = r.newPayment - r.currentPayment;
+    byId('delta').textContent = (d >= 0 ? '+' : '−') + fmt2.format(Math.abs(d));
+    byId('ltv-note').textContent = `New loan-to-value: ${ltv.toFixed(1)}% of your ${fmt0.format(value)} home${ltv > 80 ? ' — above the typical 80% cash-out cap; most lenders would reduce the cash available.' : ' (within the typical 80% cap).'}`;
+    const perDollar = r.totalCostOfCash / o.cash;
+    byId('verdict').textContent = `Accessing ${fmt0.format(o.cash)} this way costs ${fmt0.format(r.totalCostOfCash)} in extra lifetime payments — about ${fmt2.format(perDollar)} per dollar borrowed. ${o.newRate > o.currentRate ? 'Because the new rate is higher than your current one, you are repricing the whole balance upward to get the cash — compare a HELOC seriously.' : 'The rate isn’t rising, so the cost is mostly the added principal and term — still worth comparing against a HELOC.'}`;
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  byId('calc-form').addEventListener('change', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

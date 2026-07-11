@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import DownPaymentCalculator from '../components/DownPaymentCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Down Payment Calculator — 3.5% to 20% Scenarios Compared | Payoff Logic';
+const description =
+  'Free down payment calculator: see cash needed, monthly payment, and PMI at 3.5%, 5%, 10%, 15%, and 20% down — and which scenario your savings actually cover, closing costs included.';
+
+const faqs = [
+  { q: 'How much down payment do I need for a house?', a: 'Program minimums: 3% (some conventional first-time programs), 3.5% (FHA), 5–10% (typical conventional), 0% (VA and USDA if eligible). 20% is not required — it’s the threshold where conventional PMI disappears. The table above prices every tier on your target home.' },
+  { q: 'Is 20% down always best?', a: 'No. Reaching 20% removes PMI and lowers the payment, but draining savings to hit it can leave you without an emergency fund — a worse position than paying $100–$200/month of PMI. Compare the total monthly column against your remaining cash cushion.' },
+  { q: 'What else do I need cash for at closing?', a: 'Closing costs run roughly 2–5% of the price (we estimate 3%): lender fees, title, escrow prepaids, and inspections. That’s why the "cash needed" column is more than the down payment — the number that actually gates your purchase.' },
+  { q: 'Can my down payment be a gift?', a: 'Yes — conventional, FHA, and VA all allow gift funds from relatives with a signed gift letter and paper trail. Lenders verify the source, so move the money early and keep records.' },
+  { q: 'What are down payment assistance programs?', a: 'State and local programs offer grants or second loans (often forgivable over 5–10 years) for eligible first-time buyers, typically with income and price caps. Your state housing finance agency lists them — worth 15 minutes before assuming a tier is out of reach.' },
+  { q: 'How does the down payment change PMI?', a: 'Two ways: below 20%, a bigger down payment lowers the PMI rate tier AND shortens the months until PMI auto-cancels at 78% loan-to-value. Model removal timing in the PMI calculator.' },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Down Payment Calculator',
+  path: '/down-payment-calculator/',
+  description,
+  crumbName: 'Down Payment Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Down Payment Calculator' }]} />
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Down Payment Calculator</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          Every down-payment tier from 3.5% to 20% on your target home: cash needed
+          (closing costs included), monthly payment, PMI — and which tier your savings
+          cover today. Free, no signup.
+        </p>
+      </div>
+      <Illustration kind="piti" class="hidden w-40 shrink-0 sm:block" />
+    </header>
+
+    <!-- AD_SLOT: down-payment, above-fold right (desktop sidebar) -->
+    <DownPaymentCalculator />
+    <!-- AD_SLOT: down-payment, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Thinking in tiers, not targets</h2>
+        <p class="mt-3">
+          The useful question isn't "how much should I put down?" — it's "what does
+          each tier buy me?" Each step up saves monthly cost (smaller loan, cheaper or
+          no PMI) but costs liquidity. The two tiers that matter most: whatever gets
+          you <em>into</em> the market safely, and 20%, where PMI ends. Between them,
+          favor the emergency fund. Full monthly detail lives in the
+          <a href="/mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">mortgage calculator</a>
+          (taxes and insurance included), PMI timing in the
+          <a href="/pmi-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">PMI calculator</a>,
+          and zero-down programs in the
+          <a href="/va-loan-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">VA calculator</a>.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (<div><h3 class="font-semibold text-navy-900">{f.q}</h3><p class="mt-1">{f.a}</p></div>))}
+        </div>
+      </section>
+      <RelatedTools currentSlug="down-payment-calculator" slugs={['mortgage-calculator', 'pmi-calculator', 'house-affordability-calculator', 'fha-loan-calculator']} />
+      <p class="rounded-lg bg-navy-50 p-4 text-sm"><strong>Disclaimer:</strong> Educational purposes only — not financial advice. PMI rates and closing costs vary by lender, credit, and state. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.</p>
+    </article>
+  </div>
+</BaseLayout>
