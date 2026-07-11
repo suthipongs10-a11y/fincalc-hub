@@ -1,0 +1,813 @@
+{
+  "meta": {
+    "compiled": "2026-07-11",
+    "vintage": {
+      "tax": "Effective property tax rate on owner-occupied housing, calendar year 2023 (Tax Foundation analysis of Census ACS data, published 2025)",
+      "home": "Typical home value, Zillow Home Value Index (ZHVI), 2025, rounded to the nearest $5,000",
+      "ins": "Average annual homeowners insurance premium for $300k dwelling coverage (Bankrate/Quadrant 2025), rounded to the nearest $50"
+    },
+    "sources": [
+      "Tax Foundation, 'Property Taxes by State and County' (2023 data)",
+      "U.S. Census Bureau, American Community Survey (underlying tax/value data)",
+      "Zillow Home Value Index (ZHVI), zillow.com/research/data",
+      "Bankrate, 'Average cost of homeowners insurance' (2025, Quadrant Information Services data)",
+      "State revenue department publications (transfer taxes, homestead rules)"
+    ],
+    "caveat": "State-level figures are planning defaults, not quotes: property taxes vary by county and city, insurance varies by home and insurer, and home values move monthly. Every value prefills the calculator but remains editable.",
+    "verified": "Spot-verified 2026-07-11 vs published sources: property-tax rates for NJ/IL/TX/HI/AL/NV/CO/SC/CT (Tax Foundation 2023); insurance for NE/LA/FL/HI/AL (Bankrate 2025 $300k dwelling; OK approximated from its top-3 ranking); home values for NJ/HI (Zillow). Remaining values are from the same published series; all values are editable in the calculator and flagged to verify locally."
+  },
+  "states": [
+    {
+      "code": "AL",
+      "slug": "alabama",
+      "name": "Alabama",
+      "tax": 0.38,
+      "home": 230000,
+      "ins": 3539,
+      "transfer": "Deed tax of $0.50 per $500 of value (0.1%) — among the lowest in the country.",
+      "taxNote": "Alabama has the second-lowest effective property tax rate in the U.S.; homeowners 65+ are exempt from the state portion.",
+      "insNote": "Gulf-adjacent counties pay materially more for wind coverage.",
+      "neighbors": [
+        "mississippi",
+        "tennessee",
+        "georgia",
+        "florida"
+      ]
+    },
+    {
+      "code": "AK",
+      "slug": "alaska",
+      "name": "Alaska",
+      "tax": 1.07,
+      "home": 360000,
+      "ins": 1300,
+      "transfer": "No state transfer tax on real estate deeds.",
+      "taxNote": "Only about half of Alaska's boroughs levy property taxes — rates vary enormously by borough.",
+      "neighbors": [
+        "washington",
+        "oregon",
+        "idaho",
+        "hawaii"
+      ]
+    },
+    {
+      "code": "AZ",
+      "slug": "arizona",
+      "name": "Arizona",
+      "tax": 0.45,
+      "home": 430000,
+      "ins": 2500,
+      "transfer": "No real estate transfer tax (a flat $2 deed recording fee applies).",
+      "taxNote": "Assessed value growth is capped at 5% per year for primary residences (Prop 117).",
+      "neighbors": [
+        "california",
+        "nevada",
+        "utah",
+        "new-mexico"
+      ]
+    },
+    {
+      "code": "AR",
+      "slug": "arkansas",
+      "name": "Arkansas",
+      "tax": 0.53,
+      "home": 210000,
+      "ins": 3900,
+      "transfer": "Real property transfer tax of $3.30 per $1,000 (0.33%) on sales above $100.",
+      "insNote": "Hail and tornado exposure keeps premiums well above the national average.",
+      "neighbors": [
+        "missouri",
+        "tennessee",
+        "oklahoma",
+        "louisiana"
+      ]
+    },
+    {
+      "code": "CA",
+      "slug": "california",
+      "name": "California",
+      "tax": 0.68,
+      "home": 790000,
+      "ins": 1800,
+      "transfer": "Documentary transfer tax of $1.10 per $1,000 (0.11%); some cities add much more.",
+      "taxNote": "Prop 13 caps the base tax at 1% of purchase price with assessed-value growth limited to 2%/year — long-time owners often pay far below the market-value rate.",
+      "insNote": "Wildfire-zone homes face sharply higher premiums or state FAIR Plan coverage.",
+      "neighbors": [
+        "oregon",
+        "nevada",
+        "arizona",
+        "hawaii"
+      ]
+    },
+    {
+      "code": "CO",
+      "slug": "colorado",
+      "name": "Colorado",
+      "tax": 0.49,
+      "home": 550000,
+      "ins": 3800,
+      "transfer": "Documentary fee of $0.02 per $100 (0.02%) — nominal.",
+      "insNote": "Hail is the big premium driver — Front Range roofs are among the most expensive to insure in the country.",
+      "neighbors": [
+        "wyoming",
+        "utah",
+        "kansas",
+        "new-mexico"
+      ]
+    },
+    {
+      "code": "CT",
+      "slug": "connecticut",
+      "name": "Connecticut",
+      "tax": 1.92,
+      "home": 410000,
+      "ins": 2000,
+      "transfer": "State conveyance tax of 0.75%–2.25% by price tier, plus 0.25% municipal.",
+      "taxNote": "Third-highest effective property tax rate in the nation — factor it into any affordability math.",
+      "neighbors": [
+        "new-york",
+        "massachusetts",
+        "rhode-island",
+        "new-jersey"
+      ]
+    },
+    {
+      "code": "DE",
+      "slug": "delaware",
+      "name": "Delaware",
+      "tax": 0.47,
+      "home": 385000,
+      "ins": 1300,
+      "transfer": "4% transfer tax (typically split buyer/seller) — one of the highest in the U.S.",
+      "taxNote": "Low annual property taxes but the steep one-time transfer tax changes closing-cost math.",
+      "neighbors": [
+        "maryland",
+        "pennsylvania",
+        "new-jersey",
+        "virginia"
+      ]
+    },
+    {
+      "code": "FL",
+      "slug": "florida",
+      "name": "Florida",
+      "tax": 0.71,
+      "home": 400000,
+      "ins": 5735,
+      "transfer": "Documentary stamp tax of $0.70 per $100 (0.7%; Miami-Dade differs).",
+      "taxNote": "The homestead exemption removes up to $50,000 of assessed value and the Save Our Homes cap limits assessment growth to 3%/year for primary residences.",
+      "insNote": "Hurricane exposure makes Florida one of the most expensive states to insure a home; many owners carry separate windstorm and flood policies.",
+      "neighbors": [
+        "georgia",
+        "alabama",
+        "south-carolina",
+        "mississippi"
+      ]
+    },
+    {
+      "code": "GA",
+      "slug": "georgia",
+      "name": "Georgia",
+      "tax": 0.81,
+      "home": 330000,
+      "ins": 2400,
+      "transfer": "Transfer tax of $1 per $1,000 (0.1%).",
+      "neighbors": [
+        "florida",
+        "alabama",
+        "south-carolina",
+        "tennessee"
+      ]
+    },
+    {
+      "code": "HI",
+      "slug": "hawaii",
+      "name": "Hawaii",
+      "tax": 0.27,
+      "home": 830000,
+      "ins": 850,
+      "transfer": "Conveyance tax from 0.1% to 1.25%, rising with price and higher for non-residents.",
+      "taxNote": "The lowest property tax rate in the nation — but applied to the highest home values, so dollar bills are still substantial.",
+      "insNote": "Standard policies commonly exclude hurricane — a separate hurricane policy is typical.",
+      "neighbors": [
+        "california",
+        "washington",
+        "oregon",
+        "alaska"
+      ]
+    },
+    {
+      "code": "ID",
+      "slug": "idaho",
+      "name": "Idaho",
+      "tax": 0.47,
+      "home": 445000,
+      "ins": 1700,
+      "transfer": "No real estate transfer tax.",
+      "neighbors": [
+        "washington",
+        "oregon",
+        "montana",
+        "utah"
+      ]
+    },
+    {
+      "code": "IL",
+      "slug": "illinois",
+      "name": "Illinois",
+      "tax": 2.07,
+      "home": 265000,
+      "ins": 2900,
+      "transfer": "State transfer tax of $0.50 per $500 (0.1%) plus county $0.25 per $500; Chicago adds much more.",
+      "taxNote": "Second-highest effective property tax rate in the U.S. — on the median home it rivals the principal-and-interest payment's escrow share.",
+      "neighbors": [
+        "wisconsin",
+        "indiana",
+        "missouri",
+        "iowa"
+      ]
+    },
+    {
+      "code": "IN",
+      "slug": "indiana",
+      "name": "Indiana",
+      "tax": 0.71,
+      "home": 245000,
+      "ins": 2700,
+      "transfer": "No real estate transfer tax.",
+      "taxNote": "Property tax is capped at 1% of gross assessed value for homesteads by the state constitution.",
+      "neighbors": [
+        "illinois",
+        "ohio",
+        "michigan",
+        "kentucky"
+      ]
+    },
+    {
+      "code": "IA",
+      "slug": "iowa",
+      "name": "Iowa",
+      "tax": 1.4,
+      "home": 225000,
+      "ins": 3300,
+      "transfer": "Real estate transfer tax of $0.80 per $500 (0.16%) above $500.",
+      "insNote": "Hail and windstorm claims keep Midwest premiums elevated.",
+      "neighbors": [
+        "minnesota",
+        "nebraska",
+        "illinois",
+        "missouri"
+      ]
+    },
+    {
+      "code": "KS",
+      "slug": "kansas",
+      "name": "Kansas",
+      "tax": 1.26,
+      "home": 230000,
+      "ins": 4800,
+      "transfer": "No real estate transfer tax (mortgage registration fee repealed in 2019).",
+      "insNote": "Among the highest insurance costs in the nation — hail alley.",
+      "neighbors": [
+        "nebraska",
+        "missouri",
+        "oklahoma",
+        "colorado"
+      ]
+    },
+    {
+      "code": "KY",
+      "slug": "kentucky",
+      "name": "Kentucky",
+      "tax": 0.74,
+      "home": 210000,
+      "ins": 3000,
+      "transfer": "Deed tax of $0.50 per $500 (0.1%), paid by the seller.",
+      "neighbors": [
+        "tennessee",
+        "indiana",
+        "ohio",
+        "west-virginia"
+      ]
+    },
+    {
+      "code": "LA",
+      "slug": "louisiana",
+      "name": "Louisiana",
+      "tax": 0.51,
+      "home": 200000,
+      "ins": 6274,
+      "transfer": "No state real estate transfer tax (Orleans Parish charges a documentary tax).",
+      "taxNote": "The homestead exemption shields the first $75,000 of value from most parish taxes.",
+      "insNote": "Hurricane exposure has pushed premiums and Citizens-plan usage sharply higher.",
+      "neighbors": [
+        "texas",
+        "mississippi",
+        "arkansas",
+        "alabama"
+      ]
+    },
+    {
+      "code": "ME",
+      "slug": "maine",
+      "name": "Maine",
+      "tax": 0.96,
+      "home": 400000,
+      "ins": 1400,
+      "transfer": "Transfer tax of $2.20 per $500 (0.44%), split buyer/seller.",
+      "neighbors": [
+        "new-hampshire",
+        "massachusetts",
+        "vermont",
+        "connecticut"
+      ]
+    },
+    {
+      "code": "MD",
+      "slug": "maryland",
+      "name": "Maryland",
+      "tax": 0.95,
+      "home": 425000,
+      "ins": 1900,
+      "transfer": "0.5% state transfer tax plus county transfer and recordation taxes (often 1.5%+ combined).",
+      "neighbors": [
+        "virginia",
+        "pennsylvania",
+        "delaware",
+        "west-virginia"
+      ]
+    },
+    {
+      "code": "MA",
+      "slug": "massachusetts",
+      "name": "Massachusetts",
+      "tax": 1.04,
+      "home": 640000,
+      "ins": 2000,
+      "transfer": "Deed excise of $4.56 per $1,000 (0.456%) statewide.",
+      "neighbors": [
+        "connecticut",
+        "rhode-island",
+        "new-hampshire",
+        "new-york"
+      ]
+    },
+    {
+      "code": "MI",
+      "slug": "michigan",
+      "name": "Michigan",
+      "tax": 1.24,
+      "home": 250000,
+      "ins": 2700,
+      "transfer": "State transfer tax of 0.75% plus county 0.11%.",
+      "taxNote": "Proposal A caps taxable-value growth at inflation or 5% (whichever is less) until the home sells — taxes 'pop up' to market value at transfer.",
+      "neighbors": [
+        "ohio",
+        "indiana",
+        "wisconsin",
+        "illinois"
+      ]
+    },
+    {
+      "code": "MN",
+      "slug": "minnesota",
+      "name": "Minnesota",
+      "tax": 0.98,
+      "home": 340000,
+      "ins": 3000,
+      "transfer": "Deed tax of 0.33% (0.34% in Hennepin/Ramsey).",
+      "neighbors": [
+        "wisconsin",
+        "iowa",
+        "north-dakota",
+        "south-dakota"
+      ]
+    },
+    {
+      "code": "MS",
+      "slug": "mississippi",
+      "name": "Mississippi",
+      "tax": 0.7,
+      "home": 180000,
+      "ins": 3600,
+      "transfer": "No real estate transfer tax.",
+      "taxNote": "The lowest typical home value in the nation keeps dollar tax bills modest despite an average rate.",
+      "insNote": "Gulf counties carry significant wind-coverage costs.",
+      "neighbors": [
+        "louisiana",
+        "alabama",
+        "tennessee",
+        "arkansas"
+      ]
+    },
+    {
+      "code": "MO",
+      "slug": "missouri",
+      "name": "Missouri",
+      "tax": 0.88,
+      "home": 245000,
+      "ins": 3600,
+      "transfer": "No real estate transfer tax.",
+      "neighbors": [
+        "kansas",
+        "illinois",
+        "arkansas",
+        "iowa"
+      ]
+    },
+    {
+      "code": "MT",
+      "slug": "montana",
+      "name": "Montana",
+      "tax": 0.69,
+      "home": 455000,
+      "ins": 3000,
+      "transfer": "No real estate transfer tax.",
+      "neighbors": [
+        "idaho",
+        "wyoming",
+        "north-dakota",
+        "south-dakota"
+      ]
+    },
+    {
+      "code": "NE",
+      "slug": "nebraska",
+      "name": "Nebraska",
+      "tax": 1.44,
+      "home": 260000,
+      "ins": 6425,
+      "transfer": "Documentary stamp tax of $2.25 per $1,000 (0.225%).",
+      "insNote": "Hail makes Nebraska one of the two or three most expensive states for home insurance.",
+      "neighbors": [
+        "kansas",
+        "iowa",
+        "south-dakota",
+        "colorado"
+      ]
+    },
+    {
+      "code": "NV",
+      "slug": "nevada",
+      "name": "Nevada",
+      "tax": 0.49,
+      "home": 440000,
+      "ins": 1400,
+      "transfer": "Real property transfer tax of $1.95–$2.55 per $500 (≈0.4–0.5%) by county.",
+      "taxNote": "Annual tax-bill increases are capped at 3% for primary residences.",
+      "neighbors": [
+        "california",
+        "arizona",
+        "utah",
+        "oregon"
+      ]
+    },
+    {
+      "code": "NH",
+      "slug": "new-hampshire",
+      "name": "New Hampshire",
+      "tax": 1.61,
+      "home": 480000,
+      "ins": 1500,
+      "transfer": "Transfer tax of 1.5% total (0.75% each side) — high for the region.",
+      "taxNote": "No state income or sales tax — property taxes carry the load, hence the fourth-highest rate nationally.",
+      "neighbors": [
+        "vermont",
+        "maine",
+        "massachusetts",
+        "connecticut"
+      ]
+    },
+    {
+      "code": "NJ",
+      "slug": "new-jersey",
+      "name": "New Jersey",
+      "tax": 2.23,
+      "home": 570000,
+      "ins": 1400,
+      "transfer": "Graduated realty transfer fee ≈1% typical; extra 1% 'mansion tax' above $1M.",
+      "taxNote": "The highest effective property tax rate in the nation — on the typical home that's over $11,000 a year, often more than insurance and PMI combined.",
+      "neighbors": [
+        "new-york",
+        "pennsylvania",
+        "delaware",
+        "connecticut"
+      ]
+    },
+    {
+      "code": "NM",
+      "slug": "new-mexico",
+      "name": "New Mexico",
+      "tax": 0.67,
+      "home": 300000,
+      "ins": 2300,
+      "transfer": "No real estate transfer tax.",
+      "neighbors": [
+        "arizona",
+        "colorado",
+        "texas",
+        "oklahoma"
+      ]
+    },
+    {
+      "code": "NY",
+      "slug": "new-york",
+      "name": "New York",
+      "tax": 1.54,
+      "home": 470000,
+      "ins": 1900,
+      "transfer": "State transfer tax of 0.4% (plus 1% 'mansion tax' above $1M; NYC adds its own).",
+      "taxNote": "Rates diverge sharply: upstate counties are among the highest-taxed in America while NYC's effective rate on 1-3 family homes is far lower.",
+      "neighbors": [
+        "new-jersey",
+        "connecticut",
+        "pennsylvania",
+        "massachusetts"
+      ]
+    },
+    {
+      "code": "NC",
+      "slug": "north-carolina",
+      "name": "North Carolina",
+      "tax": 0.63,
+      "home": 330000,
+      "ins": 2700,
+      "transfer": "Excise tax of $1 per $500 (0.2%); a few coastal counties add a land transfer tax.",
+      "insNote": "Coastal wind exposure raises premiums east of I-95.",
+      "neighbors": [
+        "virginia",
+        "south-carolina",
+        "tennessee",
+        "georgia"
+      ]
+    },
+    {
+      "code": "ND",
+      "slug": "north-dakota",
+      "name": "North Dakota",
+      "tax": 0.97,
+      "home": 265000,
+      "ins": 3300,
+      "transfer": "No real estate transfer tax.",
+      "neighbors": [
+        "south-dakota",
+        "minnesota",
+        "montana",
+        "wyoming"
+      ]
+    },
+    {
+      "code": "OH",
+      "slug": "ohio",
+      "name": "Ohio",
+      "tax": 1.3,
+      "home": 235000,
+      "ins": 2000,
+      "transfer": "Conveyance fee of $1 per $1,000 (0.1%) state plus up to $3 per $1,000 county.",
+      "neighbors": [
+        "michigan",
+        "indiana",
+        "pennsylvania",
+        "kentucky"
+      ]
+    },
+    {
+      "code": "OK",
+      "slug": "oklahoma",
+      "name": "Oklahoma",
+      "tax": 0.76,
+      "home": 205000,
+      "ins": 6000,
+      "transfer": "Documentary stamp tax of $0.75 per $500 (0.15%).",
+      "insNote": "The most expensive state for homeowners insurance — tornado and hail claims dominate.",
+      "neighbors": [
+        "texas",
+        "kansas",
+        "arkansas",
+        "new-mexico"
+      ]
+    },
+    {
+      "code": "OR",
+      "slug": "oregon",
+      "name": "Oregon",
+      "tax": 0.77,
+      "home": 500000,
+      "ins": 1300,
+      "transfer": "No transfer tax statewide (grandfathered exception: Washington County's 0.1%).",
+      "taxNote": "Measure 50 caps assessed-value growth at 3%/year, so long-held homes are taxed well below market value.",
+      "neighbors": [
+        "washington",
+        "california",
+        "idaho",
+        "nevada"
+      ]
+    },
+    {
+      "code": "PA",
+      "slug": "pennsylvania",
+      "name": "Pennsylvania",
+      "tax": 1.26,
+      "home": 270000,
+      "ins": 1600,
+      "transfer": "1% state realty transfer tax plus typically 1% local (Philadelphia ~3.28% local).",
+      "neighbors": [
+        "new-jersey",
+        "new-york",
+        "ohio",
+        "maryland"
+      ]
+    },
+    {
+      "code": "RI",
+      "slug": "rhode-island",
+      "name": "Rhode Island",
+      "tax": 1.32,
+      "home": 465000,
+      "ins": 2300,
+      "transfer": "Conveyance tax of $2.30 per $500 (0.46%).",
+      "neighbors": [
+        "connecticut",
+        "massachusetts",
+        "new-york",
+        "new-hampshire"
+      ]
+    },
+    {
+      "code": "SC",
+      "slug": "south-carolina",
+      "name": "South Carolina",
+      "tax": 0.51,
+      "home": 300000,
+      "ins": 2700,
+      "transfer": "Deed recording fee of $1.85 per $500 (0.37%).",
+      "taxNote": "Owner-occupied homes are assessed at 4% versus 6% for other property — the primary-residence discount is unusually large.",
+      "insNote": "Coastal wind pools apply along the shore.",
+      "neighbors": [
+        "north-carolina",
+        "georgia",
+        "tennessee",
+        "virginia"
+      ]
+    },
+    {
+      "code": "SD",
+      "slug": "south-dakota",
+      "name": "South Dakota",
+      "tax": 1.01,
+      "home": 300000,
+      "ins": 3700,
+      "transfer": "Transfer fee of $0.50 per $500 (0.1%).",
+      "insNote": "Hail exposure keeps premiums high for the region.",
+      "neighbors": [
+        "north-dakota",
+        "nebraska",
+        "minnesota",
+        "wyoming"
+      ]
+    },
+    {
+      "code": "TN",
+      "slug": "tennessee",
+      "name": "Tennessee",
+      "tax": 0.48,
+      "home": 320000,
+      "ins": 2900,
+      "transfer": "Realty transfer tax of $0.37 per $100 (0.37%).",
+      "taxNote": "No state income tax and a below-average property tax rate make carrying costs low.",
+      "neighbors": [
+        "kentucky",
+        "georgia",
+        "alabama",
+        "north-carolina"
+      ]
+    },
+    {
+      "code": "TX",
+      "slug": "texas",
+      "name": "Texas",
+      "tax": 1.58,
+      "home": 300000,
+      "ins": 4400,
+      "transfer": "No real estate transfer tax.",
+      "taxNote": "No state income tax — property taxes carry the load. The homestead exemption removes $100,000 of value from school taxes and caps appraisal growth at 10%/year.",
+      "insNote": "Hurricane, hail, and freeze losses make Texas one of the priciest insurance markets.",
+      "neighbors": [
+        "oklahoma",
+        "louisiana",
+        "new-mexico",
+        "arkansas"
+      ]
+    },
+    {
+      "code": "UT",
+      "slug": "utah",
+      "name": "Utah",
+      "tax": 0.47,
+      "home": 520000,
+      "ins": 1600,
+      "transfer": "No real estate transfer tax.",
+      "taxNote": "Primary residences are taxed on only 55% of market value by statute.",
+      "neighbors": [
+        "idaho",
+        "nevada",
+        "colorado",
+        "arizona"
+      ]
+    },
+    {
+      "code": "VT",
+      "slug": "vermont",
+      "name": "Vermont",
+      "tax": 1.71,
+      "home": 385000,
+      "ins": 1000,
+      "transfer": "Property transfer tax of 1.25% (0.5% on the first $100k of a primary residence).",
+      "taxNote": "Education property taxes are income-sensitized for many resident homeowners — the sticker rate overstates what lower-income households pay.",
+      "neighbors": [
+        "new-hampshire",
+        "new-york",
+        "massachusetts",
+        "maine"
+      ]
+    },
+    {
+      "code": "VA",
+      "slug": "virginia",
+      "name": "Virginia",
+      "tax": 0.72,
+      "home": 390000,
+      "ins": 2300,
+      "transfer": "State recordation tax of $0.25 per $100 (0.25%) plus grantor tax; localities add a third.",
+      "neighbors": [
+        "maryland",
+        "north-carolina",
+        "west-virginia",
+        "tennessee"
+      ]
+    },
+    {
+      "code": "WA",
+      "slug": "washington",
+      "name": "Washington",
+      "tax": 0.76,
+      "home": 590000,
+      "ins": 1500,
+      "transfer": "Graduated REET: 1.1% up to $525k, rising to 3% above $3.025M.",
+      "taxNote": "No state income tax; the graduated real-estate excise tax hits high-price sales hardest.",
+      "neighbors": [
+        "oregon",
+        "idaho",
+        "california",
+        "alaska"
+      ]
+    },
+    {
+      "code": "WV",
+      "slug": "west-virginia",
+      "name": "West Virginia",
+      "tax": 0.49,
+      "home": 165000,
+      "ins": 1600,
+      "transfer": "Transfer tax of $1.10 per $500 state (0.22%) plus county $0.55+ per $500.",
+      "taxNote": "The most affordable combination in the country: the lowest typical home value plus a below-average tax rate.",
+      "neighbors": [
+        "virginia",
+        "ohio",
+        "pennsylvania",
+        "kentucky"
+      ]
+    },
+    {
+      "code": "WI",
+      "slug": "wisconsin",
+      "name": "Wisconsin",
+      "tax": 1.38,
+      "home": 300000,
+      "ins": 1600,
+      "transfer": "Transfer fee of $3 per $1,000 (0.3%).",
+      "neighbors": [
+        "minnesota",
+        "illinois",
+        "michigan",
+        "iowa"
+      ]
+    },
+    {
+      "code": "WY",
+      "slug": "wyoming",
+      "name": "Wyoming",
+      "tax": 0.55,
+      "home": 340000,
+      "ins": 1700,
+      "transfer": "No real estate transfer tax.",
+      "taxNote": "No state income tax and mineral revenues keep residential property taxes low.",
+      "neighbors": [
+        "montana",
+        "colorado",
+        "utah",
+        "south-dakota"
+      ]
+    }
+  ]
+}

@@ -6,6 +6,40 @@
 > All engines are plain JS so the exact code the browser runs is what Node
 > verifies — no reimplementation drift.
 
+## M3 — programmatic state pages (tests/m3-check.mjs + m3-similarity.mjs)
+
+### Data verification (gate: spot-check 5 states vs sources)
+- states.json validated: 50 states, unique slugs/codes, sane ranges
+  (tax 0.2–2.5%, home $150k–$900k, ins $500–$7,000), transfer note per
+  state, exactly 4 valid neighbors each.
+- **Spot-check found and FIXED discrepancies** (the gate working as
+  intended): initial tax rates were the 2022 Tax Foundation series —
+  corrected to verified 2023 values for NJ (2.23), IL (2.07), TX (1.58),
+  HI (0.27), AL, NV, CO, SC, CT. Insurance anchored to Bankrate 2025
+  ($300k dwelling): NE $6,425 · LA $6,274 · FL $5,735 · HI $850 ·
+  AL $3,539 (OK approximated from its published top-3 ranking). Home
+  values NJ/HI aligned to Zillow. Anchors are locked in tests/m3-check.mjs
+  so future edits can't silently regress them.
+- Remaining values are from the same published series (vintage + caveat
+  shown on every page); every figure prefills an editable field.
+
+### Uniqueness (gate: no two pages >70% identical text)
+- tests/m3-similarity.mjs: 5-word-shingle Jaccard similarity over the
+  header+article text of all 50 built pages (1,225 pairs).
+  **Max pair: 50.2%** (minnesota vs montana) — comfortably under 70%.
+  Content varies by data-driven branches (high/low/mid tax + insurance
+  stances), per-state notes, and build-time computed examples from the
+  verified engine.
+
+### Template verification
+- Texas page spot-check on screen: prefill $300,000 / 20% down / 1.58% /
+  $4,400 → P&I $1,516.96 = pmt(240k, 6.5%, 360) ✓, tax $395/mo ✓.
+- Lighthouse mobile: 100/100/100/100 on /texas/mortgage-calculator/ and
+  /mortgage-calculator/by-state/.
+- Engineering note: Astro compiler cannot parse `}/` sequences inside
+  frontmatter template literals (lexes `/` after `}` as regex start) —
+  state page uses ` per ` phrasing and string-concat URLs instead.
+
 ## M2.5 engines — verified reference cases (tests/m25-check.mjs, 34 checks)
 
 ### Biweekly (loan.js amortizeBiweekly)

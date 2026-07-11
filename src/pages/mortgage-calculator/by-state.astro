@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SITE } from '../../config';
+import { pmt } from '../../lib/loan.js';
+import data from '../../data/states.json';
+
+const { states, meta } = data;
+const RATE = 6.5;
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+
+// Example full monthly payment per state (typical home, 20% down, 30yr).
+const rows = states
+  .map((s) => {
+    const pi = pmt(s.home * 0.8, RATE, 360);
+    const monthly = pi + (s.home * s.tax) / 100 / 12 + s.ins / 12;
+    return { ...s, monthly };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const avgIns = Math.round(states.reduce((t, x) => t + x.ins, 0) / states.length);
+const hi = [...rows].sort((a, b) => b.monthly - a.monthly)[0];
+const lo = [...rows].sort((a, b) => a.monthly - b.monthly)[0];
+
+const title = 'Mortgage Calculator by State — All 50 States Compared | Payoff Logic';
+const description =
+  'State-by-state mortgage costs in one table: typical home value, effective property tax rate, average insurance, and an example monthly payment — with a preloaded calculator for every state.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Mortgage Calculator', item: `${SITE.url}/mortgage-calculator/` },
+      { '@type': 'ListItem', position: 3, name: 'By State', item: `${SITE.url}/mortgage-calculator/by-state/` },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Mortgage Calculator', href: '/mortgage-calculator/' }, { label: 'By State' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Mortgage Calculator by State</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        The same house payment looks very different across state lines: property tax rates
+        span {Math.min(...states.map((s) => s.tax))}% to {Math.max(...states.map((s) => s.tax))}%
+        and average insurance runs from {fmt(Math.min(...states.map((s) => s.ins)))} to
+        {fmt(Math.max(...states.map((s) => s.ins)))} a year. Pick your state for a
+        calculator preloaded with its real numbers — from {lo.name}'s {fmt(lo.monthly)}/month
+        typical-home example to {hi.name}'s {fmt(hi.monthly)}.
+      </p>
+    </header>
+
+    <div class="overflow-x-auto rounded-xl border border-navy-100">
+      <table class="w-full min-w-[640px] text-sm">
+        <thead>
+          <tr class="border-b border-navy-200 bg-navy-50 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+            <th class="px-3 py-2">State</th>
+            <th class="px-3 py-2 text-right">Typical home</th>
+            <th class="px-3 py-2 text-right">Property tax</th>
+            <th class="px-3 py-2 text-right">Insurance / yr</th>
+            <th class="px-3 py-2 text-right">Example payment*</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((s) => (
+            <tr class="border-b border-navy-50 hover:bg-navy-50">
+              <td class="px-3 py-2">
+                <a href={`/${s.slug}/mortgage-calculator/`} class="font-medium text-navy-900 underline hover:text-navy-600">{s.name}</a>
+              </td>
+              <td class="px-3 py-2 text-right tabular-nums">{fmt(s.home)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{s.tax}%</td>
+              <td class="px-3 py-2 text-right tabular-nums">{fmt(s.ins)}</td>
+              <td class="px-3 py-2 text-right font-semibold tabular-nums">{fmt(s.monthly)}/mo</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-2 text-xs text-navy-600">
+      *Typical home for the state, 20% down, 30-year loan at an illustrative {RATE}% rate,
+      including average property tax and insurance. Enter a real quote on the state page.
+    </p>
+
+    <article class="mx-auto mt-10 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Why state pages instead of one calculator?</h2>
+        <p class="mt-3">
+          Property tax and insurance are the two payment components people forget to
+          localize — and they vary more than rates do. A {fmt(400000)} home carries about
+          {fmt((400000 * Math.max(...states.map((s) => s.tax))) / 100 / 12)}/month of tax in the
+          highest-rate state but only {fmt((400000 * Math.min(...states.map((s) => s.tax))) / 100 / 12)}
+          in the lowest; insurance spreads even wider (50-state average: {fmt(avgIns)}/yr).
+          Each state page preloads those defaults — sourced and dated — so the first number
+          you see is already realistic for your market.
+        </p>
+      </section>
+      <section class="rounded-lg bg-navy-50 p-4 text-sm">
+        <p>
+          <strong>Data &amp; sources:</strong> {meta.vintage.tax}. {meta.vintage.home}.
+          {meta.vintage.ins}. {meta.caveat}
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

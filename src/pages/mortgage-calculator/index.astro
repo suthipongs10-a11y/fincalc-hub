@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
-import MortgageCalculator from '../components/MortgageCalculator.astro';
-import { SITE, TOOLS } from '../config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import MortgageCalculator from '../../components/MortgageCalculator.astro';
+import { SITE, TOOLS } from '../../config';
 
 const title = 'Mortgage Calculator with Taxes, Insurance & PMI — Free | Payoff Logic';
 const description =
@@ -192,6 +192,12 @@ const related = TOOLS.filter(
             ))
           }
         </ul>
+        <p class="mt-3">
+          Buying in a specific state? Property taxes and insurance differ enormously by
+          state — use the
+          <a href="/mortgage-calculator/by-state/" class="font-medium text-navy-900 underline hover:text-navy-600">state-by-state mortgage calculator</a>,
+          preloaded with your state's real numbers.
+        </p>
       </section>
 
       <p class="rounded-lg bg-navy-50 p-4 text-sm">

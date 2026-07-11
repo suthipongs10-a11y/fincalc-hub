@@ -3,7 +3,15 @@
  * Flagship mortgage calculator island. Vanilla TS in the inline module
  * script; all math lives in src/lib/mortgage.js. State is mirrored into the
  * URL query string so results are shareable (?price=...&rate=...).
+ * Optional props let programmatic pages (M3 state pages) prefill defaults.
  */
+interface Props {
+  price?: string;
+  down?: string;
+  taxRate?: string;
+  insAnnual?: string;
+}
+const { price = '400,000', down = '80,000', taxRate = '1.1', insAnnual = '1,800' } = Astro.props;
 ---
 
 <section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Mortgage calculator">
@@ -13,7 +21,7 @@
       <div>
         <label for="price" class="mc-label">Home price</label>
         <div class="mc-wrap"><span class="mc-prefix">$</span>
-          <input id="price" inputmode="decimal" value="400,000" class="mc-input mc-input--pre" />
+          <input id="price" inputmode="decimal" value={price} class="mc-input mc-input--pre" />
         </div>
       </div>
 
@@ -22,7 +30,7 @@
         <div class="flex gap-2">
           <div class="mc-wrap flex-1">
             <span class="mc-prefix" id="down-prefix">$</span>
-            <input id="down" inputmode="decimal" value="80,000" class="mc-input mc-input--pre" />
+            <input id="down" inputmode="decimal" value={down} class="mc-input mc-input--pre" />
           </div>
           <div class="flex rounded-md border border-navy-200" role="group" aria-label="Down payment unit">
             <button type="button" id="down-dollar" aria-pressed="true" class="mc-toggle rounded-l-[5px]">$</button>
@@ -57,14 +65,14 @@
           <div>
             <label for="tax" class="mc-label">Property tax / yr</label>
             <div class="mc-wrap">
-              <input id="tax" inputmode="decimal" value="1.1" class="mc-input mc-input--suf" />
+              <input id="tax" inputmode="decimal" value={taxRate} class="mc-input mc-input--suf" />
               <span class="mc-suffix">%</span>
             </div>
           </div>
           <div>
             <label for="ins" class="mc-label">Home insurance / yr</label>
             <div class="mc-wrap"><span class="mc-prefix">$</span>
-              <input id="ins" inputmode="decimal" value="1,800" class="mc-input mc-input--pre" />
+              <input id="ins" inputmode="decimal" value={insAnnual} class="mc-input mc-input--pre" />
             </div>
           </div>
           <div>

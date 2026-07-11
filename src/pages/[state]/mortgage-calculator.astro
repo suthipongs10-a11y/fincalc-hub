@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import MortgageCalculator from '../../components/MortgageCalculator.astro';
+import { SITE } from '../../config';
+import { computeMortgage } from '../../lib/mortgage.js';
+import data from '../../data/states.json';
+
+export function getStaticPaths() {
+  return data.states.map((s) => ({ params: { state: s.slug }, props: { s } }));
+}
+
+const { s } = Astro.props;
+const { states, meta } = data;
+
+// Computed, state-specific figures (build-time, from the verified engine).
+const RATE = 6.5; // illustrative rate, labeled as such everywhere it appears
+const down = Math.round(s.home * 0.2);
+const ex = computeMortgage({
+  homePrice: s.home, downPayment: down, annualRate: RATE, termYears: 30,
+  taxRate: s.tax, insuranceAnnual: s.ins, pmiRate: 0.5, hoaMonthly: 0,
+  extraMonthly: 0, startYear: 2026, startMonth: 8,
+});
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const taxAnnual = (s.home * s.tax) / 100;
+
+// National context, computed from the dataset itself.
+const taxRank = [...states].sort((a, b) => b.tax - a.tax).findIndex((x) => x.slug === s.slug) + 1; // 1 = highest
+const insRank = [...states].sort((a, b) => b.ins - a.ins).findIndex((x) => x.slug === s.slug) + 1;
+const homeRank = [...states].sort((a, b) => b.home - a.home).findIndex((x) => x.slug === s.slug) + 1;
+const avgIns = Math.round(states.reduce((t, x) => t + x.ins, 0) / states.length);
+const avgTax = states.reduce((t, x) => t + x.tax, 0) / states.length;
+const ord = (n: number) => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
+
+const taxStance = taxRank <= 10 ? 'high' : taxRank > 40 ? 'low' : 'mid';
+const taxRankLabel = taxRank <= 25 ? `${ord(taxRank)} highest` : `${ord(51 - taxRank)} lowest`;
+const insStance = s.ins > avgIns * 1.25 ? 'high' : s.ins < avgIns * 0.75 ? 'low' : 'mid';
+const neighbors = s.neighbors.map((slug) => states.find((x) => x.slug === slug)!);
+
+// Lead paragraph assembled in frontmatter (varies by data, not spun text).
+const taxLead =
+  taxStance === 'high'
+    ? `Property taxes are the line to watch in ${s.name}: at an average effective ${s.tax}% — ${ord(taxRank)} highest in the country versus a ~${avgTax.toFixed(2)}% national average — the typical ${fmt(s.home)} home carries roughly ${fmt(taxAnnual)} a year (${fmt(taxAnnual / 12)} per month) in tax before you've paid a dollar of principal.`
+    : taxStance === 'low'
+      ? `${s.name} keeps the recurring cost of ownership low: its ${s.tax}% average effective property tax rate ranks ${ord(51 - taxRank)} lowest in the nation (national average ≈ ${avgTax.toFixed(2)}%), so the typical ${fmt(s.home)} home carries only about ${fmt(taxAnnual)} a year in property tax.`
+      : `${s.name} sits mid-pack for property taxes — ${s.tax}% average effective rate (${ord(taxRank)} of 50, national average ≈ ${avgTax.toFixed(2)}%), which works out to about ${fmt(taxAnnual)} a year on the typical ${fmt(s.home)} home.`;
+const insLead =
+  `On the insurance side, ${s.name} homeowners average about ${fmt(s.ins)} a year` +
+  (insStance === 'high'
+    ? ` — ${Math.round(((s.ins - avgIns) / avgIns) * 100)}% above the 50-state average, so get quotes early; the premium can move a deal's math.`
+    : insStance === 'low'
+      ? ` — a bargain at ${Math.round(((avgIns - s.ins) / avgIns) * 100)}% below the 50-state average.`
+      : ` — near the 50-state average of ${fmt(avgIns)}.`) +
+  (s.insNote ? ` ${s.insNote}` : '');
+
+const pageUrl = SITE.url + '/' + s.slug + '/mortgage-calculator/';
+const hubUrl = SITE.url + '/mortgage-calculator/';
+const title = `${s.name} Mortgage Calculator — Payment with ${s.code} Taxes & Insurance | ${SITE.name}`;
+const description = `Free ${s.name} mortgage calculator preloaded with real state data: ${s.tax}% effective property tax, about ${fmt(s.ins)} a year insurance, and the ${fmt(s.home)} typical ${s.name} home — full PITI breakdown and amortization schedule.`;
+
+const faqs = [
+  {
+    q: `How much is the mortgage payment on a typical ${s.name} home?`,
+    a: `The typical ${s.name} home runs about ${fmt(s.home)} (Zillow, 2025). With 20% down (${fmt(down)}) on a 30-year loan at an illustrative ${RATE}% rate, the full monthly payment is roughly ${fmt(ex.totalMonthly)} — ${fmt(ex.monthlyPI)} principal & interest, ${fmt(ex.monthlyTax)} property tax, and ${fmt(ex.monthlyIns)} insurance. Adjust every input above to match your own price and quote.`,
+  },
+  {
+    q: `What is the property tax rate in ${s.name}?`,
+    a: `${s.name}'s average effective rate is ${s.tax}% of home value — the ${ord(taxRank)} ${taxRank <= 25 ? 'highest' : 'lowest — that is, ' + ord(51 - taxRank) + ' lowest'} in the nation (Tax Foundation, 2023 data). On the typical ${fmt(s.home)} home that is about ${fmt(taxAnnual)} per year. ${s.taxNote ?? 'Actual rates vary by county and city, so verify the figure for your specific address with the county assessor.'}`,
+  },
+  {
+    q: `How much is homeowners insurance in ${s.name}?`,
+    a: `Roughly ${fmt(s.ins)} per year on average for $300k of dwelling coverage (Bankrate, 2025) — ${s.ins > avgIns ? 'above' : 'below'} the 50-state average of ${fmt(avgIns)}. ${s.insNote ?? 'Your premium depends on the home’s age, construction, claims history, and coverage limits, so quote several insurers.'}`,
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: `${s.name} Mortgage Calculator`,
+    url: pageUrl,
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web Browser',
+    browserRequirements: 'Requires JavaScript',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Mortgage Calculator', item: hubUrl },
+      { '@type': 'ListItem', position: 3, name: `${s.name}`, item: pageUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Mortgage Calculator', href: '/mortgage-calculator/' }, { label: s.name }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">{s.name} Mortgage Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Preloaded with {s.name}'s real numbers — a {s.tax}% average effective property
+        tax rate ({taxRankLabel} of the 50 states),
+        about {fmt(s.ins)}/year for homeowners insurance, and the {fmt(s.home)} typical
+        {s.name} home value. Every field stays editable.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: state-mortgage, above-fold right (desktop sidebar) -->
+
+    <MortgageCalculator price={s.home.toLocaleString('en-US')} down={down.toLocaleString('en-US')} taxRate={String(s.tax)} insAnnual={s.ins.toLocaleString('en-US')} />
+
+    <!-- AD_SLOT: state-mortgage, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Buying in {s.name}: what the numbers look like</h2>
+        <p class="mt-3">{taxLead} {insLead}</p>
+        <p class="mt-3">
+          Put together at an illustrative {RATE}% rate (30-year, 20% down), the typical
+          {s.name} purchase pencils out near <strong>{fmt(ex.totalMonthly)}/month</strong>:
+          {fmt(ex.monthlyPI)} principal &amp; interest + {fmt(ex.monthlyTax)} tax +
+          {fmt(ex.monthlyIns)} insurance. That's the number the calculator above starts
+          from — swap in your real price, rate quote, and county figures to make it yours.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Property taxes &amp; closing costs in {s.name}</h2>
+        <p class="mt-3">
+          {s.taxNote ?? `Rates vary meaningfully by county and school district within ${s.name}, so treat the ${s.tax}% state average as a starting point and confirm your county's rate with the assessor before locking a budget.`}
+        </p>
+        <p class="mt-3">
+          <strong>Transfer tax:</strong> {s.transfer} Closing costs also include lender,
+          title, and recording fees — typically 2–5% of the price all-in.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">{s.name} at a glance</h2>
+        <div class="mt-3 overflow-x-auto">
+          <table class="w-full min-w-[420px] text-sm">
+            <tbody class="text-navy-800">
+              <tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">Typical home value (Zillow, 2025)</td><td class="py-2 text-right font-semibold tabular-nums">{fmt(s.home)} <span class="font-normal text-navy-500">({ord(homeRank)} highest)</span></td></tr>
+              <tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">Avg. effective property tax (2023)</td><td class="py-2 text-right font-semibold tabular-nums">{s.tax}% ≈ {fmt(taxAnnual / 12)}/mo</td></tr>
+              <tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">Avg. home insurance (2025)</td><td class="py-2 text-right font-semibold tabular-nums">{fmt(s.ins)}/yr ≈ {fmt(s.ins / 12)}/mo</td></tr>
+              <tr><td class="py-2 pr-2 text-navy-600">Example payment (typical home, {RATE}%, 20% down)</td><td class="py-2 text-right font-semibold tabular-nums">{fmt(ex.totalMonthly)}/mo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Nearby states &amp; more tools</h2>
+        <p class="mt-3">
+          Compare: {neighbors.map((n, i) => (
+            <>{i ? ' · ' : ''}<a href={`/${n.slug}/mortgage-calculator/`} class="font-medium text-navy-900 underline hover:text-navy-600">{n.name} mortgage calculator</a></>
+          ))} — or see <a href="/mortgage-calculator/by-state/" class="font-medium text-navy-900 underline hover:text-navy-600">all 50 states compared</a>.
+        </p>
+        <p class="mt-3">
+          Not sure of your price range? Start with the
+          <a href="/house-affordability-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600"> home affordability calculator</a>,
+          then fine-tune here. The
+          <a href="/mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600"> full mortgage calculator</a>
+          has extra payments and PMI controls too.
+        </p>
+      </section>
+
+      <section class="rounded-lg bg-navy-50 p-4 text-sm">
+        <p>
+          <strong>Data &amp; sources:</strong> Property tax — {meta.vintage.tax}.
+          Home value — {meta.vintage.home}. Insurance — {meta.vintage.ins}.
+          {meta.caveat} The {RATE}% rate is illustrative, not an offer or a prediction —
+          always enter a real quote.
+        </p>
+        <p class="mt-2">
+          <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+          See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

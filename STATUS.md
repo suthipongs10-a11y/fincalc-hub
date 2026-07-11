@@ -3,11 +3,34 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M2.5 complete — awaiting owner review before M3.
-- **Last commit:** `M2.5: mortgage variant tools wave 1 (7 calculators)`
-- **Build status:** `npm run build` clean (17 pages + sitemap) · all three
-  test suites pass (mortgage / m2 / m25) · Lighthouse mobile 100×4 on all
-  7 new pages. Live at https://payofflogic.com.
+- **Milestone:** M3 complete — awaiting owner review before M3.5.
+- **Last commit:** `M3: 50 programmatic state pages + by-state hub`
+- **Build status:** `npm run build` clean (**68 pages** + sitemap) · all
+  test suites pass (mortgage / m2 / m25 / m3 data / m3 similarity) ·
+  Lighthouse mobile 100×4 on state template + hub. Live at
+  https://payofflogic.com.
+
+## M3 gate checklist (self-audit)
+- [x] src/data/states.json — 50 states: effective property tax (Tax
+      Foundation 2023), typical home value (Zillow 2025), avg insurance
+      (Bankrate 2025 $300k), transfer-tax note per state, homestead/
+      insurance notes where notable, 4 neighbors each, meta.sources +
+      vintage + caveat
+- [x] Spot-check vs sources (gate): FOUND + FIXED 2022-vintage tax rates
+      (9 states corrected incl. NJ 2.23 / IL 2.07 / TX 1.58); insurance
+      re-anchored to Bankrate 2025 for 6 states; anchors locked in
+      tests/m3-check.mjs
+- [x] /[state]/mortgage-calculator/ template — calculator prefilled with
+      state data (new MortgageCalculator props), data-driven unique intro
+      (high/low/mid branches + computed example payments from verified
+      engine), at-a-glance table with national ranks, 3 data-driven FAQs,
+      visible sources & vintage block, neighbor links ×4 + hub links
+- [x] No two pages >70% identical (gate): max pair 50.2% across 1,225
+      pairs (tests/m3-similarity.mjs, article text, 5-word shingles)
+- [x] /mortgage-calculator/by-state/ hub — 50-state comparison table
+      (value/tax/insurance/example payment), linked from mortgage hub
+- [x] Sitemap auto-includes all 68 pages; schema ×3 per state page
+- [x] Lighthouse mobile 100/100/100/100 (state template + hub)
 
 ## M2.5 gate checklist (self-audit)
 - [x] T2 /house-affordability-calculator/ — 28/36 rule, binding-constraint
@@ -101,12 +124,15 @@
   cookies (so no rewrite needed at ad launch)
 
 ## Next actions
-1. Owner: review M2 + M2.5 (11 new tools total) on https://payofflogic.com
-2. After approval → M3: 50 programmatic state pages + /src/data/states.json
-   (real sourced data per state) + by-state hub
-3. Owner in progress: GSC + sitemap (https://payofflogic.com/sitemap-index.xml),
-   Cloudflare Web Analytics, contact@payofflogic.com (then swap
-   SITE.contactEmail in src/config.ts)
+1. Owner: review M3 — spot-open a few states (e.g. /texas/, /florida/,
+   /new-jersey/ + /mortgage-calculator/by-state/) and check GSC sitemap
+   status (now 68 URLs; "Couldn't fetch" expected to clear within 72h of
+   first submission)
+2. After approval → M3.5: 29 loan-amount pages (/mortgage-payment/{amount}/)
+   + hub — but per BUILD_PLAN gate, review GSC indexation of M3 pages
+   before shipping the next programmatic wave
+3. Owner in progress: Cloudflare Web Analytics, contact@payofflogic.com
+   (then swap SITE.contactEmail in src/config.ts)
 
 ## Pending decisions (owner)
 - [x] Domain name — DECIDED & LIVE 2026-07-11: **payofflogic.com**
@@ -136,6 +162,13 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — M3 built: states.json (50 states, sourced, spot-check gate
+  caught stale 2022 tax data → corrected to verified 2023 + Bankrate 2025
+  anchors, locked in tests), /[state]/mortgage-calculator/ template with
+  data-driven unique content (max pair similarity 50.2%), by-state hub
+  with 50-state comparison table. 68 pages build; Lighthouse 100×4.
+  Astro compiler quirk documented (}/ in frontmatter template literals).
+  Stopped for owner review.
 - 2026-07-11 — M2.5 built: 7 mortgage variant tools (T2–T8) on new engines
   (loan.js amortizeBiweekly, gov-loans.js FHA/VA per HUD ML 2023-05 +
   VA.gov schedule, affordability.js bisection solver). 34 checks pass;
