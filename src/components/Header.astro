@@ -11,7 +11,7 @@ const links = [
 const current = Astro.url.pathname;
 ---
 
-<header class="border-b border-navy-100 bg-white">
+<header class="relative border-b border-navy-100 bg-white">
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
     <a href="/" class="flex items-center gap-2 text-lg font-bold text-navy-900" aria-label={`${SITE.name} home`}>
       <svg
@@ -25,8 +25,9 @@ const current = Astro.url.pathname;
       </svg>
       <span>{SITE.name}</span>
     </a>
-    <nav aria-label="Main">
-      <ul class="flex items-center gap-1 sm:gap-2">
+
+    <nav aria-label="Main" class="hidden sm:block">
+      <ul class="flex items-center gap-2">
         {
           links.map((link) => (
             <li>
@@ -47,5 +48,53 @@ const current = Astro.url.pathname;
         }
       </ul>
     </nav>
+
+    <details id="mobile-menu" class="group sm:hidden">
+      <summary
+        class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md text-navy-700 transition-colors hover:bg-navy-50 [&::-webkit-details-marker]:hidden"
+        aria-label="Menu"
+      >
+        <svg class="h-6 w-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg class="hidden h-6 w-6 group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </summary>
+      <nav aria-label="Main" class="absolute inset-x-0 top-full z-20 border-b border-navy-100 bg-white shadow-lg">
+        <ul class="px-2 py-2">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={current === link.href ? 'page' : undefined}
+                  class:list={[
+                    'block rounded-md px-4 py-3 text-base font-medium transition-colors',
+                    current === link.href
+                      ? 'bg-navy-50 text-navy-900'
+                      : 'text-navy-700 hover:bg-navy-50 hover:text-navy-900',
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </details>
   </div>
 </header>
+
+<script>
+  const menu = document.getElementById('mobile-menu') as HTMLDetailsElement | null;
+  if (menu) {
+    document.addEventListener('click', (e) => {
+      if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') menu.open = false;
+    });
+  }
+</script>

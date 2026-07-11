@@ -224,6 +224,11 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — Mobile nav fixed (owner feedback): Header now shows a
+  hamburger (`<details>`-based, no framework JS; outside-click/Escape
+  close) opening a full-width panel below the header on <640px; desktop
+  nav unchanged. Verified via Playwright screenshots at 375px + Lighthouse
+  100×4, CLS 0. Also swapped contact email to contact@payofflogic.com.
 - 2026-07-11 — ads.txt added (owner supplied AdSense publisher ID
   pub-3381605860539529) → live at /ads.txt for the AdSense application.
 - 2026-07-11 — M3 built: states.json (50 states, sourced, spot-check gate
