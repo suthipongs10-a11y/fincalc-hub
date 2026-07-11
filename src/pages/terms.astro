@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `Terms of Use | ${SITE.name}`;
+const description =
+  'Terms of Use for FinCalc Hub: educational purpose of our calculators, accuracy disclaimer, limitation of liability, and acceptable use.';
+const lastUpdated = 'July 11, 2026';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Terms of Use</h1>
+    <p class="mt-2 text-sm text-navy-500">Last updated: {lastUpdated}</p>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        By accessing or using {SITE.name} (the "Site"), you agree to these
+        Terms of Use. If you do not agree, please do not use the Site.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">1. Educational purpose — not financial advice</h2>
+      <p>
+        All calculators, articles, and other content on the Site are provided
+        for <strong>general educational and informational purposes only</strong>.
+        Nothing on the Site constitutes financial, investment, legal, tax, or
+        accounting advice, and nothing on the Site should be relied upon as a
+        substitute for advice from a qualified professional who knows your
+        individual circumstances. We are not a lender, broker, or registered
+        financial advisor.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">2. Accuracy of results</h2>
+      <p>
+        Calculator results are estimates based solely on the values you enter
+        and the stated assumptions of each tool. Actual loan terms, rates,
+        taxes, insurance premiums, and fees vary by lender, location, credit
+        profile, and market conditions, and may differ materially from any
+        estimate shown here. While we test our calculators against verified
+        reference examples, we do not guarantee that any result is
+        error-free, complete, or suitable for your purpose.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">3. No warranty</h2>
+      <p>
+        The Site and all content are provided <strong>"as is" and "as
+        available"</strong> without warranties of any kind, express or
+        implied, including but not limited to warranties of merchantability,
+        fitness for a particular purpose, and non-infringement.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">4. Limitation of liability</h2>
+      <p>
+        To the maximum extent permitted by law, {SITE.name} and its operators
+        shall not be liable for any direct, indirect, incidental,
+        consequential, or special damages arising out of or in connection with
+        your use of the Site or reliance on any content or calculator result,
+        even if advised of the possibility of such damages. Your sole and
+        exclusive remedy for dissatisfaction with the Site is to stop using it.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">5. Acceptable use</h2>
+      <p>You agree not to:</p>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>Scrape, harvest, or republish Site content at scale without permission;</li>
+        <li>Interfere with the Site's operation or attempt to gain unauthorized access;</li>
+        <li>Use the Site in any way that violates applicable law.</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-navy-900">6. Intellectual property</h2>
+      <p>
+        The Site's design, text, and code are owned by {SITE.name} or its
+        licensors and are protected by copyright. You may link to any page and
+        print results for personal use. Any other reproduction requires prior
+        written permission.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">7. Third-party links and advertising</h2>
+      <p>
+        The Site may contain links to third-party websites and may display
+        third-party advertising. We do not control and are not responsible for
+        the content, policies, or practices of third-party sites. A link or ad
+        is not an endorsement.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">8. Changes</h2>
+      <p>
+        We may update these Terms at any time by posting a revised version on
+        this page with an updated "last updated" date. Continued use of the
+        Site after changes constitutes acceptance.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">9. Contact</h2>
+      <p>
+        Questions about these Terms? Reach us via the
+        <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">contact page</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

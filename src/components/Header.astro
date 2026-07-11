@@ -1,0 +1,50 @@
+---
+import { SITE } from '../config';
+
+const links = [
+  { href: '/', label: 'Calculators' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+
+const current = Astro.url.pathname;
+---
+
+<header class="border-b border-navy-100 bg-white">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <a href="/" class="flex items-center gap-2 text-lg font-bold text-navy-900" aria-label={`${SITE.name} home`}>
+      <svg
+        class="h-7 w-7"
+        viewBox="0 0 32 32"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="28" height="28" rx="6" class="fill-navy-900" />
+        <path d="M9 21.5 14 15l3.5 4 5.5-8" class="stroke-accent-400" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>{SITE.name}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="flex items-center gap-1 sm:gap-2">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={current === link.href ? 'page' : undefined}
+                class:list={[
+                  'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                  current === link.href
+                    ? 'bg-navy-50 text-navy-900'
+                    : 'text-navy-700 hover:bg-navy-50 hover:text-navy-900',
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, TOOLS } from '../config';
+
+const title = 'Free Financial Calculators — Mortgage, Loan & Debt Payoff | FinCalc Hub';
+const description =
+  'Free, no-signup financial calculators: mortgage with full PITI breakdown, loan payoff, debt snowball, refinance, and auto loan. Fast, private, and printable results.';
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Hero -->
+  <section class="bg-navy-950 text-white">
+    <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
+      <h1 class="max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
+        Financial calculators that show you the <span class="text-accent-400">whole picture</span>
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-navy-200 sm:text-lg">
+        {SITE.name} builds free, no-signup calculators for the money decisions
+        that matter most — your mortgage, your loans, and your debt payoff plan.
+        Every tool includes the full math: amortization schedules, taxes and
+        insurance, and shareable, printable results.
+      </p>
+      <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-navy-200">
+        <li class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent-400" aria-hidden="true"></span>
+          100% free, no account needed
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent-400" aria-hidden="true"></span>
+          Nothing you enter leaves your browser
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent-400" aria-hidden="true"></span>
+          Full amortization tables included
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Tool directory -->
+  <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6" aria-labelledby="tools-heading">
+    <h2 id="tools-heading" class="text-2xl font-bold text-navy-900">All calculators</h2>
+    <p class="mt-2 text-sm text-navy-600">
+      We launch each tool only when it beats what's already out there. First up:
+      the mortgage calculator.
+    </p>
+    <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        TOOLS.map((tool) => (
+          <li class="relative flex flex-col rounded-lg border border-navy-100 bg-white p-5 shadow-sm">
+            <h3 class="text-lg font-semibold text-navy-900">
+              {tool.status === 'coming-soon' ? (
+                tool.name
+              ) : (
+                <a href={`/${tool.slug}/`} class="after:absolute after:inset-0 hover:text-navy-600">
+                  {tool.name}
+                </a>
+              )}
+            </h3>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-600">{tool.description}</p>
+            <p class="mt-4">
+              {tool.status === 'coming-soon' ? (
+                <span class="inline-block rounded-full bg-navy-50 px-3 py-1 text-xs font-medium text-navy-700">
+                  Coming soon
+                </span>
+              ) : (
+                <span class="inline-block rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700">
+                  Open calculator →
+                </span>
+              )}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- AD_SLOT: homepage, below tool directory -->
+
+  <!-- Trust section -->
+  <section class="mx-auto max-w-5xl px-4 pb-4 sm:px-6" aria-labelledby="trust-heading">
+    <div class="rounded-lg bg-navy-50 p-6 sm:p-8">
+      <h2 id="trust-heading" class="text-xl font-bold text-navy-900">
+        Why another calculator site?
+      </h2>
+      <div class="mt-4 grid gap-6 text-sm leading-relaxed text-navy-700 sm:grid-cols-3">
+        <div>
+          <h3 class="font-semibold text-navy-900">Complete math, not teasers</h3>
+          <p class="mt-1">
+            Most calculators stop at a single monthly number. Ours break down
+            principal, interest, taxes, insurance, PMI, and HOA — and show the
+            full payoff schedule.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-navy-900">Private by design</h3>
+          <p class="mt-1">
+            Calculations run entirely in your browser. We never see, store, or
+            sell the numbers you enter.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-navy-900">Sourced &amp; transparent</h3>
+          <p class="mt-1">
+            Where we use reference data — like state property-tax rates — we
+            cite the source so you can verify it yourself.
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 text-xs text-navy-600">
+        Educational purposes only — not financial advice. See our
+        <a href="/terms/" class="underline hover:text-navy-800">Terms of Use</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

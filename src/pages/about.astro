@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `About ${SITE.name} — Who We Are & How Our Calculators Work`;
+const description =
+  'Learn who builds FinCalc Hub, how our financial calculators are tested for accuracy, and how the site is funded.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: title,
+    url: `${SITE.url}/about/`,
+    description,
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">About {SITE.name}</h1>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        {SITE.name} exists for one reason: most free financial calculators are
+        either too shallow to be useful or buried under pop-ups and lead forms.
+        We build calculators that show the complete math — full amortization
+        schedules, every component of a mortgage payment, real side-by-side
+        comparisons — with no account, no download, and no sales pitch.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Who we are</h2>
+      <p>
+        {SITE.name} is built and maintained by the {SITE.author}. We are
+        independent: we are not a lender, broker, or financial advisory firm,
+        and no bank or lender pays to influence our results or content.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">How we keep the math honest</h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          Every calculator is verified against known-correct reference examples
+          before launch, and the test cases are documented.
+        </li>
+        <li>
+          Reference data (such as state property-tax rates or average home
+          values) is cited to its source on the page where it appears, and we
+          record when it was last reviewed.
+        </li>
+        <li>
+          When we find an error, we fix it and note the correction — accuracy
+          matters more than looking infallible.
+        </li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-navy-900">How the site makes money</h2>
+      <p>
+        The calculators are free and always will be. The site is supported by
+        display advertising and, in some cases, affiliate links that are
+        clearly marked. Advertisers never see the numbers you enter and never
+        influence calculator results.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">What we are not</h2>
+      <p>
+        We are not financial advisors, and nothing on this site is financial,
+        legal, or tax advice. Our tools help you understand the math behind a
+        decision; the decision itself should factor in your full situation —
+        ideally with a qualified professional. See our
+        <a href="/terms/" class="text-navy-900 underline hover:text-navy-600">Terms of Use</a>
+        for details.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Get in touch</h2>
+      <p>
+        Found a bug, a math error, or have a calculator you wish existed? We
+        read everything —
+        <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">contact us</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

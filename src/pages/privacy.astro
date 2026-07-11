@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `Privacy Policy | ${SITE.name}`;
+const description =
+  'How FinCalc Hub handles your data: calculator inputs stay in your browser, privacy-friendly analytics, and full disclosure of advertising cookies.';
+const lastUpdated = 'July 11, 2026';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Privacy Policy</h1>
+    <p class="mt-2 text-sm text-navy-500">Last updated: {lastUpdated}</p>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        This Privacy Policy explains what information {SITE.name} ("we," "us")
+        collects when you visit this website, how we use it, and the choices
+        you have. The short version: our calculators run entirely in your
+        browser, we never see the numbers you enter, and we collect as little
+        as possible.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">1. Calculator inputs</h2>
+      <p>
+        The values you type into our calculators (loan amounts, interest
+        rates, home prices, debts, and so on) are processed locally in your
+        browser. They are <strong>not transmitted to, stored on, or logged by
+        our servers</strong>. If you use a "share" link, your inputs are
+        encoded into the URL itself — only share that link with people you
+        trust to see those numbers.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">2. Analytics</h2>
+      <p>
+        We use Cloudflare Web Analytics to understand aggregate traffic —
+        which pages are visited and how the site performs. Cloudflare Web
+        Analytics does not use cookies, does not fingerprint devices, and does
+        not track you across sites. It shows us anonymous, aggregate counts
+        only.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">3. Advertising</h2>
+      <p>
+        To keep the calculators free, we may display advertising served by
+        third-party networks such as Google AdSense. When advertising is
+        active on the site:
+      </p>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          Third-party vendors, including Google, may use cookies to serve ads
+          based on your prior visits to this and other websites.
+        </li>
+        <li>
+          Google's use of advertising cookies enables it and its partners to
+          serve ads based on your visits to this site and/or other sites on
+          the Internet.
+        </li>
+        <li>
+          You may opt out of personalized advertising by visiting
+          <a href="https://www.google.com/settings/ads" class="text-navy-900 underline hover:text-navy-600" rel="noopener noreferrer">Google Ads Settings</a>
+          or
+          <a href="https://www.aboutads.info" class="text-navy-900 underline hover:text-navy-600" rel="noopener noreferrer">www.aboutads.info</a>.
+        </li>
+      </ul>
+      <p>
+        Advertisers never receive the values you enter into our calculators.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">4. Information you send us</h2>
+      <p>
+        If you contact us by email, we receive your email address and the
+        contents of your message. We use this only to respond to you, and we do
+        not add you to any mailing list or share your address with third
+        parties.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">5. Cookies</h2>
+      <p>
+        The site itself does not set cookies for its core functionality. Any
+        cookies present come from the third-party advertising described in
+        Section 3 once advertising is active. Most browsers let you block or
+        delete cookies in their settings.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">6. Children's privacy</h2>
+      <p>
+        This site is directed at a general adult audience and is not intended
+        for children under 13. We do not knowingly collect personal
+        information from children.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">7. Data security &amp; retention</h2>
+      <p>
+        Because calculator inputs never leave your browser, there is no
+        calculator data for us to secure or retain. Contact emails are kept
+        only as long as needed to handle your request.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">8. Changes to this policy</h2>
+      <p>
+        If we change this policy — for example, when advertising goes live —
+        we will update this page and the "last updated" date above.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">9. Contact</h2>
+      <p>
+        Questions about this policy? Reach us via the
+        <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">contact page</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

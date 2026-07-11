@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `Contact Us | ${SITE.name}`;
+const description =
+  'Contact FinCalc Hub — report a bug or math error, suggest a calculator, or ask a question about the site.';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Contact us</h1>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        We read every message. The fastest way to reach us is email:
+      </p>
+
+      <p class="rounded-lg border border-navy-100 bg-navy-50 p-5 text-lg font-semibold text-navy-900">
+        <a href={`mailto:${SITE.contactEmail}`} class="underline hover:text-navy-600">
+          {SITE.contactEmail}
+        </a>
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">What to include</h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          <strong>Bug or math error:</strong> the calculator you used, the
+          values you entered, the result you got, and the result you expected.
+          A share link (which encodes your inputs) is the most helpful thing
+          you can send.
+        </li>
+        <li>
+          <strong>Calculator request:</strong> what decision you're trying to
+          make and what existing tools get wrong about it.
+        </li>
+        <li>
+          <strong>Data correction:</strong> the page, the figure you believe
+          is wrong, and a link to a better source.
+        </li>
+      </ul>
+
+      <p>
+        We typically respond within a few business days. Please note that we
+        cannot provide personal financial advice — see our
+        <a href="/terms/" class="text-navy-900 underline hover:text-navy-600">Terms of Use</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
