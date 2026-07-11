@@ -1,0 +1,189 @@
+---
+/**
+ * Debt snowball island: dynamic debt list + snowball-vs-avalanche comparison.
+ * Default rows are server-rendered (not JS-inserted) to avoid layout shift;
+ * the smallest debt deliberately has the LOWEST rate so the default example
+ * shows the two methods genuinely diverging.
+ */
+const DEFAULT_DEBTS = [
+  { name: 'Medical bill', bal: '1,800', rate: '0', min: '50' },
+  { name: 'Credit card', bal: '6,500', rate: '22.99', min: '195' },
+  { name: 'Car loan', bal: '11,000', rate: '7.5', min: '240' },
+];
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Debt snowball calculator">
+  <form id="calc-form" class="border-b border-navy-100 p-5 sm:p-6" novalidate>
+    <div class="grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-end gap-2 text-xs font-semibold tracking-wide text-navy-600 uppercase">
+      <span>Debt name</span><span>Balance</span><span>APR %</span><span>Min / month</span><span></span>
+    </div>
+    <div id="debts" class="mt-2 space-y-2">
+      {DEFAULT_DEBTS.map((d) => (
+        <div class="debt-row grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-center gap-2">
+          <input aria-label="Debt name" class="fc-input d-name" value={d.name} />
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Balance" inputmode="decimal" class="fc-input fc-input--pre d-bal" value={d.bal} /></div>
+          <div class="fc-wrap"><input aria-label="APR percent" inputmode="decimal" class="fc-input fc-input--suf d-rate" value={d.rate} /><span class="fc-suffix">%</span></div>
+          <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Minimum monthly payment" inputmode="decimal" class="fc-input fc-input--pre d-min" value={d.min} /></div>
+          <button type="button" aria-label="Remove this debt" class="d-remove rounded-md px-2 py-2 text-navy-500 hover:bg-red-50 hover:text-red-700">✕</button>
+        </div>
+      ))}
+    </div>
+    <div class="mt-3 flex flex-wrap items-end justify-between gap-3">
+      <button type="button" id="add-debt" class="fc-btn fc-btn--ghost">+ Add debt</button>
+      <div class="w-full max-w-56">
+        <label for="extra" class="fc-label">Extra budget / month (on top of minimums)</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="extra" inputmode="decimal" value="300" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+    </div>
+    <p id="calc-error" class="mt-3 hidden text-sm font-medium text-red-700" role="alert"></p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+      <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+    </div>
+  </form>
+
+  <div class="p-5 sm:p-6">
+    <h2 class="text-lg font-bold text-navy-900">Snowball vs. avalanche</h2>
+    <div class="mt-3 overflow-x-auto">
+      <table class="w-full min-w-[480px] text-sm">
+        <thead>
+          <tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+            <th class="py-2 pr-2">Method</th>
+            <th class="py-2 pr-2">Order</th>
+            <th class="py-2 pr-2 text-right">Debt-free in</th>
+            <th class="py-2 pr-2 text-right">Total interest</th>
+            <th class="py-2 text-right">First win</th>
+          </tr>
+        </thead>
+        <tbody id="cmp-body"></tbody>
+      </table>
+    </div>
+    <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white" aria-live="polite">—</p>
+
+    <h3 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Total balance over time</h3>
+    <div class="mt-2 overflow-x-auto">
+      <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Total debt balance by year for both methods"></svg>
+    </div>
+    <p class="mt-1 text-xs text-navy-600">Solid: avalanche · Dashed: snowball (curves often overlap — the methods differ in order and interest, less in total time).</p>
+
+    <h3 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Payoff order &amp; dates</h3>
+    <div id="order" class="mt-2 grid gap-4 sm:grid-cols-2"></div>
+  </div>
+</section>
+
+<script>
+  import { compare } from '../lib/snowball.js';
+  import { fmt0, num, byId, input, yrMo, payoffLabel, drawBalanceChart, wireActions, onInput } from '../lib/ui.js';
+
+  // Smallest debt deliberately has the LOWEST rate so the default example
+  // shows the two methods genuinely diverging (order, interest, and dates).
+  function debtRow(name = '', bal = '', rate = '', min = '') {
+    const div = document.createElement('div');
+    div.className = 'debt-row grid grid-cols-[1fr_repeat(3,minmax(6rem,8rem))_2rem] items-center gap-2';
+    div.innerHTML = `
+      <input aria-label="Debt name" class="fc-input d-name" value="${name}" />
+      <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Balance" inputmode="decimal" class="fc-input fc-input--pre d-bal" value="${bal}" /></div>
+      <div class="fc-wrap"><input aria-label="APR percent" inputmode="decimal" class="fc-input fc-input--suf d-rate" value="${rate}" /><span class="fc-suffix">%</span></div>
+      <div class="fc-wrap"><span class="fc-prefix">$</span><input aria-label="Minimum monthly payment" inputmode="decimal" class="fc-input fc-input--pre d-min" value="${min}" /></div>
+      <button type="button" aria-label="Remove this debt" class="d-remove rounded-md px-2 py-2 text-navy-500 hover:bg-red-50 hover:text-red-700">✕</button>`;
+    return div;
+  }
+
+  function readDebts() {
+    return Array.from(document.querySelectorAll('.debt-row')).map((row, i) => ({
+      name: row.querySelector('.d-name').value.trim() || `Debt ${i + 1}`,
+      balance: num(row.querySelector('.d-bal')),
+      rate: num(row.querySelector('.d-rate')),
+      minPayment: num(row.querySelector('.d-min')),
+    })).filter((d) => d.balance > 0);
+  }
+
+  function syncUrl(debts) {
+    const q = new URLSearchParams();
+    q.set('extra', input('extra').value.replace(/,/g, ''));
+    q.set('d', debts.map((d) => [encodeURIComponent(d.name), d.balance, d.rate, d.minPayment].join('~')).join('|'));
+    history.replaceState(null, '', `${location.pathname}?${q}`);
+  }
+
+  function loadUrl() {
+    // Default rows are server-rendered; only a shared link (?d=...) replaces them.
+    const q = new URLSearchParams(location.search);
+    if (q.get('extra')) input('extra').value = q.get('extra');
+    const d = q.get('d');
+    if (d) {
+      const box = byId('debts');
+      box.innerHTML = '';
+      for (const part of d.split('|')) {
+        const [name, bal, rate, min] = part.split('~');
+        box.appendChild(debtRow(decodeURIComponent(name || ''), bal || '', rate || '', min || ''));
+      }
+    }
+  }
+
+  function recalc() {
+    const debts = readDebts();
+    const extra = num(input('extra'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (!debts.length) msg = 'Add at least one debt with a balance.';
+    else if (debts.some((d) => d.rate < 0 || d.rate > 50)) msg = 'APR must be between 0% and 50%.';
+    if (!msg) {
+      var r = compare(debts, extra);
+      if (r.snowball.unpayable) msg = 'Minimum payments plus your extra budget don’t cover the monthly interest — the balances would grow forever. Increase the extra budget.';
+    }
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const now = new Date();
+    const sy = now.getFullYear(), sm = now.getMonth() + 2 > 12 ? 1 : now.getMonth() + 2;
+    const syy = now.getMonth() + 2 > 12 ? sy + 1 : sy;
+
+    const rows = [
+      ['Snowball', 'Smallest balance first', r.snowball],
+      ['Avalanche', 'Highest interest rate first', r.avalanche],
+    ].map(([label, how, res]) => `<tr class="border-b border-navy-50">
+        <td class="py-2 pr-2 font-semibold text-navy-900">${label}</td>
+        <td class="py-2 pr-2 text-navy-700">${how}</td>
+        <td class="py-2 pr-2 text-right tabular-nums">${yrMo(res.months)}</td>
+        <td class="py-2 pr-2 text-right tabular-nums">${fmt0.format(res.totalInterest)}</td>
+        <td class="py-2 text-right tabular-nums">${res.payoffOrder[0] ? `${res.payoffOrder[0].name} · month ${res.payoffOrder[0].month}` : '—'}</td>
+      </tr>`);
+    byId('cmp-body').innerHTML = rows.join('');
+
+    const diff = r.interestDiff;
+    byId('verdict').textContent =
+      Math.abs(diff) < 1
+        ? 'For your debts the two methods cost the same — pick snowball for faster motivation wins.'
+        : `Avalanche saves ${fmt0.format(Math.abs(diff))} in interest vs. snowball${r.monthsDiff > 0 ? ` and finishes ${yrMo(r.monthsDiff)} sooner` : ''}. Snowball clears your first debt ${r.snowball.payoffOrder[0] ? `in month ${r.snowball.payoffOrder[0].month}` : ''} — worth it if quick wins keep you going.`;
+
+    drawBalanceChart(byId('chart'), [
+      { values: r.snowball.timeline, dashed: true },
+      { values: r.avalanche.timeline },
+    ]);
+
+    byId('order').innerHTML = [
+      ['Snowball order', r.snowball],
+      ['Avalanche order', r.avalanche],
+    ].map(([title, res]) => `<div class="rounded-lg border border-navy-100 p-4">
+        <p class="text-sm font-semibold text-navy-900">${title}</p>
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-navy-700">
+          ${res.payoffOrder.map((p) => `<li><strong>${p.name}</strong> — paid off ${payoffLabel(syy, sm, p.month)}</li>`).join('')}
+        </ol>
+      </div>`).join('');
+
+    syncUrl(debts);
+  }
+
+  loadUrl();
+  byId('add-debt').addEventListener('click', () => { byId('debts').appendChild(debtRow()); });
+  // Event delegation covers both server-rendered and JS-added rows.
+  byId('debts').addEventListener('click', (e) => {
+    const btn = /** @type {HTMLElement} */ (e.target).closest('.d-remove');
+    if (btn) { btn.closest('.debt-row').remove(); recalc(); }
+  });
+  onInput('calc-form', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

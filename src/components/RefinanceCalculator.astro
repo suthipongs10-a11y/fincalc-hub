@@ -1,0 +1,180 @@
+---
+/** Refinance island: break-even month + lifetime savings. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Refinance calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <fieldset class="rounded-lg border border-navy-100 p-3">
+        <legend class="px-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">Current loan</legend>
+        <div class="space-y-3">
+          <div>
+            <label for="balance" class="fc-label">Remaining balance</label>
+            <div class="fc-wrap"><span class="fc-prefix">$</span>
+              <input id="balance" inputmode="decimal" value="250,000" class="fc-input fc-input--pre" />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cur-rate" class="fc-label">Current rate</label>
+              <div class="fc-wrap">
+                <input id="cur-rate" inputmode="decimal" value="7.25" class="fc-input fc-input--suf" />
+                <span class="fc-suffix">%</span>
+              </div>
+            </div>
+            <div>
+              <label for="cur-years" class="fc-label">Years remaining</label>
+              <input id="cur-years" inputmode="decimal" value="26" class="fc-input" />
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="rounded-lg border border-navy-100 p-3">
+        <legend class="px-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">New loan</legend>
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="new-rate" class="fc-label">New rate</label>
+              <div class="fc-wrap">
+                <input id="new-rate" inputmode="decimal" value="6.0" class="fc-input fc-input--suf" />
+                <span class="fc-suffix">%</span>
+              </div>
+            </div>
+            <div>
+              <label for="new-term" class="fc-label">New term</label>
+              <select id="new-term" class="fc-input">
+                <option value="30" selected>30 years</option>
+                <option value="25">25 years</option>
+                <option value="20">20 years</option>
+                <option value="15">15 years</option>
+                <option value="10">10 years</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="costs" class="fc-label">Closing costs</label>
+            <div class="fc-wrap"><span class="fc-prefix">$</span>
+              <input id="costs" inputmode="decimal" value="5,000" class="fc-input fc-input--pre" />
+            </div>
+            <p class="mt-1 text-xs text-navy-600">Typically 2–6% of the loan amount.</p>
+          </div>
+          <label class="flex items-start gap-2 text-sm text-navy-700">
+            <input id="finance-costs" type="checkbox" class="mt-0.5" />
+            <span>Roll closing costs into the new loan</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-4">
+          <p class="text-xs font-medium text-navy-600">Current payment</p>
+          <p id="cur-pay" class="text-xl font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-4">
+          <p class="text-xs font-medium text-navy-600">New payment</p>
+          <p id="new-pay" class="text-xl font-bold text-navy-900" aria-live="polite">—</p>
+        </div>
+        <div class="rounded-lg bg-accent-50 p-4">
+          <p class="text-xs font-medium text-accent-800">Monthly change</p>
+          <p id="monthly-sav" class="text-xl font-bold text-accent-800">—</p>
+        </div>
+      </div>
+
+      <p id="break-even" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white" aria-live="polite">—</p>
+
+      <h2 class="mt-6 text-sm font-semibold tracking-wide text-navy-600 uppercase">Lifetime comparison</h2>
+      <div class="mt-2 overflow-x-auto">
+        <table class="w-full min-w-[440px] text-sm">
+          <thead>
+            <tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+              <th class="py-2 pr-2"><span class="sr-only">Line item</span></th>
+              <th class="py-2 pr-2 text-right">Keep current loan</th>
+              <th class="py-2 text-right">Refinance</th>
+            </tr>
+          </thead>
+          <tbody id="cmp-body" class="text-navy-800"></tbody>
+        </table>
+      </div>
+      <p id="lifetime" class="mt-3 text-sm font-medium text-navy-800"></p>
+      <p class="mt-4 text-xs text-navy-600">
+        Compares principal &amp; interest only (taxes/insurance don't change when you
+        refinance). "Lifetime" means until each loan is fully paid off — a longer new
+        term can lower the payment yet cost more overall; both effects show here.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">New loan amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { computeRefinance } from '../lib/refinance.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, renderYearSchedule, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['balance', 'cur-rate', 'cur-years', 'new-rate', 'new-term', 'costs', 'finance-costs']);
+
+  function recalc() {
+    const o = {
+      balance: num(input('balance')),
+      currentRate: num(input('cur-rate')),
+      remainingYears: num(input('cur-years')),
+      newRate: num(input('new-rate')),
+      newTermYears: parseInt(input('new-term').value, 10),
+      closingCosts: num(input('costs')),
+      financeClosingCosts: input('finance-costs').checked,
+    };
+    const err = byId('calc-error');
+    let msg = null;
+    if (o.balance <= 0) msg = 'Enter your remaining balance.';
+    else if (o.remainingYears <= 0 || o.remainingYears > 40) msg = 'Years remaining must be between 1 and 40.';
+    else if (o.currentRate < 0 || o.currentRate > 25 || o.newRate < 0 || o.newRate > 25) msg = 'Rates must be between 0% and 25%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const r = computeRefinance(o);
+    byId('cur-pay').textContent = fmt2.format(r.currentPayment);
+    byId('new-pay').textContent = fmt2.format(r.newPayment);
+    byId('monthly-sav').textContent = (r.monthlySavings >= 0 ? '−' : '+') + fmt2.format(Math.abs(r.monthlySavings)).replace('$', '$');
+
+    const be = byId('break-even');
+    if (r.monthlySavings <= 0) {
+      be.textContent = 'The new payment is not lower than your current one, so closing costs are never recovered through payment savings. This refinance only makes sense for other goals (shorter term, rate certainty).';
+    } else {
+      be.textContent = `Break-even: ${r.breakEvenMonths} months (${yrMo(r.breakEvenMonths)}). After that, the ${fmt0.format(r.monthlySavings)}/month saving is yours — if you'd sell or refinance again before then, this deal loses money.`;
+    }
+
+    byId('cmp-body').innerHTML = [
+      ['Monthly payment (P&I)', fmt2.format(r.currentPayment), fmt2.format(r.newPayment)],
+      ['Months to payoff', `${r.curMonths} (${yrMo(r.curMonths)})`, `${r.newMonths} (${yrMo(r.newMonths)})`],
+      ['Remaining interest', fmt0.format(r.currentInterest), fmt0.format(r.newInterest)],
+      ['Closing costs', '—', fmt0.format(o.closingCosts) + (o.financeClosingCosts ? ' (financed)' : ' (upfront)')],
+    ].map(([k, a, b]) => `<tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">${k}</td><td class="py-2 pr-2 text-right tabular-nums">${a}</td><td class="py-2 text-right tabular-nums font-semibold">${b}</td></tr>`).join('');
+
+    byId('lifetime').textContent = r.lifetimeSavings >= 0
+      ? `Lifetime savings (all payments + costs, until payoff): ${fmt0.format(r.lifetimeSavings)}`
+      : `Lifetime COST of refinancing (all payments + costs, until payoff): ${fmt0.format(-r.lifetimeSavings)} more than keeping the current loan`;
+
+    renderYearSchedule(byId('schedule'), r.newRows);
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

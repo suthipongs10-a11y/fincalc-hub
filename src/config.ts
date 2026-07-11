@@ -27,27 +27,27 @@ export const TOOLS = [
     name: 'Loan Payoff Calculator',
     description:
       'See how extra payments shorten your loan and how much interest you save.',
-    status: 'coming-soon',
+    status: 'live',
   },
   {
     slug: 'debt-snowball-calculator',
     name: 'Debt Snowball Calculator',
     description:
       'Compare the snowball and avalanche payoff methods side by side across all your debts.',
-    status: 'coming-soon',
+    status: 'live',
   },
   {
     slug: 'refinance-calculator',
     name: 'Refinance Calculator',
     description:
       'Find your break-even month and lifetime savings before you refinance.',
-    status: 'coming-soon',
+    status: 'live',
   },
   {
     slug: 'auto-loan-calculator',
     name: 'Auto Loan Calculator',
     description:
       'Estimate car payments including trade-in value and state sales tax.',
-    status: 'coming-soon',
+    status: 'live',
   },
 ] as const;

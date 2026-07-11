@@ -3,11 +3,36 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M1 complete — awaiting owner review before M2.
-- **Last commit:** `M1: mortgage calculator (flagship) — PITI, amortization,
-  extra payments, share/print`
-- **Build status:** `npm run build` clean (6 pages) · `npm test` all math
-  checks pass · Lighthouse mobile /mortgage-calculator/: 100/100/100/100.
+- **Milestone:** M2 complete — awaiting owner review before M2.5.
+- **Last commit:** `M2: tool suite — loan payoff, debt snowball, refinance,
+  auto loan`
+- **Build status:** `npm run build` clean (10 pages) · `npm test` +
+  `node tests/m2-check.mjs` all pass · Lighthouse mobile 100×4 on all four
+  new pages. Live at https://payofflogic.com (auto-deploys from this branch).
+
+## M2 gate checklist (self-audit)
+- [x] /loan-payoff-calculator/ — extra payments → time saved + interest
+      saved, before/after cards, 2-series chart, schedule, share/print
+- [x] /debt-snowball-calculator/ — dynamic debt list, snowball vs avalanche
+      side-by-side table + verdict + payoff order/dates (differentiator),
+      timeline chart, URL-encoded debts for sharing
+- [x] /refinance-calculator/ — break-even month, lifetime comparison table
+      (incl. term-reset honesty), roll-costs-into-loan option, new-loan
+      schedule
+- [x] /auto-loan-calculator/ — trade-in + payoff-on-trade (negative-equity
+      warning), sales tax by state dropdown (50 states + DC, sourced data
+      in src/data/auto-sales-tax.json, editable rate), finance-vs-upfront
+      tax toggle, loan-build breakdown table
+- [x] Homepage = real tool directory (all 5 live); cross-links: footer,
+      Related Calculators on every tool page, contextual in-copy links
+- [x] Math verified per tool — 36 checks vs published references +
+      closed-form identities (tests/m2-check.mjs, documented in
+      tests/manual.md)
+- [x] Schema per page (WebApplication/BreadcrumbList/FAQPage via shared
+      src/lib/seo.ts) · FAQ 8 questions per page · AD_SLOT markers ×2/page
+- [x] Lighthouse mobile all four new templates: 100/100/100/100
+      (fixed: snowball CLS via server-rendered default rows; heading-order;
+      empty-th)
 
 ## M1 gate checklist (self-audit)
 - [x] PITI breakdown incl. PMI (auto-applies <20% down, auto-cancels at 78%
@@ -52,11 +77,11 @@
   cookies (so no rewrite needed at ad launch)
 
 ## Next actions
-1. Owner: review M1 (/mortgage-calculator/) — math, UX, copy
-2. After approval → M2: loan-payoff, debt-snowball, refinance, auto-loan
-   (T13/T14/T19/T21 keyword targets in SEO_PLAN.md) + homepage as directory
-3. Owner action anytime: deploy to Cloudflare Pages (README steps) so GSC
-   can start collecting data early — recommended before M2 finishes
+1. Owner: review M2 (4 new tools) on https://payofflogic.com
+2. After approval → M2.5: mortgage variant tools T2–T8 per BUILD_PLAN.md
+3. Owner actions recommended now: Google Search Console property +
+   submit sitemap; Cloudflare Web Analytics; contact@payofflogic.com via
+   Email Routing (then swap SITE.contactEmail)
 
 ## Pending decisions (owner)
 - [x] Domain name — DECIDED & LIVE 2026-07-11: **payofflogic.com**
@@ -86,6 +111,12 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — M2 built: 4 tools (loan-payoff, debt-snowball w/ avalanche
+  comparison, refinance w/ break-even, auto-loan w/ 50-state tax data) on
+  shared engines (src/lib/loan|snowball|refinance|auto.js) + shared UI kit
+  (src/lib/ui.js, fc-* styles) + shared schema builder (src/lib/seo.ts).
+  36 math checks pass; Lighthouse 100×4 on all four pages; homepage now a
+  real directory. Stopped for owner review.
 - 2026-07-11 — Domain payofflogic.com registered & live on Cloudflare Pages
   (new Pages project in the domain's account; production branch set to the
   working branch after initial deploy failed building empty `main`).

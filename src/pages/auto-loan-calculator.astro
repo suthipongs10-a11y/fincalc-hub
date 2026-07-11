@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import AutoLoanCalculator from '../components/AutoLoanCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+import taxData from '../data/auto-sales-tax.json';
+
+const title = 'Auto Loan Calculator with Trade-In & Sales Tax by State | Payoff Logic';
+const description =
+  'Free car payment calculator with trade-in value, loan payoff on your trade, and sales tax prefilled for all 50 states — including which states tax the full price vs. after trade-in credit.';
+
+const noCredit = taxData.states.filter((s) => !s.tradeInCredit).map((s) => s.name);
+
+const faqs = [
+  {
+    q: 'How is a car payment calculated?',
+    a: 'The amount you finance is the vehicle price minus your trade-in and down payment, plus any loan balance rolled over from your trade, plus sales tax and fees if you finance them. That amount amortizes over the term at your APR using the standard loan formula — the same math as a mortgage, on a shorter clock.',
+  },
+  {
+    q: 'Does a trade-in reduce the sales tax I pay?',
+    a: `In most states, yes — tax applies to the price minus your trade-in value. A $35,000 car with an $8,000 trade is taxed on $27,000. The exceptions tax the full price regardless of trade-in: ${noCredit.join(', ')}. Pick your state above and the calculator applies the right rule (and lets you override it).`,
+  },
+  {
+    q: 'What if I still owe money on my trade-in?',
+    a: 'The dealer pays off your old loan and adds the balance to the new one. If you owe more than the trade is worth ("negative equity" or being "upside down"), the difference rolls into the new loan — you start out owing more than the car costs. The calculator flags this explicitly.',
+  },
+  {
+    q: 'Should I finance the sales tax and fees or pay them upfront?',
+    a: 'Paying upfront keeps the loan smaller and avoids paying interest on tax. Financing them preserves cash. Toggle the checkbox above to see both: on a typical purchase the payment difference is $30–$50/month, and the interest cost of financing tax/fees over 60–72 months is a few hundred dollars.',
+  },
+  {
+    q: 'What loan term should I choose?',
+    a: 'Shorter terms cost less in total interest but have higher payments; 72- and 84-month loans have become common because they make payments look affordable, but they build equity slowly and often outlive the car’s warranty. A widely used guideline (the 20/4/10 rule) suggests 20% down, no more than 4 years, and total car costs under 10% of gross income.',
+  },
+  {
+    q: 'Why is my quoted rate different from the ads?',
+    a: 'Advertised APRs are for top-tier credit on select models. Your rate depends on credit score, term length, new vs. used (used runs higher), and lender. Get a pre-approval from a bank or credit union before visiting the dealer — it gives you a real number for this calculator and negotiating leverage.',
+  },
+  {
+    q: 'Is the state tax rate here exactly what I will pay?',
+    a: 'It is the state-level base rate, compiled from state revenue-department publications (sources listed in the site repository). Many states add county, city, or district taxes of 1–5%, and a few use special systems (Georgia’s one-time TAVT, North Carolina’s highway-use tax, South Carolina’s $500 cap). The rate field stays editable — set it to your local combined rate for a precise estimate, and verify with your DMV before purchase.',
+  },
+  {
+    q: 'New or used — does this calculator handle both?',
+    a: 'Yes. The math is identical; only your inputs change. Used-car APRs typically run 1–3 points higher than new-car rates, and some states apply slightly different fees, so adjust those two fields.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Auto Loan Calculator',
+  path: '/auto-loan-calculator/',
+  description,
+  crumbName: 'Auto Loan Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Auto Loan Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Auto Loan Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Estimate your real car payment — with trade-in value, any balance left on your
+        trade, and sales tax prefilled for your state (including whether it taxes the
+        full price or the price after trade-in). Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: auto-loan, above-fold right (desktop sidebar) -->
+
+    <AutoLoanCalculator />
+
+    <!-- AD_SLOT: auto-loan, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">The parts of a car deal that change your payment most</h2>
+        <ul class="mt-3 list-disc space-y-2 pl-6">
+          <li><strong>Negotiated price</strong> — every $1,000 off the price is roughly $20/month off a 60-month loan.</li>
+          <li><strong>APR</strong> — driven by your credit tier; the spread between tiers is often 4–8 points, worth thousands over the loan.</li>
+          <li><strong>Term</strong> — stretching 60 → 84 months cuts the payment but adds interest and years of negative equity risk.</li>
+          <li><strong>Trade-in handling</strong> — both its value (negotiate it separately from the price) and its tax treatment in your state, which this calculator models per state.</li>
+          <li><strong>Negative equity</strong> — rolling old debt into the new loan is the most common way buyers end up owing more than the car is worth.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">About the state tax data</h2>
+        <p class="mt-3">
+          State base rates and trade-in rules are compiled from state revenue-department
+          publications (including the Florida DOR's multistate vehicle-tax compilation,
+          Feb 2026) and are current as of July 2026. They prefill the form but never
+          lock it: local taxes vary within states, so the rate field stays editable.
+          {noCredit.length} jurisdictions tax the full price with no trade-in credit:
+          {noCredit.join(', ')}. Always verify the final figure with your state DMV or
+          the dealer's worksheet before signing.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="auto-loan-calculator" />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice or
+        a loan offer. Tax rates and rules change; verify with your state DMV. See our
+        <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

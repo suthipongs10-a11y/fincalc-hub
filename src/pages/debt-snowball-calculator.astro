@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import DebtSnowballCalculator from '../components/DebtSnowballCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Debt Snowball Calculator — Snowball vs. Avalanche Side by Side | Payoff Logic';
+const description =
+  'Free debt snowball calculator that compares the snowball and avalanche methods on YOUR debts: payoff order, debt-free date, and exactly how much interest each method costs.';
+
+const faqs = [
+  {
+    q: 'What is the debt snowball method?',
+    a: 'You list debts from smallest balance to largest, pay minimums on everything, and throw every spare dollar at the smallest debt. When it’s gone, its payment "rolls over" onto the next-smallest — the snowball grows with each payoff. The appeal is motivational: you clear your first debt fast and feel the progress.',
+  },
+  {
+    q: 'What is the debt avalanche method?',
+    a: 'Same rollover mechanic, different order: you attack the highest-interest-rate debt first. Mathematically this always costs the least total interest, because expensive debt dies first. The trade-off is that your first payoff can take longer if your priciest debt is also a big one.',
+  },
+  {
+    q: 'Which is better — snowball or avalanche?',
+    a: 'Avalanche never costs more interest than snowball; that’s a mathematical fact, and this calculator shows the exact dollar difference for your debts. But research on real borrowers finds people who feel early progress are more likely to finish. If the difference for your numbers is small — it often is — pick snowball for the quick wins. If it’s hundreds or thousands, the avalanche discount is real money.',
+  },
+  {
+    q: 'What counts as the "extra budget"?',
+    a: 'Any amount you can pay above the sum of all minimum payments, applied to one target debt each month. Even $50 changes the timeline. The calculator also automatically rolls freed-up minimums into the target as debts are paid off.',
+  },
+  {
+    q: 'Should I include my mortgage or car loan?',
+    a: 'Most people run the snowball on unsecured debts (credit cards, personal loans, medical bills) plus small car loans. Mortgages are usually excluded — the balance dwarfs everything and distorts the plan. You can include anything you like; the math works the same.',
+  },
+  {
+    q: 'What if I can only afford the minimum payments?',
+    a: 'With $0 extra, the rollover effect still works: each payoff frees that minimum for the next debt. But if your combined payments don’t even cover monthly interest, balances grow — the calculator warns you when that happens. In that situation, look at income, expense cuts, or talking to your card issuers before optimizing payoff order.',
+  },
+  {
+    q: 'Do balance transfers or consolidation loans beat both methods?',
+    a: 'Sometimes. A 0% balance-transfer card or a consolidation loan at a lower APR reduces the interest side directly, then snowball/avalanche still applies to what remains. Watch transfer fees (typically 3–5%) and the rate after the promo period.',
+  },
+  {
+    q: 'How accurate is the simulation?',
+    a: 'It applies monthly interest accrual, minimum payments, and rollover targeting exactly as described, and the engine is verified with published amortization references and invariant checks (test cases are public in the site repository). Real cards vary minimums as balances fall — we hold minimums fixed, which is the standard planning assumption and slightly conservative.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Debt Snowball Calculator',
+  path: '/debt-snowball-calculator/',
+  description,
+  crumbName: 'Debt Snowball Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Debt Snowball Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Debt Snowball Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Enter your debts once — see the snowball <em>and</em> avalanche plans side by
+        side: payoff order, debt-free date, and the exact interest cost of each method.
+        Free, no signup, nothing you enter leaves your browser.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: debt-snowball, above-fold right (desktop sidebar) -->
+
+    <DebtSnowballCalculator />
+
+    <!-- AD_SLOT: debt-snowball, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Snowball vs. avalanche: the honest comparison</h2>
+        <p class="mt-3">
+          Both methods use the same engine: pay minimums on everything, focus all extra
+          money on one target, and roll each cleared payment into the next target. The
+          only difference is targeting. Snowball (smallest balance first) front-loads
+          psychological wins; avalanche (highest rate first) front-loads interest
+          savings. Most sites tell you one is "right" — we'd rather show you the exact
+          dollar-and-month gap for <em>your</em> debts and let you decide what that gap
+          is worth. For many real debt mixes it's under a few hundred dollars; for
+          others it's thousands. That's why the comparison table above exists.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">How to use this plan</h2>
+        <ul class="mt-3 list-disc space-y-2 pl-6">
+          <li><strong>List every debt</strong> with its current balance, APR, and minimum payment (from your statements).</li>
+          <li><strong>Set a realistic extra budget.</strong> An amount you can sustain every month beats a heroic amount you abandon in March.</li>
+          <li><strong>Automate the minimums</strong>, pay the target manually — you'll feel the progress, which is the point of snowball.</li>
+          <li><strong>Re-run after each payoff</strong> (or share the link with yourself — your inputs are saved in the URL).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="debt-snowball-calculator" />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+        See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

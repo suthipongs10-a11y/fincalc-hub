@@ -1,8 +1,9 @@
-# tests/manual.md — Math Verification (Gate M1)
+# tests/manual.md — Math Verification (Gates M1 & M2)
 
-> How to re-run: `node tests/mortgage-check.mjs` (exits non-zero on failure).
-> The engine (`src/lib/mortgage.js`) is plain JS so the exact code the
-> browser runs is what Node verifies — no reimplementation drift.
+> How to re-run: `npm test` (mortgage engine) and `node tests/m2-check.mjs`
+> (loan/snowball/refinance/auto engines). Both exit non-zero on failure.
+> All engines are plain JS so the exact code the browser runs is what Node
+> verifies — no reimplementation drift.
 
 ## Mortgage calculator — verified reference cases
 
@@ -51,6 +52,68 @@
   P&I $1,423.93, PMI shown, savings banner "4 yr 9 mo early").
 - Amortization schedule: yearly rows expand to monthly; expand/collapse-all
   works; print opens all years (beforeprint) and restores after.
+
+## M2 engines — verified reference cases (tests/m2-check.mjs, 36 checks)
+
+### loan.js (generic fixed-rate engine — loan payoff page)
+- **$20,000 · 60 mo · 6%** → $386.66 (published example) ·
+  **$25,000 · 60 mo · 5%** → $471.78 (published example) ·
+  **$200,000 · 360 mo · 6%** → $1,199.10 (cross-checks against the verified
+  M1 mortgage engine).
+- `monthsToPayoff` inverts `pmt` exactly (60.000 months); returns ∞ when the
+  payment doesn't cover interest, and `amortizeLoan` flags the same case
+  as `unpayable` (UI shows an explanatory error instead of looping).
+- Extra $100/mo on 20k/6%/$386.66: closed-form n = −ln(1−rP∕M)∕ln(1+r)
+  = 46.55 → **47 payments**; engine matches. Principal always sums to the
+  loan to the cent.
+
+### snowball.js (debt snowball page)
+- **Degeneracy check:** a single debt must equal plain amortization —
+  months and interest match loan.js exactly.
+- **Hand-checkable case:** $500 @ 0%, $300/mo total → 2 months, $0 interest.
+- **Method ordering:** snowball targets smallest balance, avalanche targets
+  highest APR (verified on a divergent 3-debt mix where they differ);
+  avalanche interest is strictly lower there — the mathematical guarantee.
+- **Conservation:** total paid = total principal + total interest to the
+  cent, both methods. Unpayable minimums are flagged, not looped.
+
+### refinance.js
+- Current/new payments are `pmt` identities (engine shares the verified
+  formula). Break-even = ⌈closing costs ÷ monthly savings⌉ — e.g. $4,000
+  costs ÷ ($1,413.56 − $1,135.58) = 14.4 → month 15.
+- Lifetime savings equals (old payments to payoff) − (new payments to
+  payoff + upfront costs) exactly; financed costs raise the new principal
+  ($200k + $4k = $204k). Rate increases produce negative savings and the
+  UI says so instead of showing a bogus break-even.
+
+### auto.js
+- Worked example: $35,000 price, $5,000 down, $8,000 trade (owing $2,000),
+  6% tax **after trade-in credit**, $500 fees financed, 7% APR / 60 mo →
+  taxable $27,000 · tax $1,620 · **amount financed $26,120** ·
+  payment = pmt(26,120, 7%, 60) = $517.21. All arithmetic is exact.
+- No-credit state (CA-style): taxable = full $35,000; upfront tax+fees mode
+  keeps them out of the loan and in "due at signing".
+- State tax data: base rates + trade-in-credit flags compiled 2026-07 from
+  state DOR publications (see src/data/auto-sales-tax.json `meta.sources`);
+  the rate field stays user-editable and every page carries a
+  verify-with-your-DMV caveat.
+
+## UI verification (manual, 2026-07-11, headless-browser screenshots)
+- All four M2 calculators render and compute on load; results match the
+  engines (spot-checked: refinance $1,782.61 = pmt(250k, 7.25%, 312);
+  auto $663.34 = pmt(33,500, 7%, 60)).
+- Share-URL round-trip, print (schedules auto-expand), expand/collapse all,
+  add/remove debt rows, state dropdown prefill + trade-in credit toggle.
+- Lighthouse mobile, all four pages: **100/100/100/100** (snowball page
+  fixed from CLS 0.189 → 0.003 by server-rendering default debt rows;
+  heading-order + empty-th issues fixed on loan-payoff/refinance).
+
+## Gate M2 status
+- [x] Math verified per tool (36 checks, `node tests/m2-check.mjs`)
+- [x] Homepage is a real directory (all 5 tools live + cross-linked;
+      footer + Related Calculators sections link every tool)
+- [x] Schema on every page: WebApplication + BreadcrumbList + FAQPage
+- [x] Lighthouse ≥95 mobile on all four new templates (all 100×4)
 
 ## Gate M1 status
 - [x] 3 known-correct examples verified (A, B, C) + PMI + extra-payment cases
