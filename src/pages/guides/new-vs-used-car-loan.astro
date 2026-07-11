@@ -1,0 +1,63 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const newPay = pmt(38000, 6, 60);
+const usedPay = pmt(26000, 8.5, 60);
+---
+
+<GuideLayout
+  title="New vs. Used Car Loans: The Real Math (Rates, Depreciation, Total Cost)"
+  metaTitle="New vs Used Car Loan Math Compared | Payoff Logic"
+  description="Used cars cost less but finance worse (+1–3 points APR). A worked comparison of a $38k new vs $26k used deal — payment, interest, depreciation — and where the money actually goes."
+  slug="new-vs-used-car-loan"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="car"
+  tool={{ href: '/auto-loan-calculator/', label: 'auto loan calculator with trade-in & tax' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Used wins on price, new wins on financing — and
+    price usually wins the fight. Example at 60 months: a {fmt(38000)} new car at 6%
+    costs {fmt(newPay)}/month; a {fmt(26000)} 3-year-old equivalent at 8.5% costs
+    {fmt(usedPay)} — {fmt(newPay - usedPay)} less every month despite the worse rate,
+    plus you skip the steepest depreciation years.
+  </div>
+
+  <h2>Why used APRs run higher (and why it rarely flips the answer)</h2>
+  <p>
+    Lenders price used loans 1–3 points above new: collateral values are less
+    predictable and losses run higher. Promotional 0–2.9% new-car offers widen the
+    gap further — but a rate applies to a <em>principal</em>, and the used car's
+    smaller principal usually dominates. Run both versions of your actual deal in the
+    <a href="/auto-loan-calculator/">auto loan calculator</a>; the interest-column
+    difference is usually smaller than one year of the new car's depreciation.
+  </p>
+
+  <h2>Depreciation: the cost that isn't on the loan</h2>
+  <p>
+    A typical new car sheds ~20% of value in year one and ~45–50% by year five —
+    on {fmt(38000)}, roughly {fmt(38000 * 0.45)} gone by year five, dwarfing every
+    financing number above. Buying at year 2–4 lets the first owner eat that curve.
+    The counterweights are real but smaller: full warranty, current safety tech,
+    known history, and sometimes subsidized financing. That's the actual trade —
+    curve-eating versus warranty-and-rate.
+  </p>
+
+  <h2>Decision rules that survive the showroom</h2>
+  <ul>
+    <li><strong>Budget-first:</strong> set the payment ceiling before shopping (<a href="/car-affordability-calculator/">car affordability calculator</a>), then see which cars fit — not the reverse.</li>
+    <li><strong>0% APR vs rebate:</strong> promo rates usually replace cash rebates; compare "rebate + credit-union rate" against "0% + full price" both ways in the calculator.</li>
+    <li><strong>Watch the term trap on used:</strong> 72–84 months on an aging car means paying on it long after warranties and patience expire (<a href="/guides/how-car-loan-interest-works/">term math</a>).</li>
+    <li><strong>Certified pre-owned</strong> prices between the two — worth it mainly for the warranty if you'd otherwise buy an extended one.</li>
+  </ul>
+
+  <h2>The total-cost sentence</h2>
+  <p>
+    Over five years, the used deal above saves roughly {fmt((newPay - usedPay) * 60)}
+    in payments <em>and</em> avoids the worst depreciation — call it five figures —
+    in exchange for older tech and shorter warranty. If that trade sounds bad to you,
+    buy new with open eyes; if it sounds obvious, the used market is where your math
+    already lives.
+  </p>
+</GuideLayout>

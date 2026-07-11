@@ -1,0 +1,67 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const P = 400000;
+const rows = [3, 3.5, 5, 10, 20].map((pct) => {
+  const loan = P * (1 - pct / 100);
+  const pmi = pct < 20 ? (loan * 0.005) / 12 : 0;
+  return { pct, down: (P * pct) / 100, pi: pmt(loan, 6.5, 360), pmi };
+});
+---
+
+<GuideLayout
+  title="How Much Down Payment Do You Really Need? (Not 20%)"
+  metaTitle="How Much Down Payment Do You Really Need? | Payoff Logic"
+  description="Program minimums from 0% to 20%, what each tier costs monthly on a $400k home, where the 20% myth came from, and when a smaller down payment is the smarter move."
+  slug="how-much-down-payment"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/down-payment-calculator/', label: 'down payment scenario calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Program minimums are 0% (VA/USDA), 3% (conventional
+    first-time programs), 3.5% (FHA), and 5% (standard conventional). 20% is not a
+    requirement — it's the point where PMI disappears. Median first-time buyers put
+    down well under 10%; the real constraint is usually cash for down payment
+    <em>plus</em> 2–5% closing costs <em>plus</em> a surviving emergency fund.
+  </div>
+
+  <h2>What each tier costs on a {fmt(P)} home (6.5%, 30-yr)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Down</th><th class="num">Cash for down</th><th class="num">P&amp;I / mo</th><th class="num">Est. PMI / mo</th></tr></thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr><td>{r.pct}%</td><td class="num">{fmt(r.down)}</td><td class="num">{fmt(r.pi)}</td><td class="num">{r.pmi ? fmt(r.pmi) : '—'}</td></tr>
+      ))}
+    </tbody>
+  </table></div>
+  <p>
+    Read the spread: 3.5% vs 20% down is {fmt(rows[4].down - rows[1].down)} of cash
+    for about {fmt(rows[1].pi + rows[1].pmi - rows[4].pi)}/month of payment. Whether
+    that trade is good depends entirely on what else the cash could do — retire 24%
+    card debt, fund emergencies, or just exist as a buffer.
+  </p>
+
+  <h2>Where the 20% myth came from — and when it's still right</h2>
+  <p>
+    20% was the historical standard before mortgage insurance existed, and it still
+    buys three real things: no PMI, a slightly better rate tier, and instant equity
+    cushion against price dips. If you HAVE 20% <em>plus</em> closing costs
+    <em>plus</em> 3–6 months of expenses, it's usually the right call. The myth is
+    that you must <em>wait</em> for it: saving toward 20% in a market appreciating 4%
+    a year on a {fmt(P)} home means chasing a target that moves {fmt(P * 0.04 * 0.2)}
+    a year while rents continue. The
+    <a href="/rent-vs-buy-calculator/">rent-vs-buy calculator</a> prices that wait
+    honestly.
+  </p>
+
+  <h2>Smaller down payments, used well</h2>
+  <ul>
+    <li><strong>Keep PMI temporary:</strong> it auto-cancels at 78% LTV, and extra payments or appreciation can kill it in a few years (<a href="/pmi-calculator/">PMI calculator</a>).</li>
+    <li><strong>Watch the payment ratio, not the ego:</strong> qualify comfortably under the 28/36 rule with the smaller down payment (<a href="/house-affordability-calculator/">affordability calculator</a>).</li>
+    <li><strong>Gift funds and assistance programs count:</strong> documented gifts are allowed by every major program, and state HFAs run grant/forgivable-second programs most buyers never check.</li>
+    <li><strong>Don't drain to zero:</strong> the buyer with 5% down and a funded emergency account is structurally safer than the one with 20% down and $800 left.</li>
+  </ul>
+</GuideLayout>

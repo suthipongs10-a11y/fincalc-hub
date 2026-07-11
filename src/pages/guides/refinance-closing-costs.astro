@@ -1,0 +1,52 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Refinance Closing Costs: The Full Breakdown (and the No-Cost Illusion)"
+  metaTitle="Refinance Closing Costs Breakdown | Payoff Logic"
+  description="What a refinance actually costs (2–6%), line by line — which fees repeat from your purchase, which you can shop, and how 'no-closing-cost' offers really price."
+  slug="refinance-closing-costs"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="breakeven"
+  tool={{ href: '/refinance-calculator/', label: 'refinance break-even calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Refinancing re-runs most purchase closing costs:
+    typically 2–6% of the balance — {fmt(5000)}–{fmt(15000)} on {fmt(250000)}. The big
+    lines: lender origination (0.5–1%), appraisal ({fmt(500)}–{fmt(800)}), title
+    insurance (ask for the <em>reissue rate</em> — many borrowers overpay here), and
+    escrow/prepaid seeding. Every dollar matters because costs ÷ monthly savings =
+    your break-even month.
+  </div>
+
+  <h2>Line by line, with the refi-specific tricks</h2>
+  <ul>
+    <li><strong>Lender fees:</strong> fully competitive — quote 2–3 lenders the same day. "No-fee" often means lender credits (higher rate); compare both honestly.</li>
+    <li><strong>Appraisal:</strong> sometimes waived by automated valuation on strong-equity refis — ask; that's {fmt(600)} back.</li>
+    <li><strong>Title insurance:</strong> the sleeper. You bought a policy at purchase; refinancing needs a new <em>lender's</em> policy, and most title companies offer a discounted <strong>reissue rate</strong> if you provide your prior policy — commonly 25–40% off. They rarely volunteer it.</li>
+    <li><strong>Government/recording:</strong> small, except in states that levy mortgage-recording taxes.</li>
+    <li><strong>Escrow &amp; prepaids:</strong> the new loan seeds a fresh escrow account. Not a true cost — your OLD escrow balance is refunded a few weeks after closing — but it inflates cash-to-close and confuses comparisons.</li>
+  </ul>
+
+  <h2>Pay, roll, or absorb into the rate?</h2>
+  <p>
+    Three ways to fund the same costs: cash at closing (cheapest overall), rolled into
+    the balance (you finance them for 30 years), or a "no-closing-cost" rate bump
+    (typically +0.25–0.5%). None is free; they're the same bill on different
+    schedules. The <a href="/refinance-calculator/">refinance calculator</a> models
+    upfront vs financed with a checkbox, and pricing the rate-bump version is the same
+    math as <a href="/guides/mortgage-points-worth-it/">points in reverse</a>. Short
+    expected stay → lean no-cost; long stay → pay cash if you can.
+  </p>
+
+  <h2>Sanity checks before you sign</h2>
+  <ol>
+    <li>Break-even month vs honest tenure — the whole decision (<a href="/guides/when-to-refinance/">the two tests</a>).</li>
+    <li>Compare Loan Estimates section-by-section like a purchase (<a href="/guides/closing-costs-explained/">the anatomy</a>).</li>
+    <li>Watch the term reset: costs + restarted 30-year clock can flip a "winning" rate into a lifetime loss — the calculator's lifetime table catches it.</li>
+    <li>Streamline programs (FHA/VA IRRRL) skip appraisals and slash costs if you're already in those programs — see <a href="/guides/streamline-refinance/">streamline refis</a>.</li>
+  </ol>
+</GuideLayout>

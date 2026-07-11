@@ -1,0 +1,60 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+// example: $75k income → 10% = $625 all-in; assume $175 insurance+fuel → $450 payment
+const loanAt = (450 / pmt(1, 7, 48));
+---
+
+<GuideLayout
+  title="The 20/4/10 Rule for Car Buying (and How to Bend It Without Breaking It)"
+  metaTitle="The 20/4/10 Car Buying Rule Explained | Payoff Logic"
+  description="20% down, 4-year loan, all car costs under 10% of gross income — what the classic rule buys you, the math behind each number, and which part to bend when reality bites."
+  slug="20-4-10-rule"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="car"
+  tool={{ href: '/car-affordability-calculator/', label: 'car affordability calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> The 20/4/10 rule says: put <strong>20% down</strong>,
+    finance for <strong>no more than 4 years</strong>, and keep <strong>total</strong>
+    vehicle costs — payment, insurance, fuel — under <strong>10% of gross income</strong>.
+    On a {fmt(75000)} salary that's ~{fmt(625)}/month all-in; after ~{fmt(175)} of
+    insurance and fuel, a {fmt(450)} payment supports roughly {fmt(loanAt)} of
+    financing at 7%/48 months. It's deliberately conservative — that's the point.
+  </div>
+
+  <h2>What each number is protecting you from</h2>
+  <ul>
+    <li><strong>20% down</strong> ≈ first-year depreciation. You start at or above water instead of spending two years underwater (<a href="/guides/upside-down-car-loan/">why that matters</a>).</li>
+    <li><strong>4 years</strong> caps total interest and ends payments while the car is still young — versus 72–84-month loans that outlive warranties and enthusiasm (<a href="/guides/how-car-loan-interest-works/">the term table</a>).</li>
+    <li><strong>10% all-in</strong> keeps transportation from cannibalizing housing, saving, and debt payoff. Note it's <em>total</em> cost: the payment-only versions of this rule quietly double what people spend.</li>
+  </ul>
+
+  <h2>Reality check: almost nobody passes all three</h2>
+  <p>
+    Average new-car transactions and average loan terms both violate the rule —
+    that's not evidence the rule is wrong; it's evidence the average buyer is
+    over-cared. Treat 20/4/10 as a direction, and if you must bend, bend in this
+    order: <strong>the 20% down first</strong> (10–15% down with gap coverage is a
+    reasoned risk), <strong>the 4 years second</strong> (60 months on a reliable car
+    at a good rate is defensible), and <strong>the 10% never</strong> — the income cap
+    is the one doing the budget-protecting.
+  </p>
+
+  <h2>Using it with the calculators</h2>
+  <ol>
+    <li>Compute your 10% line (gross monthly × 0.10), subtract realistic insurance + fuel, and enter the remainder as your budget in the <a href="/car-affordability-calculator/">car affordability calculator</a> at 48 months.</li>
+    <li>The result is your rule-compliant price ceiling — often bracingly lower than showroom instincts. Check the 60-month version to see what bending costs.</li>
+    <li>Price a specific deal — trade-in, your state's tax, fees — in the <a href="/auto-loan-calculator/">auto loan calculator</a> and confirm the payment still clears the line.</li>
+  </ol>
+
+  <h2>The uncomfortable, liberating conclusion</h2>
+  <p>
+    For a median income, 20/4/10 points at dependable used cars, not new trims — see
+    <a href="/guides/new-vs-used-car-loan/">the new-vs-used math</a>. The rule's gift
+    isn't austerity; it's that a car bought inside it never gets to dictate the rest
+    of your finances.
+  </p>
+</GuideLayout>

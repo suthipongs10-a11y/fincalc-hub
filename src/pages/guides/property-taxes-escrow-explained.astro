@@ -1,0 +1,62 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Property Taxes in Your Mortgage Payment: How Escrow Really Works"
+  metaTitle="Property Taxes & Escrow Explained | Payoff Logic"
+  description="Why your mortgage payment includes property taxes, how escrow accounts collect and pay them, why payments rise after year one, and what an escrow shortage letter means."
+  slug="property-taxes-escrow-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator with taxes and insurance' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Most lenders collect 1/12 of your estimated annual
+    property tax with every mortgage payment, hold it in an escrow account, and pay the
+    tax bill for you. Your "payment went up" letters are almost never the loan — a
+    fixed-rate P&amp;I never changes — they're the tax and insurance portion being
+    re-estimated each year.
+  </div>
+
+  <h2>Why lenders escrow at all</h2>
+  <p>
+    Unpaid property taxes become a lien senior to the mortgage — the county gets paid
+    before the lender. Escrow removes that risk, which is why loans with less than 20%
+    down almost always require it, and why waiving it (where allowed) can cost a small
+    rate premium. For you, escrow converts one or two large annual bills into flat
+    monthly installments — convenient, as long as you understand the annual reset.
+  </p>
+
+  <h2>The annual analysis: where surprises come from</h2>
+  <p>
+    Once a year the servicer compares what escrow collected against what it actually
+    paid, projects next year's bills, and recalculates your monthly deposit. Three
+    outcomes: a <strong>surplus</strong> over $50 is refunded; a
+    <strong>shortage</strong> gets spread over the next 12 months (raising your
+    payment); and rising tax assessments raise the go-forward deposit too — a
+    double-hit that explains those "my payment jumped $300" stories. New-construction
+    buyers get the sharpest version: year-one escrow is often estimated on the
+    <em>land-only</em> tax bill, then resets brutally when the completed home is
+    assessed.
+  </p>
+
+  <h2>What you can control</h2>
+  <ul>
+    <li><strong>Check the assessment, not just the rate.</strong> Assessed values can be appealed — county deadlines are strict, success rates are meaningful, and a lower assessment lowers escrow permanently.</li>
+    <li><strong>Claim your exemptions.</strong> Homestead exemptions (and senior/veteran variants) reduce the taxable value in most states; they usually require a one-time filing that new buyers forget. Our <a href="/mortgage-calculator/by-state/">state pages</a> note the big ones.</li>
+    <li><strong>Budget with the real rate.</strong> Statewide averages span 0.27%–2.23%; your county may differ from both. Enter your county's actual rate in the <a href="/mortgage-calculator/">calculator</a> before falling for a listing.</li>
+    <li><strong>Keep the cushion in mind.</strong> Federal rules let servicers hold up to two months of extra escrow as a cushion — that's normal, not an error.</li>
+  </ul>
+
+  <h2>Escrowed taxes and your amortization</h2>
+  <p>
+    Tax dollars never touch your loan balance — {fmt(400)}/month of escrow builds zero
+    equity. When comparing loans or deciding on extra payments, always separate P&amp;I
+    (the amortizing part — see <a href="/guides/how-amortization-works/">how
+    amortization works</a>) from escrow (a pass-through bill). Our calculators print
+    them as separate lines for exactly this reason.
+  </p>
+</GuideLayout>

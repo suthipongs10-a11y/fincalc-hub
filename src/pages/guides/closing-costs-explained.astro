@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Closing Costs: What's Actually in Them (and Which Ones You Can Negotiate)"
+  metaTitle="Closing Costs Breakdown — What You Can Negotiate | Payoff Logic"
+  description="The full anatomy of 2–5% closing costs: lender fees, title, prepaids, transfer taxes — which lines are shoppable by law, and how state rules change the bill."
+  slug="closing-costs-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Closing costs run about 2–5% of the price —
+    {fmt(7000)}–{fmt(17500)} on a {fmt(350000)} home — split among lender fees
+    (~0.5–1%), third-party services (appraisal, title, ~1%), government charges
+    (recording, transfer tax — $0 to 4% by state), and prepaids (insurance, taxes,
+    interest). Your Loan Estimate marks which services you may shop — those and the
+    lender's own fees are where negotiation works.
+  </div>
+
+  <h2>The four buckets on your Loan Estimate</h2>
+  <ul>
+    <li><strong>A — Lender charges:</strong> origination, underwriting, points if any. Fully competitive: this bucket is why you get multiple quotes.</li>
+    <li><strong>B/C — Services:</strong> appraisal (fixed by lender), then title insurance, settlement, survey — section C is legally shoppable, and title premiums vary hundreds between agencies for identical coverage. In some states title is price-regulated; in the rest, shop it.</li>
+    <li><strong>E — Government:</strong> recording fees and transfer taxes. Not negotiable with the government — but WHO pays transfer tax is contract-negotiable in many states, and the state spread is wild (nothing in Texas/Missouri; ~4% in Delaware; graduated in Washington). Each of our <a href="/mortgage-calculator/by-state/">state pages</a> notes the local rule.</li>
+    <li><strong>F/G — Prepaids &amp; escrow seed:</strong> first-year insurance, months of property tax, per-diem interest. Not fees at all — your own future bills, front-loaded. Biggest single "surprise" for first-timers (full checklist: <a href="/guides/first-time-homebuyer-costs/">first-time buyer costs</a>).</li>
+  </ul>
+
+  <h2>How to actually pay less</h2>
+  <ol>
+    <li><strong>Compete lenders on the same day</strong> (rates move daily) and compare section A + rate together — a low fee with a high rate is just points in disguise (<a href="/guides/mortgage-points-worth-it/">points math</a>).</li>
+    <li><strong>Shop section C</strong> — title/settlement quotes take one email each and routinely save {fmt(500)}+.</li>
+    <li><strong>Ask for seller credits</strong> in soft markets — 2–3% toward closing is a normal ask that lowers cash-to-close without touching the price much.</li>
+    <li><strong>Consider lender credits</strong> if cash is the constraint: a slightly higher rate that erases fees can be optimal for shorter stays.</li>
+    <li><strong>Refi note:</strong> the same anatomy applies to refinances, where costs gate the whole decision — see <a href="/guides/when-to-refinance/">the break-even guide</a>.</li>
+  </ol>
+
+  <h2>The comparison ritual</h2>
+  <p>
+    Loan Estimates are standardized precisely so you can lay two side by side: same
+    rate? compare A+B+C totals. Different rates? divide the fee difference by the
+    monthly-payment difference (our <a href="/mortgage-points-calculator/">points
+    calculator</a> does this) to find the break-even. Ten minutes of this ritual is
+    worth more per hour than almost anything else in the purchase.
+  </p>
+</GuideLayout>

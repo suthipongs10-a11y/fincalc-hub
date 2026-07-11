@@ -1,0 +1,74 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt, amortizeLoan } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+const BAL = 10000, APR = 23;
+const plans = [250, 350, 500].map((p) => {
+  const a = amortizeLoan({ principal: BAL, annualRate: APR, payment: p });
+  return { p, months: a.months, interest: a.totalInterest };
+});
+const bt = pmt(BAL * 1.04, 0, 18);
+---
+
+<GuideLayout
+  title="How to Pay Off $10,000 of Credit Card Debt (Four Plans, Priced)"
+  metaTitle="How to Pay Off $10k Credit Card Debt — 4 Plans Priced | Payoff Logic"
+  description="Four realistic routes out of $10,000 at 23% APR — fixed payments, balance transfer, consolidation loan, and hybrid — each priced in months and interest."
+  slug="pay-off-10k-credit-card"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="payoff"
+  tool={{ href: '/credit-card-payoff-calculator/', label: 'credit card payoff calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> At 23% APR, {fmt(BAL)} accrues about {fmt(BAL * 0.23 / 12)}
+    of interest a month — so the plan is (1) stop new charges, (2) fix a payment of
+    {fmt(plans[0].p)}–{fmt(plans[2].p)} (payoff in {yrMo(plans[2].months)}–{yrMo(plans[0].months)}),
+    and (3) if your credit allows, cut the rate first with a 0% transfer or a
+    consolidation loan — a 0% card cleared in 18 months needs about {fmt(bt)}/month
+    and almost no interest beyond the fee.
+  </div>
+
+  <h2>Plan A: brute force with a fixed payment</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Fixed payment</th><th class="num">Time to zero</th><th class="num">Total interest</th></tr></thead>
+    <tbody>
+      {plans.map((r) => (
+        <tr><td>{fmt(r.p)}/month</td><td class="num">{yrMo(r.months)}</td><td class="num">{fmt(r.interest)}</td></tr>
+      ))}
+    </tbody>
+  </table></div>
+  <p>
+    No applications, no approvals — just the <a href="/guides/minimum-payments-trap/">fixed-payment
+    fix</a> applied hard. The step from {fmt(250)} to {fmt(500)} cuts interest by
+    {fmt(plans[0].interest - plans[2].interest)}; find your own ladder in the
+    <a href="/credit-card-payoff-calculator/">payoff calculator</a>.
+  </p>
+
+  <h2>Plan B: 0% balance transfer (credit ~670+)</h2>
+  <p>
+    Move the balance to a 0% card (12–21 months, 3–5% fee ≈ {fmt(BAL * 0.04)}). The
+    entire game is finishing inside the window: {fmt(bt)}/month clears it in 18. Miss
+    the window and deferred rates bite — set the payment on autopay on day one, and
+    don't spend on the old card you just emptied.
+  </p>
+
+  <h2>Plan C: consolidation loan (predictability)</h2>
+  <p>
+    A personal loan at 11–14% swaps daily compounding for a fixed 36-month schedule —
+    roughly {fmt(pmt(BAL * 1.03, 12, 36))}/month with the fee financed. It saves less
+    than a well-executed transfer but can't be fumbled. Verify any specific offer
+    against your cards in the <a href="/debt-consolidation-calculator/">consolidation
+    calculator</a> — at the same monthly budget.
+  </p>
+
+  <h2>Plan D: the hybrid most people actually need</h2>
+  <p>
+    Transfer what fits the 0% limit, attack the remainder at the highest rate first
+    (<a href="/guides/snowball-vs-avalanche/">avalanche</a>), and roll payments as
+    pieces die. Two rules keep any plan alive: the cards stay at zero while you work,
+    and windfalls (refunds, bonuses) go to the balance the day they land. {fmt(BAL)}
+    at 23% feels permanent; every row above is an exit with a date on it.
+  </p>
+</GuideLayout>

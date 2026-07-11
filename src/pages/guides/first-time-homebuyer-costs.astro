@@ -1,0 +1,60 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const P = 350000;
+---
+
+<GuideLayout
+  title="First-Time Homebuyer Costs: The Complete Checklist (Beyond the Down Payment)"
+  metaTitle="First-Time Homebuyer Costs Checklist | Payoff Logic"
+  description="Every cost of buying a first home, itemized on a $350k example: closing costs, prepaids, inspections, moving, immediate repairs — and the cash cushion that keeps it safe."
+  slug="first-time-homebuyer-costs"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/house-affordability-calculator/', label: 'home affordability calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Budget roughly <strong>down payment + 2–5% of the
+    price in closing costs + $2,000–$5,000 in move-in costs + a 3–6 month emergency
+    fund</strong>. On a {fmt(P)} home with 5% down, that's about {fmt(P * 0.05)} down,
+    {fmt(P * 0.03)} closing, and several thousand in first-month realities — call it
+    {fmt(P * 0.05 + P * 0.03 + 4000)} of cash before the cushion.
+  </div>
+
+  <h2>At closing (the wired money)</h2>
+  <ul>
+    <li><strong>Down payment</strong> — see <a href="/guides/how-much-down-payment/">how much you really need</a>.</li>
+    <li><strong>Lender fees</strong> — origination/underwriting, typically 0.5–1%.</li>
+    <li><strong>Third-party fees</strong> — appraisal ($500–$800), title search & insurance ({fmt(1500)}–{fmt(3500)}), recording, attorney where required.</li>
+    <li><strong>Transfer taxes</strong> — $0 in some states, 1–4% in others; our <a href="/mortgage-calculator/by-state/">state pages</a> note each state's rule.</li>
+    <li><strong>Prepaids &amp; escrow seed</strong> — first year of homeowners insurance, several months of property tax, and prepaid interest to month-end. Often the surprise line: {fmt(2500)}–{fmt(6000)}.</li>
+  </ul>
+
+  <h2>Before closing (out of pocket, refundable never)</h2>
+  <ul>
+    <li><strong>Inspections</strong> — general ($350–$600) plus radon/sewer/pest where relevant. Never skip to "win" a bid without pricing the risk you're absorbing.</li>
+    <li><strong>Earnest money</strong> — 1–3% deposited at offer; credited at closing, lost if you walk outside your contingencies.</li>
+  </ul>
+
+  <h2>The first 90 days (everyone forgets these)</h2>
+  <ul>
+    <li><strong>Moving</strong> — $500 DIY to $3,000+ interstate.</li>
+    <li><strong>Immediate fixes &amp; keys-day spending</strong> — locks, blinds, a mower, the appliance the seller took: $1,000–$4,000 typical.</li>
+    <li><strong>Utility deposits and setup</strong>, plus the first oversized utility bills of a larger space.</li>
+    <li><strong>The maintenance reality</strong> — plan ~1% of home value per year from day one; the water heater does not care that you just closed.</li>
+  </ul>
+
+  <h2>The order of operations that keeps you safe</h2>
+  <p>
+    1) Set your price ceiling from the <a href="/house-affordability-calculator/">28/36
+    math</a>, not from your pre-approval letter. 2) Verify the full monthly cost —
+    taxes, insurance, PMI — in the <a href="/mortgage-calculator/">mortgage
+    calculator</a> (state pages preload local figures). 3) Stack the cash checklist
+    above and confirm the emergency fund survives closing. 4) Ask about first-time
+    programs: state HFA grants, forgivable seconds, and lender credits are real money
+    (see <a href="/guides/mortgage-points-worth-it/">lender credits</a>). A first home
+    bought with a cushion intact is a joy; the same home bought cash-dry is a stress
+    machine — the difference is one checklist.
+  </p>
+</GuideLayout>

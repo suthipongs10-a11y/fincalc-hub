@@ -1,0 +1,65 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import taxData from '../../data/auto-sales-tax.json';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const noCredit = taxData.states.filter((s) => !s.tradeInCredit).map((s) => s.name);
+---
+
+<GuideLayout
+  title="How Trade-Ins and Sales Tax Change Your Car Deal (State by State)"
+  metaTitle="Trade-Ins & Car Sales Tax by State | Payoff Logic"
+  description="Most states tax the price AFTER your trade-in credit — worth hundreds. Which states don't, why negotiating the trade separately still wins, and how payoff amounts flow into the loan."
+  slug="trade-in-sales-tax"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="car"
+  tool={{ href: '/auto-loan-calculator/', label: 'auto loan calculator with state tax rules' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> In most states, sales tax applies to the price
+    <em>minus</em> your trade-in — an $8,000 trade at a 6% rate is {fmt(480)} of tax
+    saved on top of the trade's value. The exceptions that tax the full price:
+    {noCredit.join(', ')}. Our <a href="/auto-loan-calculator/">auto loan
+    calculator</a> applies your state's rule automatically.
+  </div>
+
+  <h2>The tax credit: the trade-in's hidden bonus</h2>
+  <p>
+    A dealer trade-in is worth its negotiated value PLUS the tax it shields (in
+    credit states). That changes the private-sale comparison: selling privately
+    typically fetches more gross, but the trade's tax shield claws back
+    {fmt(480)}-plus on mid-size deals. Rule of thumb in credit states: private sale
+    needs to beat the trade offer by more than the tax shield to be worth the
+    hassle — in no-credit states, private selling wins more often.
+  </p>
+
+  <h2>Payoffs and negative equity in the same math</h2>
+  <p>
+    Still owe on the trade? The dealer pays your lender and the difference flows
+    through the deal: positive equity reduces what you finance; negative equity gets
+    added to the new loan (and note — the tax credit is based on the trade's
+    <em>value</em>, not your equity). The calculator's "still owed on trade" field
+    wires this correctly and flags negative equity — the trap covered in
+    <a href="/guides/upside-down-car-loan/">upside down on a car loan</a>.
+  </p>
+
+  <h2>Negotiate the three numbers separately</h2>
+  <ol>
+    <li><strong>The car's price</strong> — settle it before mentioning a trade.</li>
+    <li><strong>The trade-in value</strong> — armed with 2–3 online instant offers as your floor.</li>
+    <li><strong>The financing</strong> — against a pre-approval you brought.</li>
+  </ol>
+  <p>
+    Dealers blend these into "what monthly payment works for you?" precisely because
+    a blended number hides which lever they moved. Three separate numbers, then let
+    the <a href="/auto-loan-calculator/">calculator</a> assemble the deal — including
+    whether rolling tax and fees into the loan is worth it.
+  </p>
+
+  <h2>State quirks worth knowing</h2>
+  <ul>
+    <li><strong>No-sales-tax states</strong> (AK, DE, MT, NH, OR) make the credit question moot — but registration-based fees can apply.</li>
+    <li><strong>Special systems:</strong> Georgia's one-time TAVT and North Carolina's highway-use tax behave like sales tax with their own rates; South Carolina caps the fee at $500 outright.</li>
+    <li><strong>Local add-ons:</strong> county/city taxes stack 1–5% on the state rate in much of the country — our calculator's rate field stays editable for your real combined rate.</li>
+  </ul>
+</GuideLayout>

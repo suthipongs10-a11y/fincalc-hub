@@ -1,0 +1,58 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Upside Down on a Car Loan: Your Actual Options, Ranked"
+  metaTitle="Upside Down on a Car Loan — Options Ranked | Payoff Logic"
+  description="Owing more than the car is worth: how it happens, why rolling negative equity into the next loan digs deeper, and the five real exits ranked from best to last resort."
+  slug="upside-down-car-loan"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="car"
+  tool={{ href: '/loan-payoff-calculator/', label: 'loan payoff calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Being upside down (negative equity) means the
+    payoff exceeds the car's value — common in long-term loans' early years. The
+    ranked exits: (1) keep driving and pay principal down, (2) add extra payments to
+    reach breakeven sooner, (3) sell privately and cover the small gap in cash,
+    (4) refinance to stop rate-bleed while you catch up, and (5) — last resort —
+    roll the gap into the next loan, which converts this car's problem into the next
+    car's bigger one.
+  </div>
+
+  <h2>How you got here (no shame, it's structural)</h2>
+  <p>
+    Long terms amortize slower than cars depreciate: at 72–84 months with little
+    down, the balance curve sits above the value curve for years (see the
+    <a href="/guides/how-car-loan-interest-works/">term-length math</a>). Add
+    rolled-in taxes/fees or prior negative equity and the gap starts at signing.
+    First step is measuring it: payoff quote from your lender minus real offers
+    (CarMax/Carvana quotes are fine proxies) = your number.
+  </p>
+
+  <h2>The exits, ranked</h2>
+  <ol>
+    <li><strong>Drive through it.</strong> If the car runs and the payment fits, time fixes the curve — every month closes the gap from both sides. Cheapest option by far.</li>
+    <li><strong>Accelerate to breakeven.</strong> Extra principal shortens the underwater window; the <a href="/loan-payoff-calculator/">payoff calculator</a> shows exactly when your balance crosses a target value. Even {fmt(75)}/month moves the date meaningfully.</li>
+    <li><strong>Sell private-party + cash the gap.</strong> Private sale beats trade-in value by enough to shrink the check you write. A {fmt(2000)} gap paid in cash is almost always cheaper than financing that gap at interest inside another loan.</li>
+    <li><strong>Refinance the remainder</strong> if your rate is dealer-marked-up — it doesn't fix equity, but it stops overpaying while you work the principal (<a href="/auto-refinance-calculator/">auto refi calculator</a>; note lenders cap LTV ~110–130%).</li>
+    <li><strong>Roll it into the next car.</strong> The industry's favorite: your {fmt(3500)} gap plus a new loan means starting the next car deeper underwater, at interest. Sometimes unavoidable (totaled car, job change); never neutral. If forced, roll into a cheaper car, not a nicer one.</li>
+  </ol>
+
+  <h2>Two guardrails while you're under</h2>
+  <ul>
+    <li><strong>Gap insurance:</strong> if the car were totaled today, insurance pays value, not payoff — the difference is your problem. If your gap is four figures, gap coverage (often ~{fmt(300)}–{fmt(700)} once, cheaper via insurer than dealer) is rational until you surface.</li>
+    <li><strong>Don't skip maintenance.</strong> An underwater car that dies becomes an unsecured debt with no vehicle — the worst square on the board.</li>
+  </ul>
+
+  <h2>Next time, start above water</h2>
+  <p>
+    The prevention recipe is boring and works: meaningful down payment, ≤60-month
+    term, and a price ceiling set by budget (<a href="/car-affordability-calculator/">car
+    affordability calculator</a>) rather than showroom gravity — the same three
+    levers that made this guide necessary, pointed the other way.
+  </p>
+</GuideLayout>

@@ -1,0 +1,58 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Debt-to-Income Ratio (DTI): The Number That Decides Your Mortgage"
+  metaTitle="DTI Explained — Front-End, Back-End & the Limits | Payoff Logic"
+  description="How to compute front-end and back-end DTI, the real approval limits by loan type (36% to ~50%), what counts as debt, and the fastest ways to fix a too-high ratio."
+  slug="debt-to-income-ratio-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="affordability"
+  tool={{ href: '/house-affordability-calculator/', label: 'affordability calculator (DTI-driven)' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> DTI = required monthly debt payments ÷ gross
+    monthly income. Lenders check two versions: <strong>front-end</strong> (housing
+    costs only; guideline ≤28%) and <strong>back-end</strong> (housing + all other
+    debt payments; guideline ≤36%, approvals often up to ~45–50%). Example: {fmt(8000)}
+    gross income, {fmt(2200)} housing, {fmt(700)} other debts → 27.5% front, 36.3%
+    back — right at the classic line.
+  </div>
+
+  <h2>What counts (and what doesn't)</h2>
+  <ul>
+    <li><strong>Counts:</strong> the full future housing payment (P&amp;I + taxes + insurance + PMI + HOA), car loans/leases, student loans (IDR payment or a % of balance per program rules), personal loans, credit-card <em>minimums</em>, child support/alimony.</li>
+    <li><strong>Doesn't:</strong> utilities, phone, groceries, insurance (non-home), subscriptions, taxes — which is exactly why maxing your approved DTI can still wreck a real budget: the lender ignores half your life.</li>
+    <li><strong>Income side:</strong> gross (pre-tax) W-2 pay counts cleanly; variable/self-employment income typically needs a two-year average.</li>
+  </ul>
+
+  <h2>The real limits by program</h2>
+  <p>
+    Classic guidance is 28/36 — that's what our
+    <a href="/house-affordability-calculator/">affordability calculator</a> defaults
+    to, with the aggressive row showing approval territory. In practice: conventional
+    automated approvals reach ~45–50% back-end with strong compensating factors; FHA
+    frequently approves to ~50%+; VA uses residual-income analysis alongside DTI.
+    Approval ≠ comfort: at 45% back-end, nearly half of gross pay is spoken for before
+    taxes, food, or savings.
+  </p>
+
+  <h2>Fixing a too-high DTI, ranked by speed</h2>
+  <ol>
+    <li><strong>Kill a monthly payment,</strong> not a balance. DTI counts payments — clearing a {fmt(430)}/month car loan frees ~{fmt(64000)} of mortgage capacity at current rates, often the single fastest lever (<a href="/loan-payoff-calculator/">loan payoff calculator</a>).</li>
+    <li><strong>Pay cards below their minimum-trigger balances</strong> — minimums shrink as balances do, and small minimums barely dent DTI.</li>
+    <li><strong>Recast/refinance an existing loan</strong> to lower its required payment (mind total cost — <a href="/guides/when-to-refinance/">the trade-offs</a>).</li>
+    <li><strong>Document more income:</strong> a second year of side-gig history, a co-borrower, or bonuses your lender can count.</li>
+    <li><strong>Lower the target payment:</strong> more down, cheaper house, or buying down the rate — the <a href="/mortgage-calculator/">mortgage calculator</a> shows each path's effect on the housing number.</li>
+  </ol>
+
+  <h2>The ratio to live by vs. the ratio to qualify by</h2>
+  <p>
+    Use ~36% back-end as your own ceiling and treat anything above as borrowed
+    lifestyle. Lenders will happily approve more — their risk model only needs you to
+    <em>probably</em> not default; your budget deserves a higher bar.
+  </p>
+</GuideLayout>

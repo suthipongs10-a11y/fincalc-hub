@@ -1,0 +1,54 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pointsBreakEven } from '../../lib/tools-extra.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const r = pointsBreakEven({ loan: 400000, termYears: 30, baseRate: 6.75, points: 1, reducedRate: 6.5 });
+---
+
+<GuideLayout
+  title="Mortgage Points: When Buying Down the Rate Is Worth It"
+  metaTitle="Are Mortgage Points Worth It? The Break-Even Math | Payoff Logic"
+  description="Discount points explained with a worked $400k example: cost, monthly savings, break-even month — and the two situations where points quietly lose."
+  slug="mortgage-points-worth-it"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="breakeven"
+  tool={{ href: '/mortgage-points-calculator/', label: 'mortgage points calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> One point costs 1% of the loan and typically buys
+    ~0.25% off the rate. On {fmt(400000)} (6.75% → 6.5%), that's {fmt(r.cost)} for
+    {fmt(r.monthlySavings)}/month — break-even at month {r.breakEvenMonths}
+    (~{Math.round(r.breakEvenMonths / 12)} years). Keep the loan longer and points pay
+    {fmt(r.lifetimeSavings)} over the term; exit earlier (sale OR refinance) and the
+    money is simply lost.
+  </div>
+
+  <h2>Points are a side bet on loan longevity</h2>
+  <p>
+    The rate sheet offers you the same loan at several price/rate combinations —
+    points are prepaying interest to slide down that curve. The bet only pays if the
+    loan survives past break-even. Two exits kill it: <strong>selling</strong>, which
+    people at least anticipate, and <strong>refinancing</strong>, which they don't —
+    buying points at a rate peak is close to self-defeating, because the same falling
+    rates that would tempt you to refinance are what vaporize the points you bought.
+  </p>
+
+  <h2>The checklist before paying for points</h2>
+  <ul>
+    <li><strong>Get the two-rate quote</strong> and compute break-even from real numbers (<a href="/mortgage-points-calculator/">calculator</a>) — point pricing varies by lender and day; the 0.25%-per-point rule is only a sketch.</li>
+    <li><strong>Honest horizon:</strong> average tenure in a first home runs shorter than people predict. If break-even is past year 5 and your horizon is fuzzy, skip.</li>
+    <li><strong>Rate outlook:</strong> expect to refinance within a few years? Points are the first casualty. See <a href="/guides/when-to-refinance/">when refinancing is worth it</a>.</li>
+    <li><strong>Compete the cash:</strong> the same dollars could raise your down payment (possibly cutting PMI — a guaranteed win) or stay liquid. Compare in the <a href="/down-payment-calculator/">down payment calculator</a>.</li>
+  </ul>
+
+  <h2>Lender credits: points in reverse</h2>
+  <p>
+    The same curve runs the other way — accept a slightly higher rate, receive closing
+    credits. For short expected stays this is often the genuinely optimal corner of
+    the rate sheet, and almost nobody asks for it. Model it by treating the credit
+    rate as your baseline in the calculator. Whichever direction you trade, the
+    principle is identical: <em>match the loan's pricing to how long you'll actually
+    keep it.</em>
+  </p>
+</GuideLayout>

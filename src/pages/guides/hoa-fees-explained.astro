@@ -1,0 +1,66 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+// $300/mo HOA ≈ how much price at 6.5%/30yr
+const priceEquiv = 300 / pmt(1, 6.5, 360);
+---
+
+<GuideLayout
+  title="HOA Fees and Your Mortgage Budget: The Payment That Never Amortizes"
+  metaTitle="HOA Fees & Your Mortgage Budget | Payoff Logic"
+  description="How HOA dues change what you can afford (a $300 fee ≈ $47k of price), what dues do and don't cover, special assessments, and the questions to ask before buying in."
+  slug="hoa-fees-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator with an HOA field' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> HOA dues are a permanent monthly cost that lenders
+    count in your debt-to-income ratio — every {fmt(300)}/month of dues removes about
+    {fmt(priceEquiv)} of home price you can finance at 6.5%. Unlike your loan, dues
+    never amortize, never end, and historically only rise.
+  </div>
+
+  <h2>What dues actually buy</h2>
+  <p>
+    In condos, dues often carry real weight: building insurance, water/trash,
+    exterior maintenance, reserves for roofs and elevators — costs a house owner pays
+    separately anyway. In single-family HOAs, dues frequently buy common-area
+    landscaping and rule enforcement. The comparison that matters isn't "HOA vs no
+    HOA," it's <em>what the dues replace</em>: a {fmt(450)}/month condo fee that
+    covers insurance, water, and exterior upkeep can be cheaper than a house's DIY
+    equivalents; a {fmt(450)} fee for a gate and a lawyer is pure overhead.
+  </p>
+
+  <h2>How lenders treat HOA dues</h2>
+  <p>
+    Dues sit in your DTI beside the mortgage payment — a high fee can sink an approval
+    on an otherwise affordable unit. They're also uncapped: the association can raise
+    dues and levy <strong>special assessments</strong> (five-figure one-time bills for
+    major repairs) by board vote. Post-Surfside reserve rules have pushed many condo
+    associations into steep catch-up increases — exactly why the document review below
+    matters.
+  </p>
+
+  <h2>Due diligence: six questions before you offer</h2>
+  <ol>
+    <li>Reserve study — how funded is the reserve versus its target? (Under ~60% is a yellow flag.)</li>
+    <li>Dues history — the last 5 years of increases beats any promise.</li>
+    <li>Any pending or discussed special assessments or litigation?</li>
+    <li>What exactly do dues cover — and what insurance must you still carry (HO-6 for condos)?</li>
+    <li>Owner-occupancy rate — low rates can hurt financing and resale.</li>
+    <li>Rules that affect you: rentals, pets, parking, home businesses.</li>
+  </ol>
+
+  <h2>Budgeting it honestly</h2>
+  <p>
+    Enter the real dues in the <a href="/mortgage-calculator/">mortgage
+    calculator</a>'s HOA field and judge the <em>total</em> monthly number against the
+    28/36 guideline (<a href="/house-affordability-calculator/">affordability
+    calculator</a>). Then stress-test: if dues rose 25% and a {fmt(8000)} assessment
+    landed in year three, does the budget survive? If yes, the HOA is a service
+    contract. If no, it's a risk you're not being paid to take.
+  </p>
+</GuideLayout>

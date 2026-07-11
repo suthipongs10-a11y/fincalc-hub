@@ -1,0 +1,68 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { computeFHA } from '../../lib/gov-loans.js';
+import { computeMortgage } from '../../lib/mortgage.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+// $350k, 5% down comparison
+const fha = computeFHA({ price: 350000, down: 17500, annualRate: 6.25, termYears: 30 });
+const conv = computeMortgage({ homePrice: 350000, downPayment: 17500, annualRate: 6.5, termYears: 30, taxRate: 0, insuranceAnnual: 0, pmiRate: 0.6, hoaMonthly: 0, extraMonthly: 0, startYear: 2026, startMonth: 8 });
+const convPmiMonths = conv.rows.filter((r) => r.pmi > 0).length;
+---
+
+<GuideLayout
+  title="FHA MIP vs. Conventional PMI: The Insurance Decision That Outlasts the Rate"
+  metaTitle="FHA MIP vs Conventional PMI Compared | Payoff Logic"
+  description="FHA charges 1.75% upfront plus annual MIP that usually never cancels; conventional PMI is credit-priced and ends automatically. A worked $350k comparison shows when each wins."
+  slug="fha-mip-vs-conventional-pmi"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="shield"
+  tool={{ href: '/fha-loan-calculator/', label: 'FHA calculator with real MIP rules' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Conventional PMI is priced on your credit and
+    cancels automatically at 78% loan-to-value. FHA charges 1.75% of the loan upfront
+    <em>plus</em> annual MIP that — with under 10% down — lasts the life of the loan.
+    Strong credit (roughly 680+) usually wins with conventional; weaker credit or thin
+    down payments often price better with FHA, with a planned refi out of MIP later.
+  </div>
+
+  <h2>The same house, both ways ({fmt(350000)}, 5% down)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">FHA @ 6.25%</th><th class="num">Conventional @ 6.5% (PMI 0.6%)</th></tr></thead>
+    <tbody>
+      <tr><td>Upfront insurance</td><td class="num">{fmt(fha.ufmip)} (financed)</td><td class="num">$0</td></tr>
+      <tr><td>Monthly insurance (first month)</td><td class="num">{fmt(fha.firstMIP)}</td><td class="num">{fmt(conv.monthlyPMI)}</td></tr>
+      <tr><td>Insurance ends</td><td class="num">never (life of loan)</td><td class="num">~{Math.round(convPmiMonths / 12)} years (78% LTV)</td></tr>
+      <tr><td>Total insurance if held full term</td><td class="num">{fmt(fha.totalMIP + fha.ufmip)}</td><td class="num">{fmt(conv.totalPMI)}</td></tr>
+      <tr><td>P&amp;I payment</td><td class="num">{fmt(fha.payment)}</td><td class="num">{fmt(conv.monthlyPI)}</td></tr>
+    </tbody>
+  </table></div>
+  <p>
+    Notice the shape: FHA's monthly numbers look competitive early (FHA rates often
+    run ~0.25% lower), but the insurance never leaves — the full-term totals aren't
+    close. FHA's honest pitch is <em>access</em>: it prices insurance identically
+    whether your score is 580 or 780, while conventional PMI can double for weaker
+    credit or simply be unavailable.
+  </p>
+
+  <h2>Decision rules that hold up</h2>
+  <ul>
+    <li><strong>Score ~680+ and 5%+ down:</strong> get both quotes, but conventional usually wins — cancellable insurance is worth a slightly higher rate.</li>
+    <li><strong>Score below ~660 or 3.5% down:</strong> FHA often wins today's payment. Plan the exit: build to 20% equity and refinance to conventional (run it in the <a href="/refinance-calculator/">refinance calculator</a>) — that's the standard playbook, not a loophole.</li>
+    <li><strong>10%+ down on FHA:</strong> the special case where MIP does end (after 11 years) — the comparison tightens; quote both.</li>
+    <li><strong>Eligible for VA:</strong> skip this whole debate — no monthly insurance at all (<a href="/va-loan-calculator/">VA calculator</a>).</li>
+  </ul>
+
+  <h2>The mistake to avoid</h2>
+  <p>
+    Choosing by rate alone. A 6.25% FHA quote can cost more than a 6.5% conventional
+    once life-of-loan MIP is priced in — and the reverse can be true for weak-credit
+    PMI tiers. Compare <em>rate + insurance + duration</em> in the
+    <a href="/fha-loan-calculator/">FHA</a> and
+    <a href="/mortgage-calculator/">conventional</a> calculators side by side, and see
+    <a href="/guides/pmi-explained/">PMI explained</a> for the removal rules that make
+    conventional's insurance temporary.
+  </p>
+</GuideLayout>

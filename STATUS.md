@@ -3,13 +3,36 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M4.5 complete (23 tools total, 120 pages) (autonomous overnight run per owner
-  instruction 2026-07-11: continue milestone-by-milestone without waiting
-  for per-gate review). M3.5 + images + M4 shipped. Next: M4.5.
-- **Last commit:** `M4.5: remaining 11 tools (T9-T12, T15-T18, T20, T22-T23)`
-- **Build status:** `npm run build` clean (**120 pages** + sitemap) · all
-  test suites pass · Lighthouse mobile 100×4 spot-checked on every new
-  template. Live at https://payofflogic.com.
+- **Milestone:** ALL BUILD MILESTONES COMPLETE (M0–M4.75). Site is
+  content-complete per SEO_PLAN: **143 pages** — 23 calculators, 50 state
+  pages, 29 amount pages, 33 guides, hubs, legal. Built autonomously
+  overnight per owner instruction (2026-07-11); M5 (AdSense insertion)
+  remains owner-triggered.
+- **Last commit:** `M4.75: remaining 23 guides (33 total)`
+- **Build status:** `npm run build` clean (143 pages + sitemap) · ALL 7
+  test suites pass (mortgage/m2/m25/m3-data/m3-similarity/m35/m45) ·
+  0 broken internal links (143 pages scanned) · Lighthouse 100×4
+  spot-checked on every template type. Live at https://payofflogic.com.
+
+## Owner review queue (morning checklist)
+1. Browse https://payofflogic.com — homepage, a few tools, a state page,
+   an amount page, /guides/
+2. Accuracy sign-off on guides (M4 gate item) — all figures are
+   engine-computed, but tone/claims deserve human review
+3. Decisions still pending: author entity name (placeholder "Payoff Logic
+   Editorial Team"), contact email swap (Cloudflare Email Routing)
+4. GSC: sitemap should clear "Couldn't fetch" within 72h; now 143 URLs
+5. When ready for AdSense: apply (site meets the 5-tools+10-guides+legal
+   bar many times over); M5 ad-slot insertion is ready via AD_SLOT markers
+6. Optional next phase (SEO_PLAN): videos (V-1 list ready), more guides,
+   Bing Webmaster, backlink outreach for snowball/amount-page assets
+
+## M4.75 gate checklist (self-audit)
+- [x] 23 additional guides (33 total = full SEO_PLAN §2.6 list): 10
+      mortgage, 5 debt, 4 refinance, 4 auto — engine-computed examples,
+      direct-answer blocks, dense internal linking, Article schema
+- [x] guides index updated (grouped by cluster)
+- [x] Lighthouse 100×4 spot-checked; all test suites green; 0 broken links
 
 ## M4.5 gate checklist (self-audit)
 - [x] 11 tools: down-payment, PMI, points, rent-vs-buy, credit-card

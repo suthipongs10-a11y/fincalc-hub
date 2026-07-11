@@ -1,0 +1,65 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { amortizeLoan } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+const base = amortizeLoan({ principal: 8000, annualRate: 22, payment: 240 });
+const snow = amortizeLoan({ principal: 8000, annualRate: 22, payment: 240, extraMonthly: 60 });
+---
+
+<GuideLayout
+  title="Snowflaking: How $5 and $20 Micro-Payments Actually Move Debt"
+  metaTitle="Snowflaking — Micro Extra Payments That Work | Payoff Logic"
+  description="Snowflaking sends every small windfall — sold items, refunds, skipped takeout — straight at a target debt. Here's the math on why $60/month of 'crumbs' takes a year off a card."
+  slug="snowflaking-micro-payments"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="snowball"
+  tool={{ href: '/debt-snowball-calculator/', label: 'debt snowball calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Snowflaking is paying tiny, irregular amounts —
+    {fmt(5)} here, {fmt(25)} there — toward your target debt the moment they appear,
+    instead of letting them dissolve into daily spending. It works because every
+    dollar hits principal on a high-rate balance: on an {fmt(8000)} card at 22%,
+    snowflakes averaging just {fmt(60)}/month finish
+    {yrMo(base.months - snow.months)} sooner and save {fmt(base.totalInterest - snow.totalInterest)}
+    in interest.
+  </div>
+
+  <h2>Why crumbs beat waiting for a windfall</h2>
+  <p>
+    At 22% APR, a dollar paid today saves 22 cents of interest per year — every year
+    the balance would have lived. Small amounts also clear a behavioral hurdle: you
+    can't "wait until you can afford real extra payments" your way out of debt, but
+    almost anyone can find {fmt(10)}–{fmt(30)} a week in sellable clutter, refunds,
+    cash-back, skipped impulse buys, or side-gig scraps. Snowflaking converts noise
+    into principal.
+  </p>
+
+  <h2>Making it mechanical (the whole trick)</h2>
+  <ol>
+    <li><strong>One target debt</strong> — the same target your <a href="/debt-snowball-calculator/">snowball/avalanche plan</a> names. Snowflakes are ammunition for the existing plan, not a separate system.</li>
+    <li><strong>Same-day transfers:</strong> money that sits gets spent. Sold something for {fmt(45)}? Pay {fmt(45)} tonight — most card apps take 60 seconds.</li>
+    <li><strong>Name your snowflake sources:</strong> people who list 3–5 concrete sources (cash-back, returns, one skipped delivery order a week, plasma, resale) snowflake 5× more than people who "just try to pay extra."</li>
+    <li><strong>Extras must post as principal</strong> — on amortized loans, mark them; on cards, any payment above the minimum already is.</li>
+  </ol>
+
+  <h2>What snowflaking is NOT</h2>
+  <p>
+    It's not a substitute for a fixed payment plan — the base plan does the heavy
+    lifting (<a href="/guides/minimum-payments-trap/">fixed payments</a>), snowflakes
+    accelerate it. And it's not budgeting theater: if the {fmt(45)} "snowflake" would
+    otherwise have paid for groceries you now put on the card, nothing moved. The
+    test is simple — the card balance falls faster and the pantry looks the same.
+  </p>
+
+  <h2>Watch it compound</h2>
+  <p>
+    Log a month of snowflakes, average them, and enter that number as your extra in
+    the <a href="/credit-card-payoff-calculator/">payoff calculator</a> or
+    <a href="/loan-payoff-calculator/">loan payoff calculator</a>. Seeing "{yrMo(base.months - snow.months)} sooner"
+    attached to your own crumbs is the motivational flywheel that keeps the habit
+    alive.
+  </p>
+</GuideLayout>

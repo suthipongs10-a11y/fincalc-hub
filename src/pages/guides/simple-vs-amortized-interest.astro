@@ -1,0 +1,67 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="How Loan Interest Works: Simple, Amortized, and Compound — Which Is Yours?"
+  metaTitle="Simple vs Amortized vs Compound Interest | Payoff Logic"
+  description="The three interest mechanics behind every consumer debt — simple daily, amortized installment, and compounding revolving — and how to tell which your loan uses."
+  slug="simple-vs-amortized-interest"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="payoff"
+  tool={{ href: '/loan-payoff-calculator/', label: 'loan payoff calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Almost every consumer debt is one of three
+    machines. <strong>Amortized installment</strong> (mortgages, car, personal,
+    student loans): fixed payment, interest charged monthly on the falling balance.
+    <strong>Revolving compound</strong> (credit cards): interest accrues daily and
+    unpaid interest joins the balance. <strong>Simple/precomputed</strong> (some
+    older auto and subprime loans): interest set by schedule, where early payoff may
+    save little. The label changes what extra payments are worth — a lot, everything,
+    or almost nothing, respectively.
+  </div>
+
+  <h2>Machine 1: amortized installment (the good kind)</h2>
+  <p>
+    One formula sets a payment that lands the balance on zero at the last month —
+    {fmt(pmt(20000, 7, 60))} on a {fmt(20000)}/60-month/7% car loan. Interest each
+    month = rate ÷ 12 × current balance, so every extra dollar of principal removes
+    its own future interest. This is the machine the
+    <a href="/guides/how-amortization-works/">amortization guide</a> dissects, and it's
+    why <a href="/guides/how-extra-payments-work/">extra payments</a> punch far above
+    their weight.
+  </p>
+
+  <h2>Machine 2: revolving compound (the card)</h2>
+  <p>
+    No fixed schedule, daily accrual, and interest capitalizes — unpaid interest earns
+    interest. There's no "term" to shorten; the only variables are your payment and
+    the APR. The escape mechanics live in
+    <a href="/guides/how-credit-card-interest-works/">how card interest works</a> and
+    the <a href="/credit-card-payoff-calculator/">payoff calculator</a>.
+  </p>
+
+  <h2>Machine 3: precomputed/Rule-of-78s (the trap to screen for)</h2>
+  <p>
+    A shrinking minority of auto and personal loans compute total interest up front by
+    schedule; pay early and the "earned" interest barely shrinks (Rule-of-78s
+    front-loads it further — banned for longer terms federally, restricted in many
+    states, but not extinct). Screening question before signing: <em>"Is this simple
+    interest with no prepayment penalty, and are extra payments applied to
+    principal?"</em> Anything but a clean yes is a red flag worth a different lender.
+  </p>
+
+  <h2>Same APR, different machines, different strategy</h2>
+  <ul>
+    <li><strong>Amortized loan:</strong> extras work; target the highest-rate loan first (<a href="/guides/snowball-vs-avalanche/">method guide</a>).</li>
+    <li><strong>Card:</strong> extras work even harder (compounding avoided), and rate cuts (transfer/consolidation) multiply the effect.</li>
+    <li><strong>Precomputed:</strong> extras mostly don't work — refinance out to an amortized loan instead (<a href="/auto-refinance-calculator/">auto refi calculator</a>), which converts the machine itself.</li>
+  </ul>
+  <p>
+    Know the machine, and the right move usually picks itself.
+  </p>
+</GuideLayout>

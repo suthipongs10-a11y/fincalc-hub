@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Debt Consolidation: When It Helps, When It Hurts"
+  metaTitle="Debt Consolidation — When It Helps vs Hurts | Payoff Logic"
+  description="Consolidation is a rate cut, not a debt cut: the three tests that separate genuinely helpful consolidations from repackaged trouble, and the behavioral trap that sinks half of them."
+  slug="debt-consolidation-when-it-helps"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="snowball"
+  tool={{ href: '/debt-consolidation-calculator/', label: 'consolidation comparison calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Consolidation helps when three things are true:
+    the new APR (fee included) is meaningfully below your blended rate, the term
+    doesn't stretch your payoff, and the emptied cards stay at zero. Break any one and
+    it ranges from pointless to actively harmful. The reliable test: compare plans at
+    the <em>same monthly budget</em> — our calculator does this by construction.
+  </div>
+
+  <h2>When it genuinely helps</h2>
+  <ul>
+    <li><strong>Card-rate escapes:</strong> 22–29% card debt into an 11–14% loan is a real rate cut with a fixed end date — the classic win (worked example: <a href="/guides/pay-off-10k-credit-card/">paying off $10k</a>).</li>
+    <li><strong>Simplification that prevents misses:</strong> five due dates into one autopay has genuine value if late fees were part of the problem.</li>
+    <li><strong>0% windows used with discipline:</strong> transfers cleared inside the promo period are close to free money after the fee.</li>
+  </ul>
+
+  <h2>When it quietly hurts</h2>
+  <ul>
+    <li><strong>The term stretch:</strong> a "lower payment" that moves 2 remaining years to 5 usually costs more in total — the same trap as any refinance (<a href="/guides/when-to-refinance/">term-reset math</a>). The same-budget row in the <a href="/debt-consolidation-calculator/">calculator</a> exposes it instantly.</li>
+    <li><strong>Fee-eaten savings:</strong> 5–8% origination on a modest rate drop can consume years of benefit — always compare APR, not the sticker rate.</li>
+    <li><strong>Securing the unsecured:</strong> rolling card debt into home equity converts a bad month into foreclosure risk (<a href="/cash-out-refinance-calculator/">price it here</a> — then think twice).</li>
+    <li><strong>The refill:</strong> the empirical killer. Consolidate, feel relief, re-run the cards — now you service the loan AND new card balances. If spending isn't fixed, consolidation finances the problem instead of solving it.</li>
+  </ul>
+
+  <h2>The honest sequence</h2>
+  <ol>
+    <li>Fix the outflow first — no plan survives a budget that leaks.</li>
+    <li>Run your debts through the <a href="/debt-snowball-calculator/">snowball/avalanche comparison</a>; that's your no-approval baseline.</li>
+    <li>Get a real consolidation quote and test it against that baseline at the same budget.</li>
+    <li>If it wins, take it — and freeze the cards. If it doesn't, the avalanche was already your best deal.</li>
+  </ol>
+  <p>
+    Consolidation is a tool, not a rescue. Used on a fixed budget with a real rate
+    cut, it shortens the road; used as breathing room, it lengthens it.
+  </p>
+</GuideLayout>

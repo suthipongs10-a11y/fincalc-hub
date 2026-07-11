@@ -1,0 +1,63 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="The VA Funding Fee, Explained (Rates, Exemptions, and Whether to Finance It)"
+  metaTitle="VA Funding Fee Explained — Rates & Exemptions | Payoff Logic"
+  description="Every VA funding fee tier (2.15%, 3.3%, 1.5%, 1.25%), who is exempt, why the fee exists, and the finance-vs-pay-upfront math on a real example."
+  slug="va-funding-fee-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="shield"
+  tool={{ href: '/va-loan-calculator/', label: 'VA calculator with the correct fee applied' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> The funding fee is a one-time charge that funds the
+    VA loan program in place of monthly mortgage insurance. Purchase tiers: first use
+    2.15% with less than 5% down, 1.50% with 5–9.99%, 1.25% with 10%+; subsequent use
+    3.30% / 1.50% / 1.25%. Veterans receiving VA disability compensation are exempt.
+    On a {fmt(350000)} zero-down first-use loan, the fee is {fmt(7525)}, almost always
+    rolled into the loan.
+  </div>
+
+  <h2>Why the fee exists (and why VA is still the best deal going)</h2>
+  <p>
+    VA loans offer zero down and no monthly insurance — someone funds the default risk,
+    and Congress chose a one-time fee paid by borrowers instead of a monthly premium.
+    Compare honestly: FHA at 3.5% down charges 1.75% upfront <em>plus</em> ~0.55%/year
+    forever; conventional at 5% down charges PMI for years. The 2.15% one-time fee is
+    routinely the cheapest insurance structure in the market — which is why the right
+    response to "VA has a fee" is "yes, and it's still the best deal" (see the
+    <a href="/guides/fha-mip-vs-conventional-pmi/">MIP vs PMI comparison</a> for what
+    the alternatives cost).
+  </p>
+
+  <h2>The tiers, and how to move between them</h2>
+  <ul>
+    <li><strong>Down payment moves you down-tier:</strong> putting 5% down on that {fmt(350000)} purchase cuts the fee from 2.15% to 1.5% — the fee saving alone refunds ~{fmt(350000 * 0.0065 * 0.95)} of the down payment's cost.</li>
+    <li><strong>Subsequent use is expensive at zero down (3.3%):</strong> reusing the benefit with nothing down costs {fmt(350000 * 0.033)} on this example — at that point compare a conventional loan with your accumulated equity.</li>
+    <li><strong>IRRRL (streamline refi) is only 0.5%</strong> — rate-drop refinances keep almost all their savings.</li>
+  </ul>
+
+  <h2>Exemptions — check before you pay</h2>
+  <p>
+    Exempt: veterans receiving (or eligible to receive) disability compensation,
+    Purple Heart recipients on active duty, and certain surviving spouses. This is not
+    small — it's the full 2.15–3.3% — and lenders occasionally miss it. If a rating is
+    <em>pending</em> at closing, the fee may be refundable once the rating is granted
+    retroactively; chase it.
+  </p>
+
+  <h2>Finance it or pay it at closing?</h2>
+  <p>
+    Financing the fee (the default) costs the fee <em>plus 30 years of interest on
+    it</em> — roughly {fmt(7525 * 1.27)} of total payments on the example at 6.25%
+    versus {fmt(7525)} paid in cash. If you have spare cash beyond your emergency
+    fund, paying upfront is a clean guaranteed return; if cash is tight, financing is
+    exactly what the structure is for. The
+    <a href="/va-loan-calculator/">VA calculator</a> toggles both and reprices
+    everything instantly.
+  </p>
+</GuideLayout>

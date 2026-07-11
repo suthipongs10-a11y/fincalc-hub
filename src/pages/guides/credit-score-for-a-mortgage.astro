@@ -1,0 +1,61 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const L = 350000;
+const diff = (pmt(L, 7.1, 360) - pmt(L, 6.5, 360));
+---
+
+<GuideLayout
+  title="What Credit Score You Need for Each Loan Type (and What the Tiers Cost)"
+  metaTitle="Credit Score Needed for a Mortgage by Loan Type | Payoff Logic"
+  description="Minimum scores for conventional, FHA, VA, USDA, and jumbo loans — and the real cost of score tiers: ~0.5–0.75% of rate between 640 and 760 on the same loan."
+  slug="credit-score-for-a-mortgage"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="shield"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator to price your rate tier' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Typical minimums — conventional 620, FHA 580 (500
+    with 10% down), VA no official floor (lenders often want ~580–620), USDA ~640,
+    jumbo 700+. But the minimum isn't the story: <em>pricing tiers</em> are. Moving
+    from ~640 to 760+ improves conventional rates by roughly 0.5–0.75%, worth about
+    {fmt(diff)}/month ({fmt(diff * 360)} over 30 years) on a {fmt(L)} loan.
+  </div>
+
+  <h2>Minimums by program — and what they really mean</h2>
+  <ul>
+    <li><strong>Conventional (620+):</strong> credit-priced throughout; PMI cost also scales with score, doubling the penalty for low tiers. Great credit's natural home.</li>
+    <li><strong>FHA (580+, or 500 w/ 10% down):</strong> insurance is NOT credit-priced — the same MIP at any score — which is exactly why FHA often wins below ~660–680 (see <a href="/guides/fha-mip-vs-conventional-pmi/">MIP vs PMI</a>).</li>
+    <li><strong>VA (lender overlays ~580–620):</strong> the most forgiving pricing for mid scores, no monthly insurance (<a href="/va-loan-calculator/">calculator</a>).</li>
+    <li><strong>USDA (~640):</strong> zero-down rural program with income/location limits.</li>
+    <li><strong>Jumbo (700–740+):</strong> above conforming limits, lenders self-insure — expect stricter everything.</li>
+  </ul>
+
+  <h2>Mortgage scores aren't your app's score</h2>
+  <p>
+    Lenders pull tri-bureau <em>mortgage-model</em> FICOs and historically use the
+    middle score (lowest-middle across co-borrowers). These often run lower than the
+    educational score your bank app shows. Two implications: check real FICOs before
+    rate-shopping, and know that all mortgage inquiries within a single ~45-day window
+    count as one — shop lenders aggressively, guilt-free.
+  </p>
+
+  <h2>The 90-day pre-application playbook</h2>
+  <ol>
+    <li><strong>Utilization first:</strong> pay card balances toward &lt;10% of limits before statements cut — the fastest score lever there is (see <a href="/guides/minimum-payments-trap/">why balances suppress scores</a>).</li>
+    <li><strong>No new accounts</strong> and no closing old ones — age and mix matter.</li>
+    <li><strong>Dispute real errors</strong> at all three bureaus; a stray collection can cost a tier.</li>
+    <li><strong>Then get quoted</strong> — and if you're near a tier boundary (679 vs 680, 739 vs 740), a one-month delay to cross it can pay thousands.</li>
+  </ol>
+
+  <h2>Pricing your own tier</h2>
+  <p>
+    Get two or three real quotes, then put the rates into the
+    <a href="/mortgage-calculator/">mortgage calculator</a> to see the tier difference
+    in dollars — and into the <a href="/house-affordability-calculator/">affordability
+    calculator</a> to see it in house price. Score work is unglamorous, but it's the
+    only part of the rate you fully control.
+  </p>
+</GuideLayout>

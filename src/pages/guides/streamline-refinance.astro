@@ -1,0 +1,58 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+---
+
+<GuideLayout
+  title="Streamline Refinances (FHA & VA IRRRL): The Shortcut Most Borrowers Miss"
+  metaTitle="FHA Streamline & VA IRRRL Explained | Payoff Logic"
+  description="If you already have an FHA or VA loan, streamline programs skip the appraisal and most underwriting: what qualifies, the net-tangible-benefit rules, and the catches."
+  slug="streamline-refinance"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="breakeven"
+  tool={{ href: '/refinance-calculator/', label: 'refinance break-even calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Streamline refinances are rate-drop refis inside
+    the same government program — FHA-to-FHA ("FHA Streamline") or VA-to-VA (the
+    IRRRL) — with no appraisal, minimal documentation, and reduced fees (the VA
+    funding fee falls to just 0.5%). If rates have dropped since you closed an FHA or
+    VA loan, this is usually the cheapest refinance you'll ever be offered.
+  </div>
+
+  <h2>Why they're cheap and fast</h2>
+  <p>
+    The agency already insures your loan; refinancing you into a lower payment
+    <em>reduces</em> their default risk. So they waive the expensive friction: no
+    appraisal (underwater borrowers can still qualify), often no income
+    re-verification, and closing in weeks. Both programs require a
+    <strong>net tangible benefit</strong> — typically a meaningful rate/payment drop
+    (FHA: combined rate must fall ≥0.5%) — and a clean recent payment history
+    (broadly: no 30-day lates in the last 6–12 months) plus a seasoning period
+    (~210 days from your first payment).
+  </p>
+
+  <h2>Program specifics worth knowing</h2>
+  <ul>
+    <li><strong>FHA Streamline:</strong> you get a partial refund of your original upfront MIP on a sliding scale within 3 years — refinancing in year one or two claws real money back. New UFMIP applies at a reduced streamline rate. MIP duration rules reset per the new loan.</li>
+    <li><strong>VA IRRRL:</strong> funding fee 0.5% (vs 2.15–3.3% on purchases — see <a href="/guides/va-funding-fee-explained/">the fee guide</a>), no appraisal, and fee-exempt veterans pay nothing. Fixed-to-fixed must generally drop the rate ≥0.5%; recouping fees within 36 months is a statutory requirement — the lender must show you the math.</li>
+    <li><strong>Costs can be financed</strong> in both programs (IRRRL) or offset with lender credits — the "no-cash-out-of-pocket" version is standard.</li>
+  </ul>
+
+  <h2>The two catches</h2>
+  <ol>
+    <li><strong>It keeps you in the program.</strong> An FHA Streamline keeps FHA MIP — if you've reached 20% equity, a conventional refinance that kills MIP entirely may beat the streamline even at a slightly higher rate (compare via <a href="/guides/fha-mip-vs-conventional-pmi/">MIP vs PMI</a> and the <a href="/refinance-calculator/">calculator</a>).</li>
+    <li><strong>Term resets still apply.</strong> A streamline into a fresh 30 years is still the <a href="/guides/when-to-refinance/">term-reset trap</a>; ask for a term matching your remaining years.</li>
+  </ol>
+
+  <h2>The 10-minute check</h2>
+  <p>
+    Holding an FHA/VA loan closed when rates were higher? Pull your rate, today's
+    streamline quote, and run the <a href="/refinance-calculator/">break-even
+    calculator</a> with streamline-level costs (often {fmt(1500)}–{fmt(3000)}
+    effective). Break-evens of 6–18 months are common — which is why lenders market
+    IRRRLs aggressively, and why the offer is often genuinely good despite the
+    salesmanship.
+  </p>
+</GuideLayout>
