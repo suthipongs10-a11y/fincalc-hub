@@ -1,0 +1,87 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { simulate } from '../../lib/snowball.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const fmt2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// $5,000 at 24% APR
+const BAL = 5000, APR = 24;
+const daily = APR / 100 / 365;
+const monthlyInterest = (BAL * APR) / 100 / 12;
+// min payment ~ interest + 1% of balance ≈ $150 typical
+const minOnly = simulate([{ name: 'card', balance: BAL, rate: APR, minPayment: 150 }], 0, 'snowball');
+const with250 = simulate([{ name: 'card', balance: BAL, rate: APR, minPayment: 150 }], 100, 'snowball');
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+---
+
+<GuideLayout
+  title="How Credit Card Interest Is Calculated (and Why Minimums Barely Move It)"
+  metaTitle="How Credit Card Interest Works — Daily Compounding Explained | Payoff Logic"
+  description="Credit card interest explained with real numbers: daily periodic rates, average daily balance, the grace-period rule, and how long $5,000 at 24% takes on minimum payments."
+  slug="how-credit-card-interest-works"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="payoff"
+  tool={{ href: '/debt-snowball-calculator/', label: 'debt snowball calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Cards charge interest daily: your APR ÷ 365 (the
+    daily periodic rate) is applied to each day's balance, then summed for the cycle. A
+    {fmt(BAL)} balance at {APR}% APR accrues roughly {fmt2(monthlyInterest)} a month —
+    so a $150 payment retires only ~{fmt2(150 - monthlyInterest)} of debt. Hold a fixed $150 payment and this card takes {yrMo(minOnly.months)} to kill; add $100/month and
+    it's {yrMo(with250.months)}.
+  </div>
+
+  <h2>The daily mechanics</h2>
+  <p>
+    A {APR}% APR is really a {(daily * 100).toFixed(4)}% <em>daily</em> rate. Each day,
+    the card multiplies that rate by your balance and adds it to an interest bucket;
+    most issuers use the "average daily balance" method, so a mid-cycle purchase
+    accrues interest for exactly the days it's on the books. Because yesterday's
+    interest joins today's balance at cycle end, card interest compounds — effectively
+    turning a {APR}% APR into roughly {((Math.pow(1 + daily, 365) - 1) * 100).toFixed(1)}%
+    per year if you never pay it down.
+  </p>
+
+  <h2>The grace period — the only free lunch in consumer credit</h2>
+  <p>
+    If you pay the <em>statement balance in full</em> by the due date, purchases accrue
+    no interest at all: that's the grace period. Carry even $1 forward, and most cards
+    revoke it — new purchases start accruing from day one until you've paid in full
+    for a cycle or two. This cliff is why "I'll just carry a small balance this month"
+    costs more than the small balance suggests. (Carrying a balance also does nothing
+    for your credit score — utilization is reported either way.)
+  </p>
+
+  <h2>Why minimum payments are designed to be slow</h2>
+  <p>
+    Typical minimums are interest + 1% of the balance (or a $25–$40 floor). On our
+    {fmt(BAL)} example that starts around $150 — of which {fmt2(monthlyInterest)} is
+    interest. The principal dent is tiny, and as the balance falls the minimum falls
+    too, stretching the timeline. Even holding the payment FIXED at $150 (already better than a declining minimum), it takes <strong>{yrMo(minOnly.months)}</strong> and <strong>{fmt(minOnly.totalInterest)}</strong> of interest to clear {fmt(BAL)}; a true declining-minimum track runs years longer — every statement's "minimum payment warning" box exists because Congress made
+    issuers print this math.
+  </p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Strategy on {fmt(BAL)} @ {APR}%</th><th class="num">Time to zero</th><th class="num">Total interest</th></tr></thead>
+    <tbody>
+      <tr><td>Fixed $150/month</td><td class="num">{yrMo(minOnly.months)}</td><td class="num">{fmt(minOnly.totalInterest)}</td></tr>
+      <tr><td>Fixed $250/month</td><td class="num">{yrMo(with250.months)}</td><td class="num">{fmt(with250.totalInterest)}</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Cutting the cost, in order of impact</h2>
+  <ol>
+    <li><strong>Stop the meter:</strong> a 0% balance-transfer card (12–21 months, 3–5% fee) or a fixed-rate consolidation loan converts daily compounding into a plain amortizing loan.</li>
+    <li><strong>Fix your payment:</strong> paying a constant amount (not the declining minimum) is what collapses the timeline — the table above is the proof.</li>
+    <li><strong>Sequence multiple cards:</strong> highest APR first saves the most; smallest first builds momentum. The <a href="/debt-snowball-calculator/">snowball calculator</a> shows both on your actual cards, and the <a href="/guides/snowball-vs-avalanche/">snowball-vs-avalanche guide</a> explains when each wins.</li>
+    <li><strong>Ask for a rate cut:</strong> issuers grant APR reductions more often than people expect, especially with on-time history.</li>
+  </ol>
+
+  <h2>Card debt vs. every other debt</h2>
+  <p>
+    At {APR}%, no mortgage prepayment, car-loan extra, or index-fund expectation
+    competes — retiring card debt is the highest guaranteed return most households
+    will ever see. Put the card first, then point the freed-up payment at the next
+    goal with the <a href="/loan-payoff-calculator/">loan payoff calculator</a>.
+  </p>
+</GuideLayout>

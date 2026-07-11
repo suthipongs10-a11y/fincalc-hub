@@ -1,0 +1,89 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt, amortizeLoan } from '../../lib/loan.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const fmt2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const LOAN = 30000, RATE = 7;
+const terms = [48, 60, 72, 84].map((t) => {
+  const p = pmt(LOAN, RATE, t);
+  return { t, p, interest: p * t - LOAN };
+});
+const sched60 = amortizeLoan({ principal: LOAN, annualRate: RATE, payment: pmt(LOAN, RATE, 60) });
+---
+
+<GuideLayout
+  title="How Car Loan Interest Works (and What Longer Terms Really Cost)"
+  metaTitle="How Car Loan Interest Works — Term Length Real Costs | Payoff Logic"
+  description="Car loan interest explained: simple-interest amortization, what 48 vs 60 vs 72 vs 84 months costs on a $30k loan, negative equity, and the 20/4/10 sanity check."
+  slug="how-car-loan-interest-works"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="car"
+  tool={{ href: '/auto-loan-calculator/', label: 'auto loan calculator with trade-in & state tax' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Car loans are simple-interest amortizing loans: each
+    month you pay interest on the remaining balance, and the rest of the fixed payment
+    reduces it. On a {fmt(LOAN)} loan at {RATE}%, that's {fmt2(terms[1].p)}/month for 60
+    months ({fmt(terms[1].interest)} total interest). Stretching to 84 months cuts the
+    payment to {fmt2(terms[3].p)} but raises interest to {fmt(terms[3].interest)} — and
+    keeps you underwater on the car far longer.
+  </div>
+
+  <h2>The mechanics (same math as a mortgage, faster clock)</h2>
+  <p>
+    Your first payment on the 60-month example includes {fmt2(sched60.rows[0].interest)}
+    of interest; your last includes {fmt2(sched60.rows[sched60.rows.length - 1].interest)}.
+    Between those points the loan amortizes exactly like a mortgage — which means
+    extra principal payments work the same magic, and our
+    <a href="/loan-payoff-calculator/">loan payoff calculator</a> handles car loans
+    natively. Most auto loans are simple interest with no prepayment penalty; a
+    shrinking minority are "precomputed" loans where early payoff saves little —
+    check the contract line that says how interest is earned.
+  </p>
+
+  <h2>What term length really costs ({fmt(LOAN)} @ {RATE}%)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Term</th><th class="num">Payment</th><th class="num">Total interest</th><th class="num">Interest vs 48-mo</th></tr></thead>
+    <tbody>
+      {terms.map((r) => (
+        <tr><td>{r.t} months</td><td class="num">{fmt2(r.p)}</td><td class="num">{fmt(r.interest)}</td><td class="num">{r.t === 48 ? '—' : '+' + fmt(r.interest - terms[0].interest)}</td></tr>
+      ))}
+    </tbody>
+  </table></div>
+  <p>
+    The dealer will quote the 84-month payment because it looks kindest. The table is
+    the antidote: the "cheap" payment costs {fmt(terms[3].interest - terms[0].interest)}
+    more than the 48-month plan — and used-car rates typically run 1–3 points higher
+    than these new-car numbers, widening every gap.
+  </p>
+
+  <h2>Negative equity: the real danger of long terms</h2>
+  <p>
+    Cars depreciate fastest exactly when long loans amortize slowest. On the 84-month
+    plan, after three years you still owe more than many vehicles are worth — so a
+    trade-in, totaled car, or forced sale means writing a check to walk away. Roll
+    that shortfall into the next loan (the dealer will offer) and the hole deepens.
+    The <a href="/auto-loan-calculator/">auto loan calculator</a> flags negative
+    equity explicitly when your trade-in is worth less than its loan balance.
+  </p>
+
+  <h2>Rate, price, and the order to negotiate</h2>
+  <ol>
+    <li><strong>Get pre-approved</strong> at a bank or credit union first — a real APR to beat, and leverage.</li>
+    <li><strong>Negotiate the car's price</strong> alone (every $1,000 off ≈ $20/month on 60 months).</li>
+    <li><strong>Then the trade-in</strong> as a separate number — and remember most states tax the price <em>after</em> trade-in credit, which our calculator's state dropdown handles.</li>
+    <li><strong>Then financing:</strong> let the dealer try to beat your pre-approval. 0%-APR promos are real but usually replace rebates — compare "0% APR" vs "rebate + credit-union rate" both ways.</li>
+  </ol>
+
+  <h2>The 20/4/10 sanity check</h2>
+  <p>
+    A durable rule of thumb: 20% down, no more than 4 years, and total vehicle costs
+    (payment + insurance + fuel) under 10% of gross income. Few buyers hit all three —
+    the point is direction, not perfection. If the only way into the car is 84 months
+    and nothing down, the honest conclusion is that it's too much car; the
+    <a href="/auto-loan-calculator/">calculator</a> makes the cheaper scenario
+    concrete in about a minute.
+  </p>
+</GuideLayout>

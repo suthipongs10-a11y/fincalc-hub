@@ -1,0 +1,87 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { compare } from '../../lib/snowball.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+// Divergent example: smallest debt has the LOWEST rate
+const debts = [
+  { name: 'Medical bill', balance: 1800, rate: 0, minPayment: 50 },
+  { name: 'Credit card', balance: 6500, rate: 22.99, minPayment: 195 },
+  { name: 'Car loan', balance: 11000, rate: 7.5, minPayment: 240 },
+];
+const r = compare(debts, 300);
+---
+
+<GuideLayout
+  title="Debt Snowball vs. Avalanche: The Real Math (and When Each Wins)"
+  metaTitle="Snowball vs Avalanche — The Real Math Compared | Payoff Logic"
+  description="Snowball vs avalanche compared on a real three-debt example: exact interest difference, payoff order, why avalanche always costs less — and why snowball still wins for many people."
+  slug="snowball-vs-avalanche"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="snowball"
+  tool={{ href: '/debt-snowball-calculator/', label: 'snowball vs avalanche calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Both methods pay minimums on everything and pour all
+    extra money into one target debt, rolling freed-up payments forward. Snowball
+    targets the smallest balance (fast wins); avalanche targets the highest APR
+    (least interest — always, mathematically). On our example debts the gap is
+    {fmt(Math.abs(r.interestDiff))} of interest. If your gap is small, pick the method
+    you'll stick with; if it's large, the avalanche discount is real money.
+  </div>
+
+  <h2>The engine both methods share</h2>
+  <p>
+    List your debts, pay every minimum, and commit a fixed extra budget — say $300 — to
+    exactly one "target" debt. When any debt dies, its minimum payment doesn't go back
+    into your lifestyle; it rolls onto the next target. The rollover is why either
+    method beats paying "a bit extra on everything": concentration finishes debts,
+    and finished debts feed the attack.
+  </p>
+
+  <h2>A worked example where the methods truly differ</h2>
+  <p>
+    Three debts: a $1,800 medical bill at 0%, a $6,500 credit card at 22.99%, and an
+    $11,000 car loan at 7.5% — minimums $485 total, extra budget $300.
+  </p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Method</th><th>First target</th><th class="num">Debt-free in</th><th class="num">Total interest</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Snowball</strong></td><td>Medical bill (smallest)</td><td class="num">{yrMo(r.snowball.months)}</td><td class="num">{fmt(r.snowball.totalInterest)}</td></tr>
+      <tr><td><strong>Avalanche</strong></td><td>Credit card (22.99%)</td><td class="num">{yrMo(r.avalanche.months)}</td><td class="num">{fmt(r.avalanche.totalInterest)}</td></tr>
+    </tbody>
+  </table></div>
+  <p>
+    Avalanche saves {fmt(Math.abs(r.interestDiff))} here because every month the credit
+    card survives, it bleeds ~23% annualized. But snowball delivers its first paid-off
+    debt in month {r.snowball.payoffOrder[0].month} — a win you can feel — while
+    avalanche makes you grind at the biggest, ugliest rate first. Both finish within
+    {Math.abs(r.monthsDiff)} month(s) of each other; the order and the interest differ.
+  </p>
+
+  <h2>Why avalanche always costs less (and why that's not the whole story)</h2>
+  <p>
+    Interest accrues fastest on the highest rate, so retiring high-rate dollars first
+    minimizes total interest — that's a theorem, not an opinion, and our calculator's
+    comparison will never show snowball winning on interest. But debt payoff is a
+    years-long behavior problem, and research on real borrowers (including work
+    popularized from the Kellogg School studies) finds people who experience early
+    wins are more likely to finish at all. A plan that costs {fmt(Math.abs(r.interestDiff))}
+    more and gets <em>completed</em> beats a perfect plan that gets abandoned in March.
+  </p>
+
+  <h2>How to choose in 30 seconds</h2>
+  <ol>
+    <li>Enter your debts in the <a href="/debt-snowball-calculator/">calculator</a> — it shows both methods side by side.</li>
+    <li>Look at the interest gap. Under a few hundred dollars? Take snowball's motivation for free.</li>
+    <li>Gap in the thousands (usually: big high-APR card + small low-rate debts)? Take avalanche — or a hybrid: knock out one tiny debt first for the win, then switch to avalanche order.</li>
+  </ol>
+
+  <h2>Two accelerators that beat both methods</h2>
+  <ul>
+    <li><strong>Rate reduction:</strong> a 0% balance-transfer card (mind the 3–5% fee) or a consolidation loan lowers the interest side directly; then run snowball/avalanche on what remains.</li>
+    <li><strong>Budget increases:</strong> the extra budget is the single most powerful variable — in the example above, $100 more per month cuts months off either plan. Even temporary boosts (tax refund, bonus) compound through the rollover. Track any loan's payoff with the <a href="/loan-payoff-calculator/">loan payoff calculator</a>.</li>
+  </ul>
+</GuideLayout>

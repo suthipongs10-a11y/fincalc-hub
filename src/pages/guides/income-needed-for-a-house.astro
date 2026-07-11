@@ -1,0 +1,82 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt } from '../../lib/loan.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const RATE = 6.5;
+// income needed per price: 20% down, 30yr, +1.1% tax +$2,341 ins, 28% rule
+const need = (price: number) => {
+  const piti = pmt(price * 0.8, RATE, 360) + (price * 1.1) / 100 / 12 + 2341 / 12;
+  return { piti, income: (piti * 12) / 0.28 };
+};
+const prices = [250000, 300000, 400000, 500000, 600000, 750000, 1000000];
+const table = prices.map((p) => ({ p, ...need(p) }));
+const ex400 = need(400000);
+---
+
+<GuideLayout
+  title="How Much Income You Need for a $250k–$1M House (Real Tables)"
+  metaTitle="Income Needed to Buy a House — $250k to $1M Tables | Payoff Logic"
+  description="Income needed for a $300k, $400k, $500k+ house using the 28% rule at today's-style rates — a full table with the assumptions shown, plus the levers that change your number."
+  slug="income-needed-for-a-house"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="affordability"
+  tool={{ href: '/house-affordability-calculator/', label: 'home affordability calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Under the standard 28% housing-ratio rule — with 20%
+    down, a {RATE}% 30-year rate, and average taxes and insurance — a $400,000 house
+    needs about <strong>{fmt(ex400.income)}</strong> of gross household income
+    ({fmt(ex400.piti)}/month housing cost). Every price point scales from there; the
+    full table is below, and every assumption is adjustable in the calculator.
+  </div>
+
+  <h2>The income table (assumptions visible)</h2>
+  <p>
+    Assumptions: 20% down · 30-year fixed at {RATE}% (illustrative) · property tax 1.1%
+    of value per year (national average) · insurance $2,341/year (Bankrate 2025
+    average) · housing capped at 28% of gross income. Change any of these and the
+    number moves — that's what the calculator is for.
+  </p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Home price</th><th class="num">Monthly cost (PITI)</th><th class="num">Income needed</th></tr></thead>
+    <tbody>
+      {table.map((r) => (
+        <tr><td>{fmt(r.p)}</td><td class="num">{fmt(r.piti)}</td><td class="num">{fmt(r.income)}</td></tr>
+      ))}
+    </tbody>
+  </table></div>
+
+  <h2>The five levers that move your number</h2>
+  <ol>
+    <li><strong>Existing debts (the 36% back-end rule).</strong> Car payments, student loans, and card minimums subtract from housing capacity dollar-for-dollar under the total-debt cap. A $450/month car loan can cost you roughly {fmt(450 / (pmt(0.8, RATE, 360) + 1.1 / 100 / 12 + 0))} of house price — often the single biggest lever.</li>
+    <li><strong>Down payment.</strong> More down = smaller loan at the same price, and at 20% you drop PMI entirely.</li>
+    <li><strong>Rate.</strong> At $400k, each half-point of rate moves the required income by about {fmt(need(400000).income - ((pmt(320000, RATE - 0.5, 360) + (400000 * 1.1) / 100 / 12 + 2341 / 12) * 12) / 0.28)}.</li>
+    <li><strong>Location.</strong> Property tax spans 0.27% (Hawaii) to 2.23% (New Jersey) and insurance $850 to $6,400+ by state — check the <a href="/mortgage-calculator/by-state/">state-by-state pages</a>.</li>
+    <li><strong>The ratio itself.</strong> 28/36 is a guideline; lenders may approve up to ~45% back-end DTI. Approval ≠ comfort — see the three-scenario table in the affordability calculator.</li>
+  </ol>
+
+  <h2>Reading it in reverse: what your income buys</h2>
+  <p>
+    Flip the table: {fmt(100000)} of income supports about {fmt(2333)}/month of housing
+    under the 28% rule, which lands near a {fmt(360000)}–{fmt(380000)} price at these
+    assumptions. Higher-tax states compress that; lower rates expand it. For the
+    payment side of a specific loan amount, the
+    <a href="/mortgage-payment/">payments-by-amount tables</a> show every size from
+    $100k to $2M at rates from 5% to 8%.
+  </p>
+
+  <h2>What lenders check beyond the ratio</h2>
+  <ul>
+    <li><strong>Credit score</strong> — sets your rate tier, which feeds back into the ratio.</li>
+    <li><strong>Cash to close</strong> — down payment + 2–5% closing costs + reserves.</li>
+    <li><strong>Income stability</strong> — two-year history for variable income and self-employment.</li>
+  </ul>
+  <p>
+    None of that changes the arithmetic here — it changes which row of the table you're
+    allowed to claim. Start from a comfortable payment, not a maximum approval, and let
+    the <a href="/house-affordability-calculator/">affordability calculator</a> show
+    both.
+  </p>
+</GuideLayout>

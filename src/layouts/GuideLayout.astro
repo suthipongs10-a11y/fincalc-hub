@@ -1,0 +1,103 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
+import { SITE } from '../config';
+
+interface Props {
+  title: string;
+  metaTitle?: string;
+  description: string;
+  slug: string;
+  updated: string; // e.g. "July 11, 2026"
+  updatedISO: string; // e.g. "2026-07-11"
+  kind?: string; // illustration variant
+  tool?: { href: string; label: string }; // primary embedded tool CTA
+}
+const { title, metaTitle, description, slug, updated, updatedISO, kind = 'payoff', tool } = Astro.props;
+
+const pageUrl = SITE.url + '/guides/' + slug + '/';
+const guidesUrl = SITE.url + '/guides/';
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    url: pageUrl,
+    dateModified: updatedISO,
+    datePublished: updatedISO,
+    author: { '@type': 'Organization', name: SITE.author, url: SITE.url + '/about/' },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: pageUrl,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: guidesUrl },
+      { '@type': 'ListItem', position: 3, name: title, item: pageUrl },
+    ],
+  },
+];
+---
+
+<BaseLayout title={metaTitle ?? `${title} | ${SITE.name}`} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Guides', href: '/guides/' }, { label: title }]} />
+
+  <div class="mx-auto max-w-3xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-6">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">{title}</h1>
+        <p class="mt-3 text-sm text-navy-600">
+          By <a href="/about/" class="font-medium text-navy-800 underline hover:text-navy-600">{SITE.author}</a>
+          · Updated <time datetime={updatedISO}>{updated}</time>
+        </p>
+      </div>
+      <Illustration kind={kind} class="hidden w-36 shrink-0 sm:block" />
+    </header>
+
+    {tool && (
+      <p class="rounded-lg border border-accent-200 bg-accent-50 p-4 text-sm font-medium text-accent-800">
+        Want your own numbers instead of examples? Open the free
+        <a href={tool.href} class="underline hover:text-accent-900"> {tool.label}</a> —
+        no signup, results in seconds.
+      </p>
+    )}
+
+    <!-- AD_SLOT: guide, in-content top -->
+
+    <article class="prose-guide mt-8 space-y-6 text-base leading-relaxed text-navy-700">
+      <slot />
+    </article>
+
+    <!-- AD_SLOT: guide, in-content bottom -->
+
+    <p class="mt-10 rounded-lg bg-navy-50 p-4 text-sm text-navy-700">
+      <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+      Examples are computed with the same verified engines that power our calculators;
+      your numbers will differ. See our
+      <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .prose-guide h2 { font-size: 1.25rem; font-weight: 700; color: var(--color-navy-900); margin-top: 2rem; }
+  .prose-guide h3 { font-size: 1.05rem; font-weight: 600; color: var(--color-navy-900); margin-top: 1.25rem; }
+  .prose-guide p { margin-top: 0.75rem; }
+  .prose-guide ul, .prose-guide ol { margin-top: 0.75rem; padding-left: 1.5rem; }
+  .prose-guide ul { list-style: disc; }
+  .prose-guide ol { list-style: decimal; }
+  .prose-guide li { margin-top: 0.4rem; }
+  .prose-guide a { color: var(--color-navy-900); text-decoration: underline; font-weight: 500; }
+  .prose-guide a:hover { color: var(--color-navy-600); }
+  .prose-guide table { width: 100%; font-size: 0.875rem; margin-top: 1rem; }
+  .prose-guide thead tr { border-bottom: 1px solid var(--color-navy-200); text-align: left; color: var(--color-navy-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .prose-guide th, .prose-guide td { padding: 0.5rem 0.5rem 0.5rem 0; }
+  .prose-guide tbody tr { border-bottom: 1px solid var(--color-navy-100); }
+  .prose-guide td.num, .prose-guide th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .prose-guide .answer { background: var(--color-navy-50); border-left: 4px solid var(--color-accent-500); padding: 0.875rem 1rem; border-radius: 0 0.5rem 0.5rem 0; margin-top: 0.75rem; }
+  .prose-guide .tablewrap { overflow-x: auto; }
+</style>

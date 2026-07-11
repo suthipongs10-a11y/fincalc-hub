@@ -1,0 +1,89 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { computeRefinance } from '../../lib/refinance.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const fmt2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Example: 250k left, 26 yrs, 7.25% -> 6.0% 30yr, $5k costs
+const r = computeRefinance({ balance: 250000, currentRate: 7.25, remainingYears: 26, newRate: 6.0, newTermYears: 30, closingCosts: 5000, financeClosingCosts: false });
+const r20 = computeRefinance({ balance: 250000, currentRate: 7.25, remainingYears: 26, newRate: 5.9, newTermYears: 20, closingCosts: 5000, financeClosingCosts: false });
+---
+
+<GuideLayout
+  title="When Refinancing Is Worth It: Break-Even Math That Doesn't Lie"
+  metaTitle="When to Refinance — Break-Even Math Explained | Payoff Logic"
+  description="The two tests every refinance must pass: break-even month on closing costs, and lifetime cost including the term reset. Worked example with real numbers, plus the no-closing-cost trap."
+  slug="when-to-refinance"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="breakeven"
+  tool={{ href: '/refinance-calculator/', label: 'refinance break-even calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> A refinance is worth it when (1) you'll keep the
+    loan past the break-even month — closing costs ÷ monthly savings — and (2) the
+    lifetime cost, including any term reset, actually falls. Example: $250,000 at
+    7.25% with 26 years left, refinanced to 6.0%: payment drops {fmt(r.monthlySavings)},
+    $5,000 of costs breaks even in {r.breakEvenMonths} months, and lifetime savings are
+    {fmt(r.lifetimeSavings)} — a clear yes <em>if</em> you're staying.
+  </div>
+
+  <h2>Test 1: the break-even month</h2>
+  <p>
+    Closing costs (typically 2–6% of the balance — appraisal, origination, title,
+    recording) are paid up front; savings arrive monthly. Divide one by the other:
+    {fmt(5000)} ÷ {fmt(r.monthlySavings)} ≈ <strong>month {r.breakEvenMonths}</strong>.
+    Sell or refinance again before that month and the deal lost money, no matter how
+    good the rate looked. Be pessimistic about how long you'll really stay — the
+    average homeowner moves far more often than they predict at closing.
+  </p>
+
+  <h2>Test 2: the lifetime cost (where the term reset hides)</h2>
+  <p>
+    A lower payment can still cost more overall, because refinancing a loan with 26
+    years left into a fresh 30-year adds four years of payments to the end. Our
+    example passes anyway ({fmt(r.lifetimeSavings)} lifetime savings) because the rate
+    drop is large — but shrink it to a quarter point and the reset quietly eats the
+    benefit. Always compare <em>remaining interest on the old loan</em> vs
+    <em>total interest on the new one plus costs</em>; the
+    <a href="/refinance-calculator/">calculator</a> prints exactly that table.
+  </p>
+
+  <h2>The upgrade most people miss: refinance shorter</h2>
+  <p>
+    Same example, but into a 20-year at 5.9%: the payment is {fmt2(r20.newPayment)} —
+    just {fmt(r20.newPayment - r.currentPayment)} more than today's — while lifetime
+    savings jump to <strong>{fmt(r20.lifetimeSavings)}</strong> versus
+    {fmt(r.lifetimeSavings)} for the 30-year version. When income has grown since you
+    bought, a shorter-term refinance converts a rate drop into years of freedom
+    instead of monthly pocket money. (Related: the
+    <a href="/guides/15-vs-30-year-mortgage/">15-vs-30 guide</a>.)
+  </p>
+
+  <h2>"No-closing-cost" refinances, decoded</h2>
+  <p>
+    There's no free version — the costs move into either the balance (you finance
+    them, with interest, for decades) or the rate (a "lender credit" priced ~0.25–0.5%
+    higher). Both are testable: model financed costs with the calculator's checkbox,
+    or set costs to $0 and enter the higher quoted rate. Sometimes the no-cost version
+    genuinely wins — short expected stays favor it — but decide with the math, not the
+    label.
+  </p>
+
+  <h2>Reasons to refinance that aren't about the payment</h2>
+  <ul>
+    <li><strong>Killing FHA MIP:</strong> once you reach ~20% equity, refinancing to conventional removes life-of-loan mortgage insurance — often worth more than the rate change (see <a href="/guides/pmi-explained/">PMI explained</a>).</li>
+    <li><strong>Escaping an ARM before reset,</strong> trading rate uncertainty for a fixed schedule.</li>
+    <li><strong>Cash-out</strong> for renovations or consolidation — a different decision with different risks: you're re-collateralizing other spending with your house.</li>
+  </ul>
+
+  <h2>When to walk away</h2>
+  <p>
+    Skip the refinance if the new payment isn't lower and no structural goal (shorter
+    term, MIP removal, ARM escape) applies; if you're within a couple of years of
+    moving; or if you'd stretch a nearly-paid loan back to 30 years for grocery-money
+    savings. The math is unforgiving in both directions — which is exactly why we show
+    the break-even month and the lifetime table side by side in the
+    <a href="/refinance-calculator/">refinance calculator</a>.
+  </p>
+</GuideLayout>

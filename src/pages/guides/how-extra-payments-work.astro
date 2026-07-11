@@ -1,0 +1,85 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt, amortizeLoan } from '../../lib/loan.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const LOAN = 300000, RATE = 6.5;
+const pay = pmt(LOAN, RATE, 360);
+const base = amortizeLoan({ principal: LOAN, annualRate: RATE, payment: pay });
+const rows = [100, 200, 500].map((x) => {
+  const b = amortizeLoan({ principal: LOAN, annualRate: RATE, payment: pay, extraMonthly: x });
+  return { x, months: b.months, saved: base.totalInterest - b.totalInterest, early: base.months - b.months };
+});
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+---
+
+<GuideLayout
+  title="How Extra Mortgage Payments Really Work (With the Actual Math)"
+  metaTitle="How Extra Mortgage Payments Work — Real Savings Math | Payoff Logic"
+  description="What an extra $100, $200, or $500 a month actually does to a $300k mortgage: years removed, interest saved, and the three mistakes that cancel the benefit."
+  slug="how-extra-payments-work"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="payoff"
+  tool={{ href: '/extra-payment-mortgage-calculator/', label: 'extra-payment mortgage calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Extra payments go 100% to principal, so every extra
+    dollar removes its own future interest. On a {fmt(LOAN)} mortgage at {RATE}%, an
+    extra $200/month pays the loan off {yrMo(rows[1].early)} early and saves
+    {fmt(rows[1].saved)} in interest; $500/month saves {fmt(rows[2].saved)}. The higher
+    your rate, the bigger the effect.
+  </div>
+
+  <h2>The mechanism in one paragraph</h2>
+  <p>
+    Each month your interest charge is (rate ÷ 12) × current balance — the payment
+    covers that charge first, principal absorbs the rest. An extra payment skips the
+    interest line entirely and lands on the balance. Next month's interest is computed
+    on a smaller number, so slightly more of your <em>regular</em> payment reaches
+    principal too. The effect compounds monthly for the rest of the loan, which is why
+    small extras produce five- and six-figure results.
+  </p>
+
+  <h2>What each extra amount buys ({fmt(LOAN)} @ {RATE}%, 30-year)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Extra / month</th><th class="num">Payoff time</th><th class="num">Time saved</th><th class="num">Interest saved</th></tr></thead>
+    <tbody>
+      <tr><td>$0 (baseline)</td><td class="num">30 yr 0 mo</td><td class="num">—</td><td class="num">—</td></tr>
+      {rows.map((r) => (
+        <tr><td>${r.x}</td><td class="num">{yrMo(r.months)}</td><td class="num">{yrMo(r.early)}</td><td class="num">{fmt(r.saved)}</td></tr>
+      ))}
+    </tbody>
+  </table></div>
+  <p>
+    Notice the curve: the first $100 saves {fmt(rows[0].saved)}, but going from $200 to
+    $500 doesn't triple the savings of $200. Early dollars matter most — they live on
+    the schedule longest. That's also why a lump sum today beats the same total spread
+    over next year (slightly).
+  </p>
+
+  <h2>Three mistakes that cancel the benefit</h2>
+  <ol>
+    <li><strong>Extras applied as "next month's payment."</strong> Some servicers hold extra money as a prepaid installment instead of reducing principal — which saves you nothing. Mark every extra as <em>principal-only</em>, and check the next statement.</li>
+    <li><strong>Accelerating the mortgage while carrying 22% credit-card debt.</strong> A dollar retires interest at the rate of the debt it lands on. Cards first (<a href="/debt-snowball-calculator/">snowball calculator</a>), then the house.</li>
+    <li><strong>Emptying the emergency fund.</strong> Home equity is illiquid — you can't un-pay the mortgage when the transmission dies. Extras should come from surplus, not your safety net.</li>
+  </ol>
+
+  <h2>Extra monthly vs. biweekly vs. recasting</h2>
+  <ul>
+    <li><strong>Extra monthly</strong> — flexible, stoppable anytime. What this guide models.</li>
+    <li><strong>Biweekly payments</strong> — half a payment every two weeks = 13 payments/year, mechanically the same as adding 1/12 of your payment monthly. Skip paid programs; see the <a href="/biweekly-mortgage-calculator/">biweekly calculator</a> and its DIY note.</li>
+    <li><strong>Recasting</strong> — a lump sum plus a small servicer fee re-amortizes the loan to LOWER the required payment (same end date). Choose it when cash-flow relief, not an earlier payoff, is the goal.</li>
+  </ul>
+
+  <h2>Does paying extra beat investing?</h2>
+  <p>
+    Prepaying a {RATE}% mortgage is a guaranteed, tax-free {RATE}% return. Markets have
+    historically beaten that over long horizons — without a guarantee. The defensible
+    order most planners suggest: employer 401(k) match → high-interest debt → emergency
+    fund → then split extra cash between the mortgage and investing according to how
+    much you value certainty. We compute the mortgage side precisely in the
+    <a href="/mortgage-payoff-calculator/">mortgage payoff calculator</a> (works for
+    the loan you already have); the investing side is a personal call, not a math fact.
+  </p>
+</GuideLayout>

@@ -1,0 +1,104 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt, amortizeLoan } from '../../lib/loan.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const fmt2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// Worked example, computed by the verified engine at build time.
+const LOAN = 300000, RATE = 6.5;
+const pay = pmt(LOAN, RATE, 360);
+const sched = amortizeLoan({ principal: LOAN, annualRate: RATE, payment: pay });
+const m1 = sched.rows[0];
+const m180 = sched.rows[179];
+const m359 = sched.rows[358];
+const yr = (n: number) => sched.rows.slice(n * 12 - 12, n * 12).reduce((s, x) => s + x.principal, 0);
+const half = sched.rows.findIndex((r) => r.balance <= LOAN / 2) + 1;
+---
+
+<GuideLayout
+  title="How Amortization Works (and Why Your First Payments Buy So Little House)"
+  metaTitle="How Amortization Works — Mortgage Math Explained | Payoff Logic"
+  description="Amortization explained with real numbers: why early mortgage payments are mostly interest, when you actually own half your house, and how to read an amortization schedule."
+  slug="how-amortization-works"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="piti"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator with full amortization schedule' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Amortization is the schedule that splits each fixed
+    loan payment between interest (charged on the current balance) and principal (which
+    reduces it). Because the balance starts large, early payments are mostly interest —
+    on a {fmt(LOAN)} mortgage at {RATE}%, the first payment is {fmt2(m1.interest)} interest
+    and only {fmt2(m1.principal)} principal. The split flips over time, which is why the
+    last payment is almost all principal.
+  </div>
+
+  <h2>The one formula behind every fixed-rate loan</h2>
+  <p>
+    A fixed-rate mortgage promises two things: the payment never changes, and the loan
+    hits exactly zero on the last month. The amortization formula finds the single
+    payment amount that makes both true. For {fmt(LOAN)} borrowed at {RATE}% for 30
+    years, that number is <strong>{fmt2(pay)}</strong> a month — 360 identical payments.
+  </p>
+  <p>
+    What changes every month is what's <em>inside</em> the payment. Interest is always
+    the monthly rate ({RATE}% ÷ 12) times your current balance. Whatever's left of the
+    payment reduces principal. Smaller balance → less interest next month → more
+    principal absorbed — a slow-motion flywheel in your favor.
+  </p>
+
+  <h2>Watch the split move (real schedule)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Payment</th><th class="num">Interest</th><th class="num">Principal</th><th class="num">Balance after</th></tr></thead>
+    <tbody>
+      <tr><td>#1 (month 1)</td><td class="num">{fmt2(m1.interest)}</td><td class="num">{fmt2(m1.principal)}</td><td class="num">{fmt(m1.balance)}</td></tr>
+      <tr><td>#180 (year 15)</td><td class="num">{fmt2(m180.interest)}</td><td class="num">{fmt2(m180.principal)}</td><td class="num">{fmt(m180.balance)}</td></tr>
+      <tr><td>#359 (year 30)</td><td class="num">{fmt2(m359.interest)}</td><td class="num">{fmt2(m359.principal)}</td><td class="num">{fmt(m359.balance)}</td></tr>
+    </tbody>
+  </table></div>
+  <p>
+    Three things people find surprising. First, at the halfway point in <em>time</em>
+    (year 15) you have not paid off half the <em>loan</em> — the balance is still
+    {fmt(m180.balance)}. On this loan you don't own "half the house" until payment
+    <strong>#{half}</strong> — year {Math.ceil(half / 12)}. Second, total interest over
+    the full schedule is {fmt(sched.totalInterest)} — {Math.round((sched.totalInterest / LOAN) * 100)}%
+    of what you borrowed. Third, the flip point where more of your payment goes to
+    principal than interest doesn't arrive until deep in the schedule.
+  </p>
+
+  <h2>Why lenders front-load interest (they don't, actually)</h2>
+  <p>
+    It looks rigged, but no one is "front-loading" anything: interest is simply charged
+    on what you still owe, and early on you owe the most. The same rule that hurts you
+    in year one is what makes extra payments so powerful — every extra dollar goes
+    straight to principal and removes that dollar's interest from <em>every future
+    month</em>. Our <a href="/guides/how-extra-payments-work/">extra-payments guide</a>
+    runs those numbers, and the
+    <a href="/extra-payment-mortgage-calculator/">extra-payment calculator</a> shows
+    yours.
+  </p>
+
+  <h2>How to read an amortization schedule</h2>
+  <ul>
+    <li><strong>Principal column:</strong> your equity build from payments. Yearly totals grow every year — {fmt(yr(1))} in year 1 vs {fmt(yr(15))} in year 15 on this example.</li>
+    <li><strong>Interest column:</strong> the cost of that year's borrowing. It only falls as fast as the balance does.</li>
+    <li><strong>Balance column:</strong> what a payoff (sale or refinance) would require. This is the number that matters when you sell.</li>
+  </ul>
+  <p>
+    Every calculator on this site prints the full schedule — yearly rows you can expand
+    to months — because decisions like "sell in year 6" or "refinance at year 3" depend
+    on the balance at that exact row, not on averages.
+  </p>
+
+  <h2>Where amortization shows up beyond mortgages</h2>
+  <p>
+    Car loans, personal loans, and student loans amortize identically — only the term
+    and rate change. Credit cards do <em>not</em>: they have no fixed schedule, which is
+    exactly why minimum payments can stretch for decades (see
+    <a href="/guides/how-credit-card-interest-works/">how credit-card interest works</a>).
+    For any fixed loan, the <a href="/loan-payoff-calculator/">loan payoff calculator</a>
+    builds your schedule in seconds.
+  </p>
+</GuideLayout>

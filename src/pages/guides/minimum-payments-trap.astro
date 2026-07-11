@@ -1,0 +1,77 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { simulate } from '../../lib/snowball.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const yrMo = (m: number) => `${Math.floor(m / 12)} yr ${m % 12} mo`;
+// simulate: minimum-only uses declining min ≈ interest + 1%; we approximate
+// declining-min with the simulator's fixed min (conservative), and note it.
+const BAL = 4000, APR = 22;
+const s120 = simulate([{ name: 'c', balance: BAL, rate: APR, minPayment: 120 }], 0, 'snowball');
+const s200 = simulate([{ name: 'c', balance: BAL, rate: APR, minPayment: 120 }], 80, 'snowball');
+const monthlyInt = (BAL * APR) / 100 / 12;
+---
+
+<GuideLayout
+  title="Why Minimum Payments Keep You in Debt (the Design, Not the Accident)"
+  metaTitle="Why Minimum Payments Keep You in Debt | Payoff Logic"
+  description="Minimum payments are calculated to maximize interest, not to free you: the declining-minimum trap explained with a $4,000 card example, and the fixed-payment fix that collapses the timeline."
+  slug="minimum-payments-trap"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="payoff"
+  tool={{ href: '/debt-snowball-calculator/', label: 'debt snowball calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> Card minimums are typically interest + 1% of the
+    balance — just enough to keep the account current while retiring almost no debt.
+    On {fmt(BAL)} at {APR}%, interest alone is about {fmt(monthlyInt)} a month, so a
+    $120 minimum removes barely {fmt(120 - monthlyInt)} of principal. The fix is
+    mechanical: pay a <em>fixed</em> amount instead of the declining minimum — even the
+    same $120 held constant clears the card in {yrMo(s120.months)}.
+  </div>
+
+  <h2>The design: minimums shrink as you shrink</h2>
+  <p>
+    The trap isn't the first month's minimum — it's that the minimum <em>falls with
+    the balance</em>. As you pay down, the issuer asks for less, the timeline
+    stretches, and interest keeps accruing on what remains. Regulators forced the
+    "minimum payment warning" box onto every statement precisely because the honest
+    projection shocks people: decades and thousands of dollars for a mid-size balance.
+  </p>
+
+  <h2>One change collapses the trap</h2>
+  <p>
+    Freeze your payment at its <em>current</em> level (or any fixed number) and refuse
+    to let it decline. Held-constant payments behave like a loan amortization —
+    finite, predictable, over.
+  </p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Strategy on {fmt(BAL)} @ {APR}%</th><th class="num">Time to zero</th><th class="num">Total interest</th></tr></thead>
+    <tbody>
+      <tr><td>Fixed $120/month</td><td class="num">{yrMo(s120.months)}</td><td class="num">{fmt(s120.totalInterest)}</td></tr>
+      <tr><td>Fixed $200/month</td><td class="num">{yrMo(s200.months)}</td><td class="num">{fmt(s200.totalInterest)}</td></tr>
+    </tbody>
+  </table></div>
+  <p>
+    (A true minimum-only track — where the payment declines every month — runs years
+    longer than the first row; issuers' own statement warnings routinely show 10+
+    years. Our simulator holds payments fixed, which is the strategy we're
+    recommending anyway.)
+  </p>
+
+  <h2>Why this matters beyond one card</h2>
+  <ul>
+    <li><strong>Utilization and your score:</strong> balances that never fall keep credit utilization high, which suppresses your score and raises the price of every future loan.</li>
+    <li><strong>The rollover engine:</strong> a fixed payment that outlives its card becomes free ammunition for the next debt — the core of the snowball/avalanche method (<a href="/guides/snowball-vs-avalanche/">the real math</a>).</li>
+    <li><strong>Compounding works against you here:</strong> unpaid interest joins the balance and earns interest itself — the same force that grows retirement accounts, pointed the wrong way (<a href="/guides/how-credit-card-interest-works/">how card interest compounds</a>).</li>
+  </ul>
+
+  <h2>A 15-minute action plan</h2>
+  <ol>
+    <li>Pull every card's balance, APR, and current minimum from the statements.</li>
+    <li>Enter them in the <a href="/debt-snowball-calculator/">snowball calculator</a> with whatever fixed extra you can sustain — even $50.</li>
+    <li>Set autopay to your <em>fixed</em> numbers, not "minimum due."</li>
+    <li>Re-run after each payoff and roll the freed payment forward — the calculator's share link saves your plan.</li>
+  </ol>
+</GuideLayout>

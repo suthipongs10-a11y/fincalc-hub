@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Illustration from '../../components/Illustration.astro';
+import { SITE } from '../../config';
+
+const guides = [
+  { slug: 'how-amortization-works', title: 'How Amortization Works', desc: 'Why early payments are mostly interest, when you truly own half the house, and how to read a schedule.', cluster: 'Mortgage' },
+  { slug: 'pmi-explained', title: 'PMI Explained: Cost, Rules, Removal', desc: 'What PMI costs, the federal 80/78% cancellation rules, and three ways to kill it early.', cluster: 'Mortgage' },
+  { slug: 'how-extra-payments-work', title: 'How Extra Mortgage Payments Really Work', desc: 'What $100, $200, or $500 extra actually buys — and the three mistakes that cancel the benefit.', cluster: 'Mortgage' },
+  { slug: 'income-needed-for-a-house', title: 'Income Needed for a $250k–$1M House', desc: 'Real income tables under the 28% rule, with every assumption shown and adjustable.', cluster: 'Mortgage' },
+  { slug: '15-vs-30-year-mortgage', title: '15 vs. 30-Year Mortgage: The Real Math', desc: 'Payments, lifetime interest, 5-year equity — plus the "30 paid like a 15" third option, priced.', cluster: 'Mortgage' },
+  { slug: 'snowball-vs-avalanche', title: 'Snowball vs. Avalanche: The Real Math', desc: 'A worked example where the methods truly differ, and an honest rule for choosing.', cluster: 'Debt' },
+  { slug: 'how-credit-card-interest-works', title: 'How Credit Card Interest Is Calculated', desc: 'Daily compounding, the grace-period cliff, and what fixed payments do to the timeline.', cluster: 'Debt' },
+  { slug: 'minimum-payments-trap', title: 'Why Minimum Payments Keep You in Debt', desc: 'The declining-minimum design, and the one mechanical change that collapses it.', cluster: 'Debt' },
+  { slug: 'when-to-refinance', title: 'When Refinancing Is Worth It', desc: 'Break-even months, the term-reset trap, no-closing-cost decoded — with worked numbers.', cluster: 'Refinance' },
+  { slug: 'how-car-loan-interest-works', title: 'How Car Loan Interest Works', desc: 'What 48 vs 84 months really costs, negative equity, and the 20/4/10 sanity check.', cluster: 'Auto' },
+];
+
+const title = 'Guides — Money Math Explained with Real Numbers | Payoff Logic';
+const description =
+  'Plain-English guides to mortgage, debt, and loan math — every example computed with the same verified engines that power our calculators, every guide paired with a free tool.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: SITE.url + '/guides/' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Guides' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Guides</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+          The math behind the money decisions, in plain English. Every number in these
+          guides is computed by the same verified engines that power our calculators —
+          and every guide pairs with a free tool for your own numbers.
+        </p>
+      </div>
+      <Illustration kind="hero" class="hidden w-44 shrink-0 sm:block" />
+    </header>
+
+    <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+      {guides.map((g) => (
+        <li class="relative flex flex-col rounded-lg border border-navy-100 bg-white p-5 shadow-sm">
+          <p class="text-xs font-semibold tracking-wide text-accent-700 uppercase">{g.cluster}</p>
+          <h2 class="mt-1 text-lg font-semibold text-navy-900">
+            <a href={`/guides/${g.slug}/`} class="after:absolute after:inset-0 hover:text-navy-600">{g.title}</a>
+          </h2>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-600">{g.desc}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

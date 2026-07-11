@@ -3,12 +3,40 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M3 complete — awaiting owner review before M3.5.
-- **Last commit:** `M3: 50 programmatic state pages + by-state hub`
-- **Build status:** `npm run build` clean (**68 pages** + sitemap) · all
-  test suites pass (mortgage / m2 / m25 / m3 data / m3 similarity) ·
-  Lighthouse mobile 100×4 on state template + hub. Live at
-  https://payofflogic.com.
+- **Milestone:** M4 complete (autonomous overnight run per owner
+  instruction 2026-07-11: continue milestone-by-milestone without waiting
+  for per-gate review). M3.5 + images + M4 shipped. Next: M4.5.
+- **Last commit:** `M4: 10 guides + guides index + Article schema`
+- **Build status:** `npm run build` clean (**109 pages** + sitemap) · all
+  test suites pass · Lighthouse mobile 100×4 spot-checked on every new
+  template. Live at https://payofflogic.com.
+
+## M4 gate checklist (self-audit; owner review still required for accuracy sign-off)
+- [x] 10 guides live under /guides/ (amortization, PMI, extra payments,
+      income-for-a-house, 15v30, snowball-vs-avalanche, credit-card
+      interest, minimum-payments trap, when-to-refinance, car-loan
+      interest) — every figure computed at build time by the verified
+      engines (no hand-typed numbers), direct-answer citable blocks,
+      tool links throughout
+- [x] /guides/ index + Guides in header/footer nav
+- [x] Article + Organization-author schema, visible byline + updated date
+      (GuideLayout); author entity = "Payoff Logic Editorial Team"
+      placeholder — OWNER DECISION still pending, swap in src/config.ts
+- [x] Lighthouse 100×4 on guide template
+- [ ] Owner accuracy review of the 10 guides (gate item — pending)
+- [ ] AdSense application — owner action when ready
+
+## M3.5 gate checklist (self-audit)
+- [x] 29 /mortgage-payment/{amount}/ pages + hub; matrices verified to the
+      cent vs engine on 5 built pages (tests/m35-check.mjs); tier-branched
+      content; conforming/jumbo notes (FHFA 2025 baseline); Lighthouse
+      100×4. Note: BUILD_PLAN suggested reviewing GSC indexation of M3
+      before this wave — owner explicitly instructed to proceed overnight.
+
+## Images (owner request 2026-07-11)
+- [x] Illustration.astro: 10 brand SVG variants; applied to homepage hero,
+      all tool pages, hubs, state/amount templates, guides
+- [x] public/og.png share image (SVG→sharp) + og:image/twitter:card meta
 
 ## M3 gate checklist (self-audit)
 - [x] src/data/states.json — 50 states: effective property tax (Tax

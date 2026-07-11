@@ -1,0 +1,79 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { pmt, amortizeLoan } from '../../lib/loan.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const LOAN = 300000;
+const R15 = 5.9, R30 = 6.5;
+const p15 = pmt(LOAN, R15, 180), p30 = pmt(LOAN, R30, 360);
+const a15 = amortizeLoan({ principal: LOAN, annualRate: R15, payment: p15 });
+const a30 = amortizeLoan({ principal: LOAN, annualRate: R30, payment: p30 });
+const b5_15 = a15.rows[59].balance, b5_30 = a30.rows[59].balance;
+// 30yr paid like 15: extra = p15 - p30
+const hybrid = amortizeLoan({ principal: LOAN, annualRate: R30, payment: p30, extraMonthly: p15 - p30 });
+---
+
+<GuideLayout
+  title="15 vs. 30-Year Mortgage: The Real Math (Including the Third Option)"
+  metaTitle="15 vs 30 Year Mortgage — Real Cost Comparison | Payoff Logic"
+  description="A $300k loan compared honestly: 15-year vs 30-year payments, total interest, 5-year equity — plus the '30 paid like a 15' strategy and exactly what it costs vs the real 15."
+  slug="15-vs-30-year-mortgage"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="race"
+  tool={{ href: '/15-year-mortgage-calculator/', label: '15-vs-30 comparison calculator' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> On a {fmt(LOAN)} loan (15-yr at {R15}%, 30-yr at
+    {R30}% — shorter terms price lower), the 15-year costs {fmt(p15 - p30)} more per
+    month but saves <strong>{fmt(a30.totalInterest - a15.totalInterest)}</strong> in
+    total interest and builds equity roughly 3× faster in the first five years. The
+    30-year's advantage is flexibility: a lower <em>required</em> payment you can
+    voluntarily exceed.
+  </div>
+
+  <h2>Side by side, no spin</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">15-year @ {R15}%</th><th class="num">30-year @ {R30}%</th></tr></thead>
+    <tbody>
+      <tr><td>Monthly payment (P&amp;I)</td><td class="num">{fmt(p15)}</td><td class="num">{fmt(p30)}</td></tr>
+      <tr><td>Total interest</td><td class="num">{fmt(a15.totalInterest)}</td><td class="num">{fmt(a30.totalInterest)}</td></tr>
+      <tr><td>Total paid</td><td class="num">{fmt(LOAN + a15.totalInterest)}</td><td class="num">{fmt(LOAN + a30.totalInterest)}</td></tr>
+      <tr><td>Balance after 5 years</td><td class="num">{fmt(b5_15)}</td><td class="num">{fmt(b5_30)}</td></tr>
+      <tr><td>Equity from payments, 5 yrs</td><td class="num">{fmt(LOAN - b5_15)}</td><td class="num">{fmt(LOAN - b5_30)}</td></tr>
+    </tbody>
+  </table></div>
+  <p>
+    Two structural reasons the 15-year wins on cost: less time borrowing, and a rate
+    discount — lenders price 15-year money about half a point cheaper because it's
+    less risky to them. That discount is real and only available by committing to the
+    higher payment.
+  </p>
+
+  <h2>The third option: a 30 paid like a 15</h2>
+  <p>
+    Take the 30-year, then voluntarily pay the 15-year amount ({fmt(p15)}). On our
+    numbers that pays off in about {Math.floor(hybrid.months / 12)} years
+    {hybrid.months % 12} months with {fmt(hybrid.totalInterest)} of interest —
+    <strong>{fmt(hybrid.totalInterest - a15.totalInterest)} more than the true
+    15-year</strong>. That gap is precisely the price of flexibility: you're paying the
+    30-year rate for an escape hatch you can use if income drops. Cheap insurance for
+    some households, wasted money for others with rock-solid income.
+  </p>
+
+  <h2>Who should lean which way</h2>
+  <ul>
+    <li><strong>Lean 15-year:</strong> stable income, emergency fund intact, retirement match captured, and the higher payment still leaves savings room. The forced discipline plus the rate discount is the most efficient equity builder available to most households.</li>
+    <li><strong>Lean 30-year:</strong> variable income, young kids/child-care years, other high-return uses for cash (employer match, expensive debt), or you're buying near your affordability ceiling. Add extras when you can — the <a href="/extra-payment-mortgage-calculator/">extra-payment calculator</a> shows each scenario.</li>
+    <li><strong>Already own?</strong> Refinancing a 30 into a 15 mid-life is common once income grows — run the break-even in the <a href="/refinance-calculator/">refinance calculator</a>.</li>
+  </ul>
+
+  <h2>The mistake to avoid</h2>
+  <p>
+    Don't take the 15-year payment if it crowds out your emergency fund — house-rich,
+    cash-poor is fragile, and missed payments cost more than the interest savings.
+    The <a href="/house-affordability-calculator/">affordability calculator</a> (set
+    the term to 15) shows whether the shorter term fits your ratios before you fall in
+    love with the savings number.
+  </p>
+</GuideLayout>

@@ -1,0 +1,89 @@
+---
+import GuideLayout from '../../layouts/GuideLayout.astro';
+import { computeMortgage } from '../../lib/mortgage.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+// Worked example: $350k home, 10% down, 6.5%, PMI 0.6%
+const ex = computeMortgage({ homePrice: 350000, downPayment: 35000, annualRate: 6.5, termYears: 30, taxRate: 0, insuranceAnnual: 0, pmiRate: 0.6, hoaMonthly: 0, extraMonthly: 0, startYear: 2026, startMonth: 8 });
+const pmiEnd = ex.rows.filter((r) => r.pmi > 0).length;
+---
+
+<GuideLayout
+  title="PMI Explained: What It Costs, When It Ends, and How to Kill It Early"
+  metaTitle="PMI Explained — Cost, 78% Rule & How to Remove It | Payoff Logic"
+  description="Private mortgage insurance in plain English: typical PMI costs, the 80/78% cancellation rules under federal law, and three legitimate ways to remove PMI faster."
+  slug="pmi-explained"
+  updated="July 11, 2026"
+  updatedISO="2026-07-11"
+  kind="shield"
+  tool={{ href: '/mortgage-calculator/', label: 'mortgage calculator with automatic PMI' }}
+>
+  <div class="answer">
+    <strong>Direct answer:</strong> PMI (private mortgage insurance) is a monthly fee —
+    typically 0.3%–1.5% of the loan per year — charged on conventional mortgages with
+    less than 20% down. It protects the lender, not you. By federal law it cancels
+    automatically once your balance reaches 78% of the home's original value, and you
+    can request removal at 80%. On a {fmt(315000)} loan at 0.6%, that's about
+    {fmt(ex.monthlyPMI)} a month for roughly {Math.round(pmiEnd / 12)} years if you
+    only make scheduled payments.
+  </div>
+
+  <h2>What you actually pay</h2>
+  <p>
+    PMI is priced on your loan amount, credit score, and down payment. Example: buy a
+    {fmt(350000)} home with 10% down and a 0.6% PMI rate, and you'll pay about
+    <strong>{fmt(ex.monthlyPMI)}/month</strong> on top of principal and interest. Over
+    the {pmiEnd} months until automatic cancellation, that's roughly
+    <strong>{fmt(ex.totalPMI)}</strong> of insurance that builds you zero equity.
+    Weak credit can double the rate; strong credit and 15% down can halve it.
+  </p>
+
+  <h2>The three ways PMI ends</h2>
+  <h3>1. Automatic termination (the 78% rule)</h3>
+  <p>
+    Under the federal Homeowners Protection Act, the servicer must cancel PMI on the
+    date your balance is <em>scheduled</em> to hit 78% of the original value — no
+    action needed, as long as you're current on payments. Our calculators model this
+    rule exactly.
+  </p>
+  <h3>2. Borrower-requested cancellation (the 80% rule)</h3>
+  <p>
+    You may request cancellation once the balance reaches 80% of the original value —
+    typically months or years before the automatic date. The catch: you must ask in
+    writing, have a good payment history, and the servicer may require proof the value
+    hasn't fallen.
+  </p>
+  <h3>3. Reappraisal after appreciation or improvements</h3>
+  <p>
+    If your home's <em>current</em> value has risen enough that your loan is at or
+    under 75–80% of it (rules vary by investor and loan age), many servicers will
+    cancel PMI based on a new appraisal you pay for (a few hundred dollars). In fast
+    markets this is often the biggest shortcut of the three.
+  </p>
+
+  <h2>How to kill PMI faster with math, not luck</h2>
+  <ul>
+    <li><strong>Extra principal payments</strong> pull the 78% date forward. Model it in the <a href="/extra-payment-mortgage-calculator/">extra-payment calculator</a> — the PMI cutoff there reflects your extra payments.</li>
+    <li><strong>A slightly bigger down payment</strong> can matter disproportionately: moving from 10% to 12% down cuts both the premium rate tier and the months to 78%.</li>
+    <li><strong>Track your original-value LTV</strong>: original value = the lower of purchase price or appraisal at closing. Your payoff progress is in every amortization schedule row.</li>
+  </ul>
+
+  <h2>PMI vs. FHA mortgage insurance — don't confuse them</h2>
+  <p>
+    Conventional PMI cancels. FHA's MIP mostly doesn't: with the common 3.5% down, FHA
+    insurance lasts the life of the loan, and the usual exit is refinancing to a
+    conventional loan at 20% equity. If you're weighing the two programs, compare real
+    numbers in the <a href="/fha-loan-calculator/">FHA calculator</a> versus the
+    <a href="/mortgage-calculator/">conventional calculator with PMI</a>.
+  </p>
+
+  <h2>Is avoiding PMI always worth it?</h2>
+  <p>
+    No — and this surprises people. Draining savings to reach 20% down can leave you
+    without an emergency fund, and in appreciating markets, buying sooner with PMI
+    sometimes beats saving longer while prices climb. PMI is a cost, not a sin; put it
+    in the calculator, look at the total monthly number, and decide with the whole
+    picture in front of you. That's the honest math — and it's what the
+    <a href="/house-affordability-calculator/">affordability calculator</a> is for.
+  </p>
+</GuideLayout>
