@@ -65,9 +65,14 @@
       Registry lookups (RDAP/DoH) are blocked from this environment; owner
       must verify availability at the registrar (Cloudflare Registrar
       recommended — at-cost pricing, integrates with Pages).
-      Shortlist (Claude's order): 1) payoffmath.com 2) truemonthly.com
-      3) payoffcalc.com (likely parked/premium) 4) calcpiti.com (owner's;
-      mortgage-jargon, boxes out debt/auto clusters — not recommended)
+      Round 1 (payoffmath/truemonthly/payoffcalc) all taken per owner.
+      Round 2 shortlist (Claude's order; no active site found in search,
+      owner must still verify at registrar): 1) monthlymath.com
+      2) payofflogic.com 3) clearmonthly.com 4) payoffkit.com
+      5) payoffworks.com 6) payoffcompass.com 7) loanmathlab.com
+      8) realmonthly.com — invented fallbacks (near-certain available):
+      amortiq.com / payoffly.com. AVOID payoffpilot.com (active debt-relief
+      company) and "MoneyMath*" (crowded: moneymath.tools active).
       Avoid: single-vertical names (mortgagemath.*) since site spans 4
       clusters; avoid .io for YMYL trust.
       After registering: update `site` in astro.config.mjs, SITE.url +
