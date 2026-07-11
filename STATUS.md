@@ -59,10 +59,19 @@
    can start collecting data early — recommended before M2 finishes
 
 ## Pending decisions (owner)
-- [ ] Domain name — candidates to check availability:
-      calcpiti.com / mortgagemath.io / payoffcalc.com / (owner's ideas)
-      Working name "FinCalc Hub" until decided. Placeholder URL
-      `https://fincalc-hub.pages.dev` used in `astro.config.mjs` + `src/config.ts`.
+- [ ] Domain name — DECIDE BEFORE M2 (recommended 2026-07-11).
+      ⚠ Finding: fincalchub.com is TAKEN by an active financial-calculator
+      site (brand collision — working name must change at rebrand).
+      Registry lookups (RDAP/DoH) are blocked from this environment; owner
+      must verify availability at the registrar (Cloudflare Registrar
+      recommended — at-cost pricing, integrates with Pages).
+      Shortlist (Claude's order): 1) payoffmath.com 2) truemonthly.com
+      3) payoffcalc.com (likely parked/premium) 4) calcpiti.com (owner's;
+      mortgage-jargon, boxes out debt/auto clusters — not recommended)
+      Avoid: single-vertical names (mortgagemath.*) since site spans 4
+      clusters; avoid .io for YMYL trust.
+      After registering: update `site` in astro.config.mjs, SITE.url +
+      SITE.name in src/config.ts, rerun build.
 - [ ] Author entity name for About page (real name or pen name).
       Placeholder in use: "FinCalc Hub Editorial Team" (`SITE.author` in src/config.ts).
 - [ ] Public contact email: currently the owner's Gmail is published on
