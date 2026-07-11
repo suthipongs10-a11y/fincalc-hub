@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import MortgageCalculator from '../../components/MortgageCalculator.astro';
+import { SITE } from '../../config';
+import { pmt } from '../../lib/loan.js';
+import { AMOUNTS, CONFORMING_LIMIT, MATRIX_RATES, ILLUSTRATIVE_RATE } from '../../data/amounts.js';
+
+export function getStaticPaths() {
+  return AMOUNTS.map((amount) => ({ params: { amount: String(amount) }, props: { amount } }));
+}
+
+const { amount } = Astro.props;
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const fmt2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const short = amount >= 1000000 ? `$${(amount / 1000000).toLocaleString('en-US')} million` : fmt(amount);
+
+// Build-time math from the verified engine.
+const pi30 = pmt(amount, ILLUSTRATIVE_RATE, 360);
+const pi15 = pmt(amount, ILLUSTRATIVE_RATE, 180);
+// National-average escrow estimate for the PITI view (labeled): home price
+// assuming this loan is 80% LTV; tax 1.1% of price; insurance $2,341/yr.
+const price = amount / 0.8;
+const taxMo = (price * 1.1) / 100 / 12;
+const insMo = 2341 / 12;
+const piti = pi30 + taxMo + insMo;
+const incomeNeeded = (piti * 12) / 0.28;
+const isJumbo = amount > CONFORMING_LIMIT;
+const tier = amount <= 200000 ? 'entry' : amount <= 450000 ? 'core' : amount <= 1000000 ? 'upper' : 'jumbo';
+
+const matrix = MATRIX_RATES.map((r) => ({ r, m30: pmt(amount, r, 360), m15: pmt(amount, r, 180) }));
+
+// Adjacent amounts for internal links.
+const idx = AMOUNTS.indexOf(amount);
+const adjacent = [AMOUNTS[idx - 1], AMOUNTS[idx + 1]].filter(Boolean);
+
+const pageUrl = SITE.url + '/mortgage-payment/' + amount + '/';
+const hubUrl = SITE.url + '/mortgage-payment/';
+const title = `${short} Mortgage Payment — Monthly Cost at Every Rate | ${SITE.name}`;
+const description = `What a ${short} mortgage costs per month: ${fmt(pi30)} principal & interest at ${ILLUSTRATIVE_RATE}% over 30 years, full rate table from 5% to 8%, 15-year comparison, and the income needed to qualify.`;
+
+const tierLead = {
+  entry: `A ${short} mortgage sits in starter-home and refinance territory — in much of the Midwest and South it finances a median home outright, while in coastal metros it's a condo or a hefty down payment's remainder. The payment math is friendly at this size: even a full percentage point of rate moves the monthly cost by only ${fmt(pmt(amount, 7.5, 360) - pi30)}.`,
+  core: `A ${short} loan is squarely in the mainstream of American mortgages — near the typical loan on a median-priced U.S. home with 20% down. It's also where rate shopping pays real money: the spread between a ${MATRIX_RATES[0]}% and ${MATRIX_RATES[MATRIX_RATES.length - 1]}% rate on this balance is ${fmt(pmt(amount, 8, 360) - pmt(amount, 5, 360))} every month.`,
+  upper: `A ${short} mortgage is high-cost-metro territory — or a lot of house elsewhere. ${isJumbo ? `Note that ${fmt(amount)} exceeds the baseline conforming loan limit (${fmt(CONFORMING_LIMIT)} for 2025; higher in designated high-cost counties), which makes this a jumbo loan for most buyers — jumbo rates and underwriting differ from conforming loans.` : `It stays under the baseline conforming loan limit (${fmt(CONFORMING_LIMIT)} in 2025), so standard conforming rates apply.`} At this size, an eighth of a point is real money: ${fmt(pmt(amount, ILLUSTRATIVE_RATE + 0.125, 360) - pi30)} a month.`,
+  jumbo: `A ${short} mortgage is a jumbo loan — well beyond the ${fmt(CONFORMING_LIMIT)} baseline conforming limit — so expect different underwriting: larger reserves, lower max debt-to-income, and rates that can sit either above or below conforming depending on the market. At this scale small rate differences are enormous: a quarter point changes the payment by ${fmt(pmt(amount, ILLUSTRATIVE_RATE + 0.25, 360) - pi30)} a month, ${fmt((pmt(amount, ILLUSTRATIVE_RATE + 0.25, 360) - pi30) * 360)} over the life of the loan.`,
+}[tier];
+
+const faqs = [
+  {
+    q: `How much is the monthly payment on a ${short} mortgage?`,
+    a: `At ${ILLUSTRATIVE_RATE}% on a 30-year fixed loan, principal and interest run ${fmt2(pi30)} per month. With typical property taxes and insurance on top (assuming the loan is 80% of the home's price), the full monthly cost is roughly ${fmt(piti)}. On a 15-year term at the same rate the payment is ${fmt2(pi15)}. The table above shows every half-point from 5% to 8%.`,
+  },
+  {
+    q: `How much income do I need for a ${short} mortgage?`,
+    a: `Using the standard 28% housing-ratio guideline and the full payment estimate above, you'd want roughly ${fmt(incomeNeeded)} of gross annual income (${fmt(incomeNeeded / 12)} per month). Less existing debt, a bigger down payment, or a lower rate all reduce that requirement — work your exact numbers in our home affordability calculator.`,
+  },
+  {
+    q: `How much interest does a ${short} mortgage cost over 30 years?`,
+    a: `At ${ILLUSTRATIVE_RATE}%, total interest over a full 30-year schedule is about ${fmt(pi30 * 360 - amount)} — ${(((pi30 * 360 - amount) / amount) * 100).toFixed(0)}% of the amount borrowed. A 15-year term cuts that to about ${fmt(pi15 * 180 - amount)}, and extra payments can remove years without changing the required payment.`,
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: `${short} Mortgage Payment Calculator`,
+    url: pageUrl,
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web Browser',
+    browserRequirements: 'Requires JavaScript',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Mortgage Payments by Amount', item: hubUrl },
+      { '@type': 'ListItem', position: 3, name: `${short} Mortgage`, item: pageUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'By Amount', href: '/mortgage-payment/' }, { label: `${short} Mortgage` }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">{short} Mortgage Payment</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Principal &amp; interest on a {short} loan runs <strong>{fmt2(pi30)}/month</strong> at
+        {ILLUSTRATIVE_RATE}% over 30 years ({fmt2(pi15)} on a 15-year). Below: the payment at
+        every rate from 5% to 8%, the income the standard ratios suggest, and a full
+        calculator preloaded with this amount.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: amount-page, above-fold right (desktop sidebar) -->
+
+    <section aria-labelledby="matrix-heading" class="rounded-xl border border-navy-100 bg-white p-5 shadow-sm sm:p-6">
+      <h2 id="matrix-heading" class="text-lg font-bold text-navy-900">Monthly payment by rate ({short} loan)</h2>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full min-w-[440px] text-sm">
+          <thead>
+            <tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+              <th class="py-2 pr-2">Rate</th>
+              <th class="py-2 pr-2 text-right">30-year P&amp;I</th>
+              <th class="py-2 pr-2 text-right">15-year P&amp;I</th>
+              <th class="py-2 text-right">30-yr total interest</th>
+            </tr>
+          </thead>
+          <tbody class="text-navy-800">
+            {matrix.map((row) => (
+              <tr class={`border-b border-navy-50 ${row.r === ILLUSTRATIVE_RATE ? 'bg-accent-50 font-semibold' : ''}`}>
+                <td class="py-2 pr-2">{row.r.toFixed(2)}%</td>
+                <td class="py-2 pr-2 text-right tabular-nums">{fmt2(row.m30)}</td>
+                <td class="py-2 pr-2 text-right tabular-nums">{fmt2(row.m15)}</td>
+                <td class="py-2 text-right tabular-nums">{fmt(row.m30 * 360 - amount)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2 text-xs text-navy-600">Principal &amp; interest only — taxes, insurance, PMI, and HOA come on top. Highlighted row = the illustrative rate used in the text.</p>
+    </section>
+
+    <article class="mx-auto mt-10 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">What {short} of mortgage really costs</h2>
+        <p class="mt-3">{tierLead}</p>
+        <p class="mt-3">
+          The full monthly bill is more than principal and interest. If this loan is 80%
+          of the home's price ({fmt(price)} home), national-average property tax (1.1%/yr)
+          adds about {fmt(taxMo)}/month and average insurance ({fmt(2341)}/yr) another
+          {fmt(insMo)} — bringing the realistic total to roughly <strong>{fmt(piti)}/month</strong>.
+          Under the classic 28% housing ratio, that suggests around {fmt(incomeNeeded)} of
+          household income. Local taxes change this a lot — see the
+          <a href="/mortgage-calculator/by-state/" class="font-medium text-navy-900 underline hover:text-navy-600">state-by-state comparison</a>.
+        </p>
+      </section>
+    </article>
+
+    <div class="mx-auto mt-10 max-w-5xl">
+      <h2 class="text-lg font-bold text-navy-900">Run your own numbers on a {short} loan</h2>
+      <p class="mt-1 mb-4 text-sm text-navy-600">Preloaded as an 80%-LTV purchase ({fmt(price)} price, 20% down). Adjust everything.</p>
+      <MortgageCalculator price={Math.round(price).toLocaleString('en-US')} down={Math.round(price * 0.2).toLocaleString('en-US')} taxRate="1.1" insAnnual="2,341" />
+    </div>
+
+    <!-- AD_SLOT: amount-page, below results -->
+
+    <article class="mx-auto mt-10 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Nearby amounts &amp; tools</h2>
+        <p class="mt-3">
+          Compare: {adjacent.map((a, i) => (
+            <>{i ? ' · ' : ''}<a href={`/mortgage-payment/${a}/`} class="font-medium text-navy-900 underline hover:text-navy-600">{a >= 1000000 ? `$${a / 1000000}M` : `$${a / 1000}k`} mortgage payment</a></>
+          ))} — or every amount on the
+          <a href="/mortgage-payment/" class="font-medium text-navy-900 underline hover:text-navy-600"> payments-by-amount index</a>.
+          Work backwards from income with the
+          <a href="/house-affordability-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600"> affordability calculator</a>,
+          or model extra payments in the
+          <a href="/extra-payment-mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600"> extra-payment calculator</a>.
+        </p>
+      </section>
+
+      <section class="rounded-lg bg-navy-50 p-4 text-sm">
+        <p>
+          <strong>Assumptions &amp; sources:</strong> Payments computed with the standard
+          amortization formula (engine verified against published examples — see the site
+          repository). The {ILLUSTRATIVE_RATE}% figure is illustrative, not an offer;
+          tax/insurance estimates use national averages (1.1% effective property tax,
+          {fmt(2341)}/yr insurance — Bankrate 2025) and vary widely by location.
+          Conforming-limit reference: FHFA 2025 baseline. Educational purposes only — see
+          our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

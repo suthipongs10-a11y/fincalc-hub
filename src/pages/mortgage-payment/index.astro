@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SITE } from '../../config';
+import { pmt } from '../../lib/loan.js';
+import { AMOUNTS, ILLUSTRATIVE_RATE, CONFORMING_LIMIT } from '../../data/amounts.js';
+
+const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+const rows = AMOUNTS.map((a) => ({
+  a,
+  label: a >= 1000000 ? `$${(a / 1000000).toLocaleString('en-US')} million` : fmt(a),
+  m30: pmt(a, ILLUSTRATIVE_RATE, 360),
+  m15: pmt(a, ILLUSTRATIVE_RATE, 180),
+}));
+
+const title = 'Mortgage Payments by Loan Amount — $100k to $2M | Payoff Logic';
+const description =
+  'Monthly mortgage payments for every common loan amount from $100,000 to $2 million: 30-year and 15-year costs side by side, with a dedicated rate table and calculator for each amount.';
+
+const hubUrl = SITE.url + '/mortgage-payment/';
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Mortgage Payments by Amount', item: hubUrl },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Mortgage Payments by Amount' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Mortgage Payments by Loan Amount</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        The monthly cost of every common loan size at an illustrative {ILLUSTRATIVE_RATE}%
+        rate. Each amount links to a full page: payment at every rate from 5% to 8%,
+        income needed, total interest, and a preloaded calculator.
+      </p>
+    </header>
+
+    <div class="overflow-x-auto rounded-xl border border-navy-100">
+      <table class="w-full min-w-[520px] text-sm">
+        <thead>
+          <tr class="border-b border-navy-200 bg-navy-50 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+            <th class="px-3 py-2">Loan amount</th>
+            <th class="px-3 py-2 text-right">30-yr P&amp;I @ {ILLUSTRATIVE_RATE}%</th>
+            <th class="px-3 py-2 text-right">15-yr P&amp;I @ {ILLUSTRATIVE_RATE}%</th>
+            <th class="px-3 py-2 text-right">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class="border-b border-navy-50 hover:bg-navy-50">
+              <td class="px-3 py-2">
+                <a href={`/mortgage-payment/${r.a}/`} class="font-medium text-navy-900 underline hover:text-navy-600">{r.label} mortgage</a>
+              </td>
+              <td class="px-3 py-2 text-right tabular-nums">{fmt(r.m30)}/mo</td>
+              <td class="px-3 py-2 text-right tabular-nums">{fmt(r.m15)}/mo</td>
+              <td class="px-3 py-2 text-right text-xs text-navy-600">{r.a > CONFORMING_LIMIT ? 'jumbo' : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-2 text-xs text-navy-600">
+      Principal &amp; interest only, standard amortization. "Jumbo" = above the
+      {fmt(CONFORMING_LIMIT)} 2025 baseline conforming limit (higher in high-cost counties).
+    </p>
+
+    <article class="mx-auto mt-10 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Reading this table like a lender</h2>
+        <p class="mt-3">
+          Two patterns worth noticing. First, payments scale exactly linearly with the
+          amount — {fmt(rows[0].m30)} per {rows[0].label} at this rate — so you can
+          interpolate any loan size in your head. Second, the 15-year payment is only
+          about {Math.round((rows[0].m15 / rows[0].m30 - 1) * 100)}% higher than the
+          30-year at the same rate, yet finishes in half the time; that gap is why the
+          <a href="/15-year-mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">15-vs-30 comparison</a>
+          deserves five minutes before you commit. To go from a payment budget to a
+          price, use the
+          <a href="/house-affordability-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">affordability calculator</a>;
+          to see your state's taxes and insurance on top, the
+          <a href="/mortgage-calculator/by-state/" class="font-medium text-navy-900 underline hover:text-navy-600">state pages</a> have you covered.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
