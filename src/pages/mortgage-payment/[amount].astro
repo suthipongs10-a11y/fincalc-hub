@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Illustration from '../../components/Illustration.astro';
 import MortgageCalculator from '../../components/MortgageCalculator.astro';
 import { SITE } from '../../config';
 import { pmt } from '../../lib/loan.js';
@@ -95,7 +96,8 @@ const schema = [
   <Breadcrumbs crumbs={[{ label: 'By Amount', href: '/mortgage-payment/' }, { label: `${short} Mortgage` }]} />
 
   <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
-    <header class="py-5">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
       <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">{short} Mortgage Payment</h1>
       <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
         Principal &amp; interest on a {short} loan runs <strong>{fmt2(pi30)}/month</strong> at
@@ -103,6 +105,8 @@ const schema = [
         every rate from 5% to 8%, the income the standard ratios suggest, and a full
         calculator preloaded with this amount.
       </p>
+    </div>
+      <Illustration kind="piti" class="hidden w-40 shrink-0 sm:block" />
     </header>
 
     <!-- AD_SLOT: amount-page, above-fold right (desktop sidebar) -->

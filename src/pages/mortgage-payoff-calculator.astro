@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
 import MortgagePayoffCalculator from '../components/MortgagePayoffCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
@@ -53,13 +54,16 @@ const schema = calcSchema({
   <Breadcrumbs crumbs={[{ label: 'Mortgage Payoff Calculator' }]} />
 
   <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
-    <header class="py-5">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
       <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Mortgage Payoff Calculator</h1>
       <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
         For the mortgage you already have: enter your current balance, rate, and P&amp;I
         payment, add an extra monthly amount and/or a lump sum, and get your new
         payoff date, the years removed, and the interest saved. Free, no signup.
       </p>
+    </div>
+      <Illustration kind="payoff" class="hidden w-40 shrink-0 sm:block" />
     </header>
 
     <!-- AD_SLOT: mortgage-payoff, above-fold right (desktop sidebar) -->

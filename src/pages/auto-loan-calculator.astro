@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Illustration from '../components/Illustration.astro';
 import AutoLoanCalculator from '../components/AutoLoanCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
@@ -60,13 +61,16 @@ const schema = calcSchema({
   <Breadcrumbs crumbs={[{ label: 'Auto Loan Calculator' }]} />
 
   <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
-    <header class="py-5">
+    <header class="flex items-start justify-between gap-6 py-5">
+      <div class="min-w-0">
       <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Auto Loan Calculator</h1>
       <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
         Estimate your real car payment — with trade-in value, any balance left on your
         trade, and sales tax prefilled for your state (including whether it taxes the
         full price or the price after trade-in). Free, no signup.
       </p>
+    </div>
+      <Illustration kind="car" class="hidden w-40 shrink-0 sm:block" />
     </header>
 
     <!-- AD_SLOT: auto-loan, above-fold right (desktop sidebar) -->
