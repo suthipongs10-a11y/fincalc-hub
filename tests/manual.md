@@ -1,9 +1,46 @@
-# tests/manual.md — Math Verification (Gates M1 & M2)
+# tests/manual.md — Math Verification (Gates M1, M2 & M2.5)
 
-> How to re-run: `npm test` (mortgage engine) and `node tests/m2-check.mjs`
-> (loan/snowball/refinance/auto engines). Both exit non-zero on failure.
+> How to re-run: `npm test` (mortgage engine), `node tests/m2-check.mjs`
+> (loan/snowball/refinance/auto), `node tests/m25-check.mjs`
+> (biweekly/FHA/VA/affordability). All exit non-zero on failure.
 > All engines are plain JS so the exact code the browser runs is what Node
 > verifies — no reimplementation drift.
+
+## M2.5 engines — verified reference cases (tests/m25-check.mjs, 34 checks)
+
+### Biweekly (loan.js amortizeBiweekly)
+- Bankrate's published example ($250,000 · 30 yr · 5%): monthly P&I
+  $1,342.05 ✓; biweekly half-payment $671.03 ✓; total biweekly interest
+  within $500 of Bankrate's $189,734 (accrual-method difference documented
+  on-page); payoff ≈ 25.27 yr (≈4 yr 9 mo early, matching the published
+  example). Principal-conservation invariant holds.
+
+### FHA (gov-loans.js, rates per HUD ML 2023-05)
+- $300k / 3.5% down: base $289,500 · UFMIP $5,066.25 · financed total
+  $294,566.25 · LTV 96.5% → MIP 0.55% for life; first-month MIP $135.01;
+  payment = pmt(total) exactly; schedule sums to the total loan.
+- 10% down → 0.50% and exactly 132 months (row 133 has MIP = 0);
+  15-yr low-LTV tier 0.15% verified.
+
+### VA (gov-loans.js, VA.gov permanent schedule)
+- All six fee tiers verified (2.15/1.5/1.25 first use; 3.3/1.5/1.25
+  subsequent). $350k zero-down first use: fee $7,525 → financed loan
+  $357,525, payment = pmt identity. Exemption zeroes the fee; upfront mode
+  keeps it out of the loan.
+
+### Affordability (affordability.js, 28/36 rule)
+- $120k income / $500 debts: front budget $2,800, back $3,100, front binds;
+  bisection solver's housing cost at max price equals the budget to ±$0.05.
+- Closed-form identity with taxes/ins/PMI zeroed:
+  maxPrice = down + budget ÷ pmt-per-dollar (exact to $1).
+- Heavier debts flip the binding constraint to back-end (verified).
+
+### M2.5 UI verification (headless screenshots, 2026-07-11)
+- All 7 pages render + compute on load; FHA breakdown matches test values
+  on screen ($2,373.70 total; $135.01 MIP); VA $2,672.18 / fee $7,525.
+- Fixed during QA: FHA 3.5%-minimum validation rejected exactly-3.5% down
+  (floating-point epsilon).
+- Lighthouse mobile: **100/100/100/100 on all seven pages**.
 
 ## Mortgage calculator — verified reference cases
 

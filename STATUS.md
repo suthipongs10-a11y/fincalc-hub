@@ -3,12 +3,36 @@
 > Claude Code: update this file before ending every session.
 
 ## Current state
-- **Milestone:** M2 complete — awaiting owner review before M2.5.
-- **Last commit:** `M2: tool suite — loan payoff, debt snowball, refinance,
-  auto loan`
-- **Build status:** `npm run build` clean (10 pages) · `npm test` +
-  `node tests/m2-check.mjs` all pass · Lighthouse mobile 100×4 on all four
-  new pages. Live at https://payofflogic.com (auto-deploys from this branch).
+- **Milestone:** M2.5 complete — awaiting owner review before M3.
+- **Last commit:** `M2.5: mortgage variant tools wave 1 (7 calculators)`
+- **Build status:** `npm run build` clean (17 pages + sitemap) · all three
+  test suites pass (mortgage / m2 / m25) · Lighthouse mobile 100×4 on all
+  7 new pages. Live at https://payofflogic.com.
+
+## M2.5 gate checklist (self-audit)
+- [x] T2 /house-affordability-calculator/ — 28/36 rule, binding-constraint
+      explanation, PITI breakdown at max price, 3-scenario comfort ladder
+- [x] T3 /extra-payment-mortgage-calculator/ — monthly extra + one-time
+      lump, before/after, chart, schedule
+- [x] T4 /biweekly-mortgage-calculator/ — rate/26 accrual model, monthly vs
+      biweekly comparison, honest DIY-alternative copy
+- [x] T5 /15-year-mortgage-calculator/ — separate rates per term, lifetime
+      table incl. 5-yr equity build, verdict line
+- [x] T6 /fha-loan-calculator/ — UFMIP 1.75% financed + annual MIP with
+      11-yr/life duration rule (HUD ML 2023-05), full PITI+MIP payment
+- [x] T7 /va-loan-calculator/ — funding-fee table by down/usage, disability
+      exemption, financed-vs-upfront toggle, no-PMI comparison
+- [x] T8 /mortgage-payoff-calculator/ — existing-loan payoff w/ extra +
+      lump sum, unpayable-payment guard
+- [x] Shared engines verified: 34 checks (tests/m25-check.mjs) incl.
+      Bankrate biweekly reference, HUD/VA fee tables, affordability
+      closed-form identity — documented in tests/manual.md
+- [x] Hub-and-spoke links: mortgage hub lists all 8 mortgage-cluster
+      spokes; each spoke → hub + curated related; homepage directory
+      grouped by cluster; footer kept to 5 core tools per SEO_PLAN §1.3
+- [x] Schema ×3 per page, FAQ 7 questions/page, AD_SLOT ×2/page
+- [x] Lighthouse mobile: 100/100/100/100 on all seven new pages
+- [x] Bonus shipped early: XML sitemap + robots.txt (owner submitting to GSC)
 
 ## M2 gate checklist (self-audit)
 - [x] /loan-payoff-calculator/ — extra payments → time saved + interest
@@ -77,11 +101,12 @@
   cookies (so no rewrite needed at ad launch)
 
 ## Next actions
-1. Owner: review M2 (4 new tools) on https://payofflogic.com
-2. After approval → M2.5: mortgage variant tools T2–T8 per BUILD_PLAN.md
-3. Owner actions recommended now: Google Search Console property +
-   submit sitemap; Cloudflare Web Analytics; contact@payofflogic.com via
-   Email Routing (then swap SITE.contactEmail)
+1. Owner: review M2 + M2.5 (11 new tools total) on https://payofflogic.com
+2. After approval → M3: 50 programmatic state pages + /src/data/states.json
+   (real sourced data per state) + by-state hub
+3. Owner in progress: GSC + sitemap (https://payofflogic.com/sitemap-index.xml),
+   Cloudflare Web Analytics, contact@payofflogic.com (then swap
+   SITE.contactEmail in src/config.ts)
 
 ## Pending decisions (owner)
 - [x] Domain name — DECIDED & LIVE 2026-07-11: **payofflogic.com**
@@ -111,6 +136,12 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — M2.5 built: 7 mortgage variant tools (T2–T8) on new engines
+  (loan.js amortizeBiweekly, gov-loans.js FHA/VA per HUD ML 2023-05 +
+  VA.gov schedule, affordability.js bisection solver). 34 checks pass;
+  Lighthouse 100×4 ×7 pages; hub-and-spoke linking wired; homepage grouped
+  by cluster. Sitemap + robots.txt shipped early for GSC. Fixed FHA 3.5%
+  floating-point validation bug. Stopped for owner review.
 - 2026-07-11 — M2 built: 4 tools (loan-payoff, debt-snowball w/ avalanche
   comparison, refinance w/ break-even, auto-loan w/ 50-state tax data) on
   shared engines (src/lib/loan|snowball|refinance|auto.js) + shared UI kit

@@ -1,0 +1,149 @@
+---
+/** Extra-payment mortgage island: recurring extra + one-time lump sum vs baseline. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Extra payment mortgage calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="amount" class="fc-label">Loan amount</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="amount" inputmode="decimal" value="300,000" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="rate" class="fc-label">Interest rate</label>
+          <div class="fc-wrap">
+            <input id="rate" inputmode="decimal" value="6.5" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="term" class="fc-label">Loan term</label>
+          <select id="term" class="fc-input">
+            <option value="30" selected>30 years</option>
+            <option value="20">20 years</option>
+            <option value="15">15 years</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="extra" class="fc-label">Extra payment / month</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="extra" inputmode="decimal" value="200" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+        <div>
+          <label for="lump" class="fc-label">One-time extra (now)</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="lump" inputmode="decimal" value="0" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <label for="start" class="fc-label">First payment</label>
+        <input id="start" type="month" class="fc-input" />
+      </div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="rounded-lg bg-navy-50 p-4">
+          <p class="text-xs font-semibold tracking-wide text-navy-600 uppercase">Regular schedule</p>
+          <p class="mt-1 text-2xl font-bold text-navy-900" id="base-time">—</p>
+          <p class="text-sm text-navy-700">Paid off <span id="base-date">—</span></p>
+          <p class="mt-1 text-sm text-navy-700">Total interest: <strong id="base-int">—</strong></p>
+        </div>
+        <div class="rounded-lg bg-accent-50 p-4">
+          <p class="text-xs font-semibold tracking-wide text-accent-800 uppercase">With extra payments</p>
+          <p class="mt-1 text-2xl font-bold text-accent-800" id="extra-time" aria-live="polite">—</p>
+          <p class="text-sm text-accent-800">Paid off <span id="extra-date">—</span></p>
+          <p class="mt-1 text-sm text-accent-800">Total interest: <strong id="extra-int">—</strong></p>
+        </div>
+      </div>
+      <p id="savings" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white">—</p>
+      <p class="mt-2 text-sm text-navy-700">Monthly P&amp;I payment: <strong id="pi">—</strong> <span id="pi-plus"></span></p>
+
+      <h2 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Balance over time</h2>
+      <div class="mt-2 overflow-x-auto">
+        <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Mortgage balance by year, with and without extra payments"></svg>
+      </div>
+      <p class="mt-1 text-xs text-navy-600">Solid: with extra payments · Dashed: regular schedule.</p>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">Payoff schedule (with extra payments)</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { pmt, amortizeLoan } from '../lib/loan.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, payoffLabel, renderYearSchedule, drawBalanceChart, rowsToSeries, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['amount', 'rate', 'term', 'extra', 'lump', 'start']);
+
+  function defaultStart() {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  function recalc() {
+    const amount = num(input('amount'));
+    const rate = num(input('rate'));
+    const term = parseInt(input('term').value, 10);
+    const extra = num(input('extra'));
+    const lump = num(input('lump'));
+    const [sy, sm] = (input('start').value || defaultStart()).split('-').map(Number);
+    const err = byId('calc-error');
+    let msg = null;
+    if (amount <= 0) msg = 'Enter a loan amount above $0.';
+    else if (rate < 0 || rate > 25) msg = 'Enter a rate between 0% and 25%.';
+    else if (lump >= amount) msg = 'The one-time payment would pay the whole loan off.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const payment = pmt(amount, rate, term * 12);
+    const base = amortizeLoan({ principal: amount, annualRate: rate, payment, startYear: sy, startMonth: sm });
+    const boosted = amortizeLoan({ principal: amount - lump, annualRate: rate, payment, extraMonthly: extra, startYear: sy, startMonth: sm });
+
+    byId('pi').textContent = fmt2.format(payment);
+    byId('pi-plus').textContent = extra > 0 ? `(you'd pay ${fmt2.format(payment + extra)} with the extra)` : '';
+    byId('base-time').textContent = yrMo(base.months);
+    byId('base-date').textContent = payoffLabel(sy, sm, base.months);
+    byId('base-int').textContent = fmt0.format(base.totalInterest);
+    byId('extra-time').textContent = yrMo(boosted.months);
+    byId('extra-date').textContent = payoffLabel(sy, sm, boosted.months);
+    byId('extra-int').textContent = fmt0.format(boosted.totalInterest);
+
+    const saved = base.totalInterest - boosted.totalInterest;
+    byId('savings').textContent = extra > 0 || lump > 0
+      ? `${extra > 0 ? `Extra ${fmt0.format(extra)}/month` : ''}${extra > 0 && lump > 0 ? ' + ' : ''}${lump > 0 ? `${fmt0.format(lump)} one-time` : ''} pays the mortgage off ${yrMo(base.months - boosted.months)} early and saves ${fmt0.format(saved)} in interest.`
+      : 'Add an extra monthly amount or a one-time payment to see the savings.';
+
+    drawBalanceChart(byId('chart'), [
+      { values: rowsToSeries(base.rows, amount), dashed: true },
+      { values: rowsToSeries(boosted.rows, amount - lump) },
+    ], amount);
+    renderYearSchedule(byId('schedule'), boosted.rows);
+    url.sync();
+  }
+
+  input('start').value = defaultStart();
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

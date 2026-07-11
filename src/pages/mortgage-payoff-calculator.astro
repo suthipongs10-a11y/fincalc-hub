@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import MortgagePayoffCalculator from '../components/MortgagePayoffCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Mortgage Payoff Calculator — Pay Off Your Mortgage Early | Payoff Logic';
+const description =
+  'Free early mortgage payoff calculator for your EXISTING loan: current balance + extra monthly payments or a lump sum → new payoff date, years removed, and interest saved.';
+
+const faqs = [
+  {
+    q: 'How can I pay off my mortgage early?',
+    a: 'Four proven routes: a recurring monthly extra (steadiest), one-time lump sums from bonuses or windfalls, biweekly payments (one extra payment a year), or refinancing into a shorter term. This calculator models the first two together; our biweekly and refinance calculators cover the rest.',
+  },
+  {
+    q: 'Should I pay off my mortgage early?',
+    a: 'The honest checklist: pay off higher-interest debt first, keep 3–6 months of expenses in an emergency fund, and capture any employer retirement match — those beat mortgage prepayment mathematically. After that, extra mortgage payments are a guaranteed, tax-free return equal to your rate, which many people rightly value for the certainty and the psychological weight lifted.',
+  },
+  {
+    q: 'What happens if I make a $20,000 lump-sum payment?',
+    a: 'It immediately cuts the balance that all future interest is computed on. On a $240,000 balance at 6.75% with a $1,700 payment, a $20,000 lump sum today removes roughly 3½ years and around $50,000 of interest. Enter your own numbers above for the exact effect.',
+  },
+  {
+    q: 'Where do I find my monthly P&I amount?',
+    a: 'On your mortgage statement, listed as "principal & interest" — it excludes the escrow portion (taxes and insurance). Using your full payment including escrow would overstate how fast you can pay off, since escrow never touches the balance.',
+  },
+  {
+    q: 'Is it better to recast or prepay?',
+    a: 'They answer different goals. Prepaying (this calculator) keeps your payment the same and ends the loan sooner. Recasting applies a lump sum and re-amortizes to LOWER the required payment while keeping the original end date — useful for cash-flow relief. Many servicers offer recasting for a small fee after a $5,000+ principal payment.',
+  },
+  {
+    q: 'Will paying off my mortgage early hurt my credit?',
+    a: 'Closing your oldest installment account can trim a few points temporarily, but the effect is minor and fades. It is not a financially meaningful reason to keep a mortgage.',
+  },
+  {
+    q: 'Are there tax downsides to paying off a mortgage?',
+    a: 'Only if you itemize deductions and deduct mortgage interest — a minority of filers since the standard deduction doubled. Even then, a deduction returns cents on each interest dollar; avoiding the dollar outright is usually better. Confirm your situation with a tax professional.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Mortgage Payoff Calculator',
+  path: '/mortgage-payoff-calculator/',
+  description,
+  crumbName: 'Mortgage Payoff Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Mortgage Payoff Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Mortgage Payoff Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        For the mortgage you already have: enter your current balance, rate, and P&amp;I
+        payment, add an extra monthly amount and/or a lump sum, and get your new
+        payoff date, the years removed, and the interest saved. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: mortgage-payoff, above-fold right (desktop sidebar) -->
+
+    <MortgagePayoffCalculator />
+
+    <!-- AD_SLOT: mortgage-payoff, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Make every extra dollar count</h2>
+        <ul class="mt-3 list-disc space-y-2 pl-6">
+          <li><strong>Mark payments "principal only."</strong> Otherwise some servicers treat extras as an early next payment — zero savings.</li>
+          <li><strong>Confirm no prepayment penalty.</strong> Rare on post-2014 loans, but 30 seconds with your closing disclosure settles it.</li>
+          <li><strong>Don't starve your safety net.</strong> Home equity is illiquid — you can't easily un-pay the mortgage in an emergency. Emergency fund first, then acceleration.</li>
+          <li><strong>Compare against your other rates.</strong> Extra dollars earn your mortgage rate here; a credit card charging 22% is a far better target — sequence it with the <a href="/debt-snowball-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">debt snowball calculator</a>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="mortgage-payoff-calculator" slugs={['extra-payment-mortgage-calculator', 'biweekly-mortgage-calculator', 'refinance-calculator', 'loan-payoff-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+        See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

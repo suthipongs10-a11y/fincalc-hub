@@ -32,6 +32,34 @@ export function monthsToPayoff(principal, annualRate, payment) {
 }
 
 /**
+ * Accelerated biweekly amortization: half the monthly payment every two
+ * weeks (26 half-payments/yr ≈ 13 monthly payments), interest accrued per
+ * biweekly period at annualRate/26. This is the standard "biweekly
+ * mortgage" model; lenders' daily-accrual results differ slightly.
+ * @param {number} principal @param {number} annualRate percent @param {number} termYears
+ */
+export function amortizeBiweekly(principal, annualRate, termYears) {
+  const half = pmt(principal, annualRate, Math.round(termYears * 12)) / 2;
+  const r = annualRate / 100 / 26;
+  let balance = principal;
+  let totalInterest = 0;
+  let periods = 0;
+  const cap = Math.ceil(termYears * 26) + 26;
+  const balances = [principal]; // per period, for charting
+  while (balance > 0.005 && periods < cap) {
+    const interest = balance * r;
+    let pr = half - interest;
+    if (pr > balance) pr = balance;
+    if (pr < 0) break; // pathological guard
+    balance -= pr;
+    totalInterest += interest;
+    periods++;
+    balances.push(balance);
+  }
+  return { halfPayment: half, periods, years: periods / 26, totalInterest, balances };
+}
+
+/**
  * Amortize a loan under a fixed payment (+ optional extra). Final payment
  * clamps to the payoff amount.
  * @param {{principal:number, annualRate:number, payment:number,

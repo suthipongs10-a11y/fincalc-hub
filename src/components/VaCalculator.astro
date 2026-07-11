@@ -1,0 +1,171 @@
+---
+/** VA loan island: funding fee by down payment + usage, no PMI. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="VA loan calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="price" class="fc-label">Home price</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="price" inputmode="decimal" value="350,000" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="down" class="fc-label">Down payment</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="down" inputmode="decimal" value="0" class="fc-input fc-input--pre" />
+          </div>
+          <p id="down-hint" class="mt-1 text-xs text-navy-600">$0 — VA allows zero down</p>
+        </div>
+        <div>
+          <label for="rate" class="fc-label">Interest rate</label>
+          <div class="fc-wrap">
+            <input id="rate" inputmode="decimal" value="6.25" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="term" class="fc-label">Loan term</label>
+          <select id="term" class="fc-input">
+            <option value="30" selected>30 years</option>
+            <option value="15">15 years</option>
+          </select>
+        </div>
+        <div>
+          <label for="usage" class="fc-label">VA loan usage</label>
+          <select id="usage" class="fc-input">
+            <option value="first" selected>First use</option>
+            <option value="subsequent">Used before</option>
+          </select>
+        </div>
+      </div>
+      <label class="flex items-start gap-2 text-sm text-navy-700">
+        <input id="exempt" type="checkbox" class="mt-0.5" />
+        <span>Exempt from the funding fee (receiving VA disability compensation)</span>
+      </label>
+      <label class="flex items-start gap-2 text-sm text-navy-700">
+        <input id="finance-fee" type="checkbox" checked class="mt-0.5" />
+        <span>Roll the funding fee into the loan (typical)</span>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="tax" class="fc-label">Property tax / yr</label>
+          <div class="fc-wrap">
+            <input id="tax" inputmode="decimal" value="1.1" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="ins" class="fc-label">Home insurance / yr</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="ins" inputmode="decimal" value="1,800" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+      </div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">Estimated monthly payment</h2>
+      <p class="mt-1 text-4xl font-bold text-navy-900" id="total" aria-live="polite">—</p>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full min-w-[320px] text-sm"><tbody id="breakdown" class="text-navy-800"></tbody></table>
+      </div>
+
+      <div class="mt-6 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">Base loan</p>
+          <p id="base-loan" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600" id="fee-label">+ Funding fee</p>
+          <p id="fee" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">= Amount financed</p>
+          <p id="total-loan" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+      </div>
+      <p id="no-pmi" class="mt-3 rounded-lg bg-accent-50 p-3 text-sm font-medium text-accent-800"></p>
+      <p class="mt-3 text-xs leading-relaxed text-navy-600">
+        Funding fee per the VA's current schedule (in effect July 2026), purchase
+        loans: first use 2.15% (&lt;5% down), 1.5% (5–9.99%), 1.25% (≥10%);
+        subsequent use 3.3% / 1.5% / 1.25%. Veterans receiving disability
+        compensation (and certain others) are exempt. VA loans have no monthly
+        mortgage insurance at any down payment.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">Amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { computeVA } from '../lib/gov-loans.js';
+  import { fmt0, fmt2, num, byId, input, renderYearSchedule, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['price', 'down', 'rate', 'term', 'usage', 'exempt', 'finance-fee', 'tax', 'ins']);
+
+  function recalc() {
+    const price = num(input('price'));
+    const down = num(input('down'));
+    const rate = num(input('rate'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (price <= 0) msg = 'Enter a home price above $0.';
+    else if (down < 0 || down >= price) msg = 'Down payment must be between $0 and the price.';
+    else if (rate < 0 || rate > 25) msg = 'Enter a rate between 0% and 25%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const o = {
+      price, down, annualRate: rate,
+      termYears: parseInt(input('term').value, 10),
+      subsequentUse: input('usage').value === 'subsequent',
+      exempt: input('exempt').checked,
+      financeFee: input('finance-fee').checked,
+    };
+    byId('down-hint').textContent = down === 0 ? '$0 — VA allows zero down' : `${((down / price) * 100).toFixed(1)}% of price`;
+
+    const r = computeVA(o);
+    const tax = (price * num(input('tax'))) / 100 / 12;
+    const ins = num(input('ins')) / 12;
+    const total = r.payment + tax + ins;
+
+    byId('total').textContent = fmt2.format(total);
+    byId('breakdown').innerHTML = [
+      ['Principal & interest', r.payment],
+      ['Property tax', tax],
+      ['Home insurance', ins],
+      ['Total', total],
+    ].map(([k, v], i, arr) => `<tr class="${i === arr.length - 1 ? 'border-t-2 border-navy-300 font-bold' : 'border-b border-navy-50'}"><td class="py-1.5 pr-2 text-navy-700">${k}</td><td class="py-1.5 text-right tabular-nums">${fmt2.format(v)}</td></tr>`).join('');
+
+    byId('base-loan').textContent = fmt0.format(r.baseLoan);
+    byId('fee-label').textContent = o.exempt ? 'Funding fee (exempt)' : `+ Funding fee (${r.feePct}%${o.financeFee ? ', financed' : ', paid upfront'})`;
+    byId('fee').textContent = fmt0.format(r.feeAmount);
+    byId('total-loan').textContent = fmt0.format(r.totalLoan);
+    byId('no-pmi').textContent = `No PMI on VA loans: a conventional loan with this down payment would add roughly ${fmt0.format((r.baseLoan * 0.005) / 12)}/month in mortgage insurance.`;
+
+    renderYearSchedule(byId('schedule'), r.rows.map((x) => ({ ...x, year: x.year + new Date().getFullYear() - 2026 })));
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

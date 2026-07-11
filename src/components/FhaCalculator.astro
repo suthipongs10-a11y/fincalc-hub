@@ -1,0 +1,153 @@
+---
+/** FHA loan island: UFMIP + annual MIP with the 11-year/life duration rule. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="FHA loan calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="price" class="fc-label">Home price</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="price" inputmode="decimal" value="300,000" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="down" class="fc-label">Down payment</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="down" inputmode="decimal" value="10,500" class="fc-input fc-input--pre" />
+          </div>
+          <p id="down-hint" class="mt-1 text-xs text-navy-600">3.5% — the FHA minimum</p>
+        </div>
+        <div>
+          <label for="rate" class="fc-label">Interest rate</label>
+          <div class="fc-wrap">
+            <input id="rate" inputmode="decimal" value="6.25" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="term" class="fc-label">Loan term</label>
+          <select id="term" class="fc-input">
+            <option value="30" selected>30 years</option>
+            <option value="15">15 years</option>
+          </select>
+        </div>
+        <div>
+          <label for="tax" class="fc-label">Property tax / yr</label>
+          <div class="fc-wrap">
+            <input id="tax" inputmode="decimal" value="1.1" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="ins" class="fc-label">Home insurance / yr</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="ins" inputmode="decimal" value="1,800" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+      </div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">Estimated monthly payment</h2>
+      <p class="mt-1 text-4xl font-bold text-navy-900" id="total" aria-live="polite">—</p>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full min-w-[320px] text-sm"><tbody id="breakdown" class="text-navy-800"></tbody></table>
+      </div>
+
+      <div class="mt-6 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">Base loan</p>
+          <p id="base-loan" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">+ Upfront MIP (1.75%)</p>
+          <p id="ufmip" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+        <div class="rounded-lg bg-navy-50 p-3">
+          <p class="text-xs font-medium text-navy-600">= Amount financed</p>
+          <p id="total-loan" class="text-lg font-bold text-navy-900">—</p>
+        </div>
+      </div>
+      <p id="mip-note" class="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-medium text-amber-900"></p>
+      <p class="mt-3 text-xs leading-relaxed text-navy-600">
+        MIP rates per HUD Mortgagee Letter 2023-05 (in effect July 2026): 1.75%
+        upfront (financed here, as is typical); annual MIP for 30-year loans
+        0.55% (down &lt;5%) or 0.50% (≥5%), charged on the declining balance.
+        With 10%+ down, MIP ends after 11 years; otherwise it lasts the life
+        of the loan.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">Amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <p class="mt-1 text-sm text-navy-600">Principal, interest, and balance (MIP shown in the breakdown above).</p>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { computeFHA } from '../lib/gov-loans.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, renderYearSchedule, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['price', 'down', 'rate', 'term', 'tax', 'ins']);
+
+  function recalc() {
+    const price = num(input('price'));
+    const down = num(input('down'));
+    const rate = num(input('rate'));
+    const term = parseInt(input('term').value, 10);
+    const taxRate = num(input('tax'));
+    const insAnnual = num(input('ins'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (price <= 0) msg = 'Enter a home price above $0.';
+    else if (down < price * 0.035 - 0.01) msg = `FHA requires at least 3.5% down (${fmt0.format(price * 0.035)} on this price).`;
+    else if (down >= price) msg = 'Down payment must be less than the price.';
+    else if (rate < 0 || rate > 25) msg = 'Enter a rate between 0% and 25%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    byId('down-hint').textContent = `${((down / price) * 100).toFixed(1)}% of price (FHA minimum 3.5%)`;
+    const r = computeFHA({ price, down, annualRate: rate, termYears: term });
+    const tax = (price * taxRate) / 100 / 12;
+    const ins = insAnnual / 12;
+    const total = r.payment + r.firstMIP + tax + ins;
+
+    byId('total').textContent = fmt2.format(total);
+    byId('breakdown').innerHTML = [
+      ['Principal & interest', r.payment],
+      [`Monthly MIP (${r.mipRate}%/yr, first month)`, r.firstMIP],
+      ['Property tax', tax],
+      ['Home insurance', ins],
+      ['Total', total],
+    ].map(([k, v], i, arr) => `<tr class="${i === arr.length - 1 ? 'border-t-2 border-navy-300 font-bold' : 'border-b border-navy-50'}"><td class="py-1.5 pr-2 text-navy-700">${k}</td><td class="py-1.5 text-right tabular-nums">${fmt2.format(v)}</td></tr>`).join('');
+
+    byId('base-loan').textContent = fmt0.format(r.baseLoan);
+    byId('ufmip').textContent = fmt0.format(r.ufmip);
+    byId('total-loan').textContent = fmt0.format(r.totalLoan);
+    byId('mip-note').textContent = r.mipMonths === Infinity
+      ? `With ${((down / price) * 100).toFixed(1)}% down, the annual MIP never cancels — it runs the life of the loan (total ≈ ${fmt0.format(r.totalMIP)}). Refinancing to conventional once you reach 20% equity is the usual exit.`
+      : `With 10%+ down, MIP ends after 11 years (${yrMo(r.mipMonths)}); total MIP ≈ ${fmt0.format(r.totalMIP)}.`;
+
+    renderYearSchedule(byId('schedule'), r.rows.map((x) => ({ ...x, year: x.year + new Date().getFullYear() - 1, month: x.month })));
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

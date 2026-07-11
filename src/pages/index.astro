@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, TOOLS } from '../config';
+import { SITE, TOOLS, CLUSTERS } from '../config';
+
+const clusterOrder = Object.keys(CLUSTERS) as (keyof typeof CLUSTERS)[];
 
 const title = 'Free Financial Calculators — Mortgage, Loan & Debt Payoff | Payoff Logic';
 const description =
@@ -44,35 +46,36 @@ const description =
       All five launch tools are live — each built to show the complete math,
       verified against published reference examples.
     </p>
-    <ul class="mt-6 grid gap-4 sm:grid-cols-2">
-      {
-        TOOLS.map((tool) => (
-          <li class="relative flex flex-col rounded-lg border border-navy-100 bg-white p-5 shadow-sm">
-            <h3 class="text-lg font-semibold text-navy-900">
-              {tool.status === 'coming-soon' ? (
-                tool.name
-              ) : (
-                <a href={`/${tool.slug}/`} class="after:absolute after:inset-0 hover:text-navy-600">
-                  {tool.name}
-                </a>
-              )}
-            </h3>
-            <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-600">{tool.description}</p>
-            <p class="mt-4">
-              {tool.status === 'coming-soon' ? (
-                <span class="inline-block rounded-full bg-navy-50 px-3 py-1 text-xs font-medium text-navy-700">
-                  Coming soon
-                </span>
-              ) : (
-                <span class="inline-block rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700">
-                  Open calculator →
-                </span>
-              )}
-            </p>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      clusterOrder.map((c) => (
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-navy-800">{CLUSTERS[c]}</h3>
+          <ul class="mt-3 grid gap-4 sm:grid-cols-2">
+            {TOOLS.filter((t) => t.cluster === c).map((tool) => (
+              <li class="relative flex flex-col rounded-lg border border-navy-100 bg-white p-5 shadow-sm">
+                <h4 class="text-lg font-semibold text-navy-900">
+                  {tool.status === 'coming-soon' ? (
+                    tool.name
+                  ) : (
+                    <a href={`/${tool.slug}/`} class="after:absolute after:inset-0 hover:text-navy-600">
+                      {tool.name}
+                    </a>
+                  )}
+                </h4>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-600">{tool.description}</p>
+                <p class="mt-4">
+                  {tool.status === 'coming-soon' ? (
+                    <span class="inline-block rounded-full bg-navy-50 px-3 py-1 text-xs font-medium text-navy-700">Coming soon</span>
+                  ) : (
+                    <span class="inline-block rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700">Open calculator →</span>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
   </section>
 
   <!-- AD_SLOT: homepage, below tool directory -->

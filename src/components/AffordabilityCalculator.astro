@@ -1,0 +1,195 @@
+---
+/** Home affordability island: 28/36 rule → max price + budget breakdown. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Home affordability calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="income" class="fc-label">Annual gross income</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="income" inputmode="decimal" value="100,000" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+        <div>
+          <label for="debts" class="fc-label">Monthly debt payments</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="debts" inputmode="decimal" value="500" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-navy-600">Debts = car loans, student loans, credit-card minimums, other required payments (not utilities or groceries).</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="down" class="fc-label">Down payment saved</label>
+          <div class="fc-wrap"><span class="fc-prefix">$</span>
+            <input id="down" inputmode="decimal" value="40,000" class="fc-input fc-input--pre" />
+          </div>
+        </div>
+        <div>
+          <label for="rate" class="fc-label">Interest rate</label>
+          <div class="fc-wrap">
+            <input id="rate" inputmode="decimal" value="6.5" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+      </div>
+      <fieldset class="rounded-lg border border-navy-100 p-3">
+        <legend class="px-1 text-xs font-semibold tracking-wide text-navy-600 uppercase">Assumptions</legend>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="term" class="fc-label">Loan term</label>
+            <select id="term" class="fc-input">
+              <option value="30" selected>30 years</option>
+              <option value="20">20 years</option>
+              <option value="15">15 years</option>
+            </select>
+          </div>
+          <div>
+            <label for="tax" class="fc-label">Property tax / yr</label>
+            <div class="fc-wrap">
+              <input id="tax" inputmode="decimal" value="1.1" class="fc-input fc-input--suf" />
+              <span class="fc-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label for="ins" class="fc-label">Home insurance / yr</label>
+            <div class="fc-wrap"><span class="fc-prefix">$</span>
+              <input id="ins" inputmode="decimal" value="1,800" class="fc-input fc-input--pre" />
+            </div>
+          </div>
+          <div>
+            <label for="hoa" class="fc-label">HOA / month</label>
+            <div class="fc-wrap"><span class="fc-prefix">$</span>
+              <input id="hoa" inputmode="decimal" value="0" class="fc-input fc-input--pre" />
+            </div>
+          </div>
+          <div>
+            <label for="front" class="fc-label">Housing ratio</label>
+            <div class="fc-wrap">
+              <input id="front" inputmode="decimal" value="28" class="fc-input fc-input--suf" />
+              <span class="fc-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label for="back" class="fc-label">Total debt ratio</label>
+            <div class="fc-wrap">
+              <input id="back" inputmode="decimal" value="36" class="fc-input fc-input--suf" />
+              <span class="fc-suffix">%</span>
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 text-xs text-navy-600">28/36 is the classic conventional guideline; PMI (0.5%/yr) is applied automatically when your down payment is under 20% of the resulting price.</p>
+      </fieldset>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">You can afford a home up to about</h2>
+      <p class="mt-1 text-4xl font-bold text-navy-900" id="max-price" aria-live="polite">—</p>
+      <p class="mt-1 text-sm text-navy-700" id="binding-note"></p>
+
+      <h3 class="mt-6 text-sm font-semibold tracking-wide text-navy-600 uppercase">Monthly budget at that price</h3>
+      <div class="mt-2 overflow-x-auto">
+        <table class="w-full min-w-[320px] text-sm"><tbody id="breakdown" class="text-navy-800"></tbody></table>
+      </div>
+
+      <h3 class="mt-6 text-sm font-semibold tracking-wide text-navy-600 uppercase">Comfort levels</h3>
+      <div class="mt-2 overflow-x-auto">
+        <table class="w-full min-w-[420px] text-sm">
+          <thead>
+            <tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+              <th class="py-2 pr-2">Approach</th>
+              <th class="py-2 pr-2">Ratios</th>
+              <th class="py-2 pr-2 text-right">Housing budget</th>
+              <th class="py-2 text-right">Max price</th>
+            </tr>
+          </thead>
+          <tbody id="ladder" class="text-navy-800"></tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-xs text-navy-600">Lenders may approve more than the "standard" row — approval limits and comfortable budgets are different things.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { computeAffordability } from '../lib/affordability.js';
+  import { fmt0, fmt2, num, byId, input, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['income', 'debts', 'down', 'rate', 'term', 'tax', 'ins', 'hoa', 'front', 'back']);
+
+  function readBase() {
+    return {
+      annualIncome: num(input('income')),
+      monthlyDebts: num(input('debts')),
+      down: num(input('down')),
+      annualRate: num(input('rate')),
+      termYears: parseInt(input('term').value, 10),
+      taxRate: num(input('tax')),
+      insAnnual: num(input('ins')),
+      pmiRate: 0.5,
+      hoaMonthly: num(input('hoa')),
+      frontPct: num(input('front')),
+      backPct: num(input('back')),
+    };
+  }
+
+  function recalc() {
+    const o = readBase();
+    const err = byId('calc-error');
+    let msg = null;
+    if (o.annualIncome <= 0) msg = 'Enter your annual income.';
+    else if (o.annualRate < 0 || o.annualRate > 25) msg = 'Enter a rate between 0% and 25%.';
+    else if (o.frontPct <= 0 || o.backPct <= 0 || o.frontPct > 60 || o.backPct > 70) msg = 'Ratios must be between 1% and 60/70%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const r = computeAffordability(o);
+    byId('max-price').textContent = r.maxPrice > 0 ? fmt0.format(r.maxPrice) : '$0';
+    byId('binding-note').textContent =
+      r.maxPrice <= 0
+        ? 'Your existing debts use up the qualifying budget — reducing them raises this number fastest.'
+        : r.binding === 'front'
+          ? `Limited by the housing ratio: ${fmt0.format(r.budget)}/month for housing (${o.frontPct}% of gross income).`
+          : `Limited by your total-debt ratio: after ${fmt0.format(o.monthlyDebts)} in debts, ${fmt0.format(r.budget)}/month remains for housing.`;
+
+    if (r.breakdown) {
+      const b = r.breakdown;
+      byId('breakdown').innerHTML = [
+        ['Principal & interest', b.pi],
+        ['Property tax', b.tax],
+        ['Home insurance', b.ins],
+        ...(b.pmi > 0 ? [['PMI (down payment under 20%)', b.pmi]] : []),
+        ...(o.hoaMonthly > 0 ? [['HOA', o.hoaMonthly]] : []),
+        ['Total housing cost', b.total],
+      ].map(([k, v], i, arr) => `<tr class="${i === arr.length - 1 ? 'border-t-2 border-navy-300 font-bold' : 'border-b border-navy-50'}"><td class="py-1.5 pr-2 text-navy-700">${k}</td><td class="py-1.5 text-right tabular-nums">${fmt2.format(v)}</td></tr>`).join('');
+    } else {
+      byId('breakdown').innerHTML = '';
+    }
+
+    const ladder = [
+      ['Conservative', 25, 33],
+      ['Standard (28/36)', 28, 36],
+      ['Aggressive', 31, 43],
+    ].map(([label, f, bk]) => {
+      const rr = computeAffordability({ ...o, frontPct: f, backPct: bk });
+      return `<tr class="border-b border-navy-50${f === 28 ? ' font-semibold' : ''}">
+        <td class="py-2 pr-2">${label}</td><td class="py-2 pr-2 text-navy-600">${f}/${bk}</td>
+        <td class="py-2 pr-2 text-right tabular-nums">${fmt0.format(Math.max(0, rr.budget))}/mo</td>
+        <td class="py-2 text-right tabular-nums">${fmt0.format(Math.max(0, rr.maxPrice))}</td></tr>`;
+    });
+    byId('ladder').innerHTML = ladder.join('');
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

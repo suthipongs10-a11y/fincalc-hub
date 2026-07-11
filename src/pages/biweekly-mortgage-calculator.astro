@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BiweeklyMortgageCalculator from '../components/BiweeklyMortgageCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Biweekly Mortgage Calculator — Years & Interest Saved | Payoff Logic';
+const description =
+  'Free biweekly mortgage payment calculator: see exactly how paying half your payment every two weeks (13 payments a year) shortens your loan and how much interest it saves.';
+
+const faqs = [
+  {
+    q: 'How do biweekly mortgage payments work?',
+    a: 'You pay half of your monthly payment every two weeks. Because a year has 26 two-week periods, you make 26 half-payments — the equivalent of 13 full monthly payments instead of 12. That extra annual payment goes straight to principal, which is where the acceleration comes from.',
+  },
+  {
+    q: 'How many years do biweekly payments take off a 30-year mortgage?',
+    a: 'Typically 4 to 6 years, depending on the rate — higher rates save more. On a $300,000 loan at 6.5%, biweekly payments finish roughly 5½ years early and save six figures of interest over the life of the loan. Your exact numbers appear above.',
+  },
+  {
+    q: 'Is biweekly different from paying twice a month?',
+    a: 'Yes, and the difference is the whole trick. Twice a month (semi-monthly) = 24 half-payments = 12 full payments — no acceleration. Every two weeks (biweekly) = 26 half-payments = 13 full payments — one extra payment a year. Make sure any plan you join is truly biweekly.',
+  },
+  {
+    q: 'Do biweekly payments save money because of payment frequency?',
+    a: 'Mostly no. The overwhelming share of the savings comes from the 13th payment, not from paying two weeks sooner. That’s why the DIY equivalent — adding 1/12 of your payment to each monthly payment — produces almost identical results without changing your payment setup.',
+  },
+  {
+    q: 'Should I pay for a biweekly payment program?',
+    a: 'Usually not. Third-party biweekly services charge setup fees ($200–$400) and per-payment fees for something you can do free: many servicers accept biweekly schedules directly, and the 1/12-extra-per-month method needs no enrollment at all. Try both in our extra-payment calculator — the results are nearly identical.',
+  },
+  {
+    q: 'Will my lender accept biweekly payments?',
+    a: 'Some servicers credit half-payments as they arrive; others hold the first half until the second arrives (which still delivers the 13th-payment benefit over the year, with slightly less interest advantage). Ask how partial payments are applied before enrolling.',
+  },
+  {
+    q: 'Does this calculator work for an existing mortgage?',
+    a: 'Yes — enter your current balance and the years remaining instead of the original amount and term. The comparison then shows switching to biweekly from today.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Biweekly Mortgage Calculator',
+  path: '/biweekly-mortgage-calculator/',
+  description,
+  crumbName: 'Biweekly Mortgage Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Biweekly Mortgage Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Biweekly Mortgage Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Half your payment every two weeks = 13 full payments a year instead of 12. See
+        exactly how many years that removes from your mortgage and what it saves in
+        interest — and when a paid biweekly "program" isn't worth it. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: biweekly, above-fold right (desktop sidebar) -->
+
+    <BiweeklyMortgageCalculator />
+
+    <!-- AD_SLOT: biweekly, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">The honest take on biweekly plans</h2>
+        <p class="mt-3">
+          Biweekly payments are a genuinely effective acceleration method — but they're
+          not magic, and they're frequently oversold by services that charge for them.
+          The mechanism is simply one extra payment per year, packaged to match how many
+          people are paid (every two weeks). If your paycheck arrives biweekly, aligning
+          your mortgage with it is painless budgeting psychology and the savings are
+          real. If you'd rather not change your payment plumbing, adding 1/12 of your
+          payment as a monthly extra achieves nearly the same curve — model it in the
+          <a href="/extra-payment-mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">extra-payment calculator</a>
+          and compare.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="biweekly-mortgage-calculator" slugs={['extra-payment-mortgage-calculator', 'mortgage-payoff-calculator', 'mortgage-calculator', 'loan-payoff-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+        Servicer payment-application policies vary. See our
+        <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

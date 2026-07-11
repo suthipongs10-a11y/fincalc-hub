@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import VaCalculator from '../components/VaCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'VA Loan Calculator with Funding Fee — Zero Down, No PMI | Payoff Logic';
+const description =
+  'Free VA loan calculator that applies the correct funding fee for your down payment and prior usage (2.15%, 3.3%, 1.5%, or 1.25%), handles the disability exemption, and shows the no-PMI advantage.';
+
+const faqs = [
+  {
+    q: 'What is the VA funding fee in 2026?',
+    a: 'For purchase loans: first use is 2.15% with less than 5% down, 1.50% with 5–9.99% down, and 1.25% with 10% or more down. Subsequent use is 3.30% / 1.50% / 1.25% for the same tiers. The fee is a one-time charge, almost always rolled into the loan. These are the VA’s current permanent rates (in effect since April 2023).',
+  },
+  {
+    q: 'Who is exempt from the VA funding fee?',
+    a: 'Veterans receiving (or eligible to receive) VA disability compensation, recipients of the Purple Heart on active duty, and certain surviving spouses. If that’s you, tick the exemption box above — on a $350,000 loan it removes $7,500+ from the cost.',
+  },
+  {
+    q: 'Do VA loans require a down payment?',
+    a: 'No — VA loans allow 100% financing, and unlike nearly every other zero-down program, there is no monthly mortgage insurance. A down payment is still worth considering: putting 5% or 10% down lowers the funding fee tier and the monthly payment.',
+  },
+  {
+    q: 'Do VA loans have PMI?',
+    a: 'No monthly mortgage insurance at any down payment — the funding fee replaces it. That saves roughly $100–$250/month versus a comparable conventional loan with a small down payment, which is why VA is usually the strongest option available to eligible borrowers.',
+  },
+  {
+    q: 'Should I finance the funding fee or pay it at closing?',
+    a: 'Most borrowers finance it (the default here). Paying it upfront keeps the loan smaller and saves the interest on it over 30 years — a few thousand dollars — at the cost of more cash due at closing. Toggle the checkbox above to compare.',
+  },
+  {
+    q: 'VA vs. FHA — which is better if I qualify for both?',
+    a: 'VA nearly always wins: zero down vs. 3.5%, no monthly insurance vs. MIP that often lasts the life of the loan, and typically comparable or better rates. FHA becomes relevant when VA entitlement is tied up or exhausted. Compare your exact numbers with our FHA calculator.',
+  },
+  {
+    q: 'Does the calculator include property taxes and insurance?',
+    a: 'Yes — enter your property-tax rate and annual premium and the total reflects the full monthly payment. VA loans generally require escrow, so you’ll pay these with the mortgage.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic VA Loan Calculator',
+  path: '/va-loan-calculator/',
+  description,
+  crumbName: 'VA Loan Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'VA Loan Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">VA Loan Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        The VA loan's real cost structure, computed correctly: the funding fee that
+        depends on your down payment <em>and</em> whether you've used a VA loan before,
+        the disability exemption, and the no-PMI advantage in dollars. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: va, above-fold right (desktop sidebar) -->
+
+    <VaCalculator />
+
+    <!-- AD_SLOT: va, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">What makes VA loans different</h2>
+        <p class="mt-3">
+          Zero down usually comes with a monthly penalty — FHA charges MIP for the life
+          of the loan, conventional 97 programs charge PMI. VA charges neither. The
+          trade is the one-time funding fee, and its tier structure rewards two things:
+          a down payment (5% drops the fee from 2.15% to 1.5%) and first use. The
+          subsequent-use fee of 3.3% is steep — if you're reusing your benefit, compare
+          against conventional with your current equity before defaulting to VA.
+        </p>
+        <p class="mt-3">
+          One planning note: with zero down and a financed fee, you start with slightly
+          negative book equity. In a flat market, selling within the first couple of
+          years can mean bringing cash to closing. If a near-term move is possible,
+          test scenarios in the
+          <a href="/mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">full mortgage calculator</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="va-loan-calculator" slugs={['fha-loan-calculator', 'mortgage-calculator', 'house-affordability-calculator', 'refinance-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice or
+        a loan offer. Funding-fee schedule per VA.gov; eligibility and entitlement rules
+        apply. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

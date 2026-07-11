@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FifteenYearCalculator from '../components/FifteenYearCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = '15-Year Mortgage Calculator — 15 vs. 30 Year Comparison | Payoff Logic';
+const description =
+  'Free 15-year mortgage calculator that puts 15 vs. 30 years side by side: monthly payment difference, total interest difference, and how much faster you build equity — with real rates for each term.';
+
+const faqs = [
+  {
+    q: 'How much more is the payment on a 15-year vs. a 30-year mortgage?',
+    a: 'Typically 40–50% higher, not double — because 15-year rates run about half a point lower and far less of your payment goes to interest. On $300,000, a 30-year at 6.5% is about $1,896/month while a 15-year at 5.9% is about $2,516 — $620 more.',
+  },
+  {
+    q: 'How much interest does a 15-year mortgage save?',
+    a: 'Usually more than half of the 30-year’s total interest. In the example above, the 30-year costs about $382,000 in interest versus about $153,000 for the 15-year — roughly $230,000 saved. The exact figure for your loan and rates appears in the table above.',
+  },
+  {
+    q: 'Why are 15-year mortgage rates lower?',
+    a: 'Shorter loans are less risky for lenders — less time for rates, inflation, and borrower circumstances to move — so they price 15-year money about 0.5–0.75 points below 30-year money. That discount is a real part of the 15-year advantage, which is why this calculator asks for both rates separately.',
+  },
+  {
+    q: 'Is a 15-year mortgage worth it?',
+    a: 'If the higher payment fits comfortably — after retirement savings, emergency fund, and other goals — the 15-year is one of the most efficient wealth builders available: equity accumulates 3–4× faster in the early years. If the payment would strain you, a 30-year with voluntary extra payments gives similar math with an escape hatch: you can stop the extras anytime.',
+  },
+  {
+    q: 'What about a 30-year paid like a 15-year?',
+    a: 'Taking the 30-year and paying the 15-year payment amount gets you most of the benefit with full flexibility — but not all of it, because your rate stays at the higher 30-year level. The difference is exactly the rate spread; test it in our extra-payment calculator and compare with the table here.',
+  },
+  {
+    q: 'Can I refinance a 30-year into a 15-year?',
+    a: 'Yes, that’s a common move once income grows or the balance shrinks. Run the numbers in our refinance calculator — enter your remaining balance and a 15-year term, and check the break-even month on closing costs.',
+  },
+  {
+    q: 'Does a 15-year loan affect how much house I can afford?',
+    a: 'Yes — the higher required payment reduces the maximum price under lender debt-to-income ratios. If you’re choosing between a bigger house on a 30-year and a smaller one on a 15-year, our affordability calculator (set the term to 15) shows the price impact directly.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic 15-Year Mortgage Calculator',
+  path: '/15-year-mortgage-calculator/',
+  description,
+  crumbName: '15-Year Mortgage Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: '15-Year Mortgage Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">15-Year Mortgage Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        The 15 vs. 30 decision, computed honestly: enter a real rate for each term
+        (15-year money is cheaper) and compare the payment gap, the total-interest gap,
+        and how much faster equity builds. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: 15-year, above-fold right (desktop sidebar) -->
+
+    <FifteenYearCalculator />
+
+    <!-- AD_SLOT: 15-year, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">How to think about the 15 vs. 30 decision</h2>
+        <p class="mt-3">
+          The 30-year's real product is <em>flexibility</em>: a lower required payment
+          that you can voluntarily exceed. The 15-year's product is <em>discipline plus
+          a rate discount</em>: a lower rate you can't get otherwise, and a forced
+          savings plan. Financially, the 15-year wins if you'd otherwise spend (not
+          invest) the payment difference; the 30-year wins if the difference would go
+          to higher-return uses — retirement accounts with an employer match, or paying
+          off expensive debt. The wrong answer is taking the 15-year payment when it
+          crowds out your emergency fund: house-rich, cash-poor is a fragile position.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="15-year-mortgage-calculator" slugs={['mortgage-calculator', 'extra-payment-mortgage-calculator', 'refinance-calculator', 'house-affordability-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+        See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

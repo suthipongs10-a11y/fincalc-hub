@@ -1,0 +1,119 @@
+---
+/** 15-year vs 30-year comparison island (separate rates per term). */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="15-year mortgage calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="amount" class="fc-label">Loan amount</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="amount" inputmode="decimal" value="300,000" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="rate15" class="fc-label">15-year rate</label>
+          <div class="fc-wrap">
+            <input id="rate15" inputmode="decimal" value="5.9" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="rate30" class="fc-label">30-year rate</label>
+          <div class="fc-wrap">
+            <input id="rate30" inputmode="decimal" value="6.5" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-navy-600">15-year rates typically run 0.5–0.75 points below 30-year rates — enter real quotes for both if you have them.</p>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <h2 class="text-sm font-semibold tracking-wide text-navy-600 uppercase">15 vs. 30 years, side by side</h2>
+      <div class="mt-2 overflow-x-auto">
+        <table class="w-full min-w-[440px] text-sm">
+          <thead>
+            <tr class="border-b border-navy-200 text-left text-xs font-semibold tracking-wide text-navy-600 uppercase">
+              <th class="py-2 pr-2"><span class="sr-only">Line item</span></th>
+              <th class="py-2 pr-2 text-right">15-year</th>
+              <th class="py-2 text-right">30-year</th>
+            </tr>
+          </thead>
+          <tbody id="cmp-body" class="text-navy-800"></tbody>
+        </table>
+      </div>
+      <p id="verdict" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white" aria-live="polite">—</p>
+
+      <h2 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Balance over time</h2>
+      <div class="mt-2 overflow-x-auto">
+        <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Loan balance by year, 15-year vs 30-year term"></svg>
+      </div>
+      <p class="mt-1 text-xs text-navy-600">Solid: 15-year · Dashed: 30-year. The gap between the curves is the extra equity the 15-year builds.</p>
+    </div>
+  </div>
+
+  <div class="border-t border-navy-100 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-lg font-bold text-navy-900">15-year amortization schedule</h2>
+      <button type="button" id="expand-all" class="text-sm font-medium text-navy-700 underline hover:text-navy-900">Expand all years</button>
+    </div>
+    <div id="schedule" class="mt-4 space-y-1"></div>
+  </div>
+</section>
+
+<script>
+  import { pmt, amortizeLoan } from '../lib/loan.js';
+  import { fmt0, fmt2, num, byId, input, renderYearSchedule, drawBalanceChart, rowsToSeries, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['amount', 'rate15', 'rate30']);
+
+  function recalc() {
+    const amount = num(input('amount'));
+    const r15 = num(input('rate15'));
+    const r30 = num(input('rate30'));
+    const err = byId('calc-error');
+    let msg = null;
+    if (amount <= 0) msg = 'Enter a loan amount above $0.';
+    else if (r15 < 0 || r15 > 25 || r30 < 0 || r30 > 25) msg = 'Enter rates between 0% and 25%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const p15 = pmt(amount, r15, 180);
+    const p30 = pmt(amount, r30, 360);
+    const a15 = amortizeLoan({ principal: amount, annualRate: r15, payment: p15 });
+    const a30 = amortizeLoan({ principal: amount, annualRate: r30, payment: p30 });
+    const bal5_15 = a15.rows[59]?.balance ?? 0;
+    const bal5_30 = a30.rows[59]?.balance ?? 0;
+
+    byId('cmp-body').innerHTML = [
+      ['Monthly payment (P&I)', fmt2.format(p15), fmt2.format(p30)],
+      ['Total interest', fmt0.format(a15.totalInterest), fmt0.format(a30.totalInterest)],
+      ['Total paid', fmt0.format(amount + a15.totalInterest), fmt0.format(amount + a30.totalInterest)],
+      ['Balance after 5 years', fmt0.format(bal5_15), fmt0.format(bal5_30)],
+      ['Equity built in 5 years', fmt0.format(amount - bal5_15), fmt0.format(amount - bal5_30)],
+    ].map(([k, a, b]) => `<tr class="border-b border-navy-50"><td class="py-2 pr-2 text-navy-600">${k}</td><td class="py-2 pr-2 text-right tabular-nums font-semibold">${a}</td><td class="py-2 text-right tabular-nums">${b}</td></tr>`).join('');
+
+    const extraMo = p15 - p30;
+    const saved = a30.totalInterest - a15.totalInterest;
+    byId('verdict').textContent = `The 15-year costs ${fmt0.format(extraMo)} more per month and saves ${fmt0.format(saved)} in total interest — every dollar of payment buys equity ${(saved / (extraMo * 180) + 1).toFixed(1)}× faster. Only take it if the higher payment leaves room for savings and emergencies.`;
+
+    drawBalanceChart(byId('chart'), [
+      { values: rowsToSeries(a30.rows, amount), dashed: true },
+      { values: rowsToSeries(a15.rows, amount) },
+    ], amount);
+    renderYearSchedule(byId('schedule'), a15.rows);
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#schedule');
+  recalc();
+</script>

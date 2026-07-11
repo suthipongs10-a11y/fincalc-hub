@@ -1,0 +1,129 @@
+---
+/** Biweekly mortgage island: half-payment every two weeks vs monthly plan. */
+---
+
+<section id="calc" class="rounded-xl border border-navy-100 bg-white shadow-sm" aria-label="Biweekly mortgage calculator">
+  <div class="grid gap-0 lg:grid-cols-[minmax(0,24rem)_1fr]">
+    <form id="calc-form" class="space-y-4 border-b border-navy-100 p-5 sm:p-6 lg:border-r lg:border-b-0" novalidate>
+      <div>
+        <label for="amount" class="fc-label">Loan amount (or current balance)</label>
+        <div class="fc-wrap"><span class="fc-prefix">$</span>
+          <input id="amount" inputmode="decimal" value="300,000" class="fc-input fc-input--pre" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="rate" class="fc-label">Interest rate</label>
+          <div class="fc-wrap">
+            <input id="rate" inputmode="decimal" value="6.5" class="fc-input fc-input--suf" />
+            <span class="fc-suffix">%</span>
+          </div>
+        </div>
+        <div>
+          <label for="term" class="fc-label">Term (or years left)</label>
+          <select id="term" class="fc-input">
+            <option value="30" selected>30 years</option>
+            <option value="25">25 years</option>
+            <option value="20">20 years</option>
+            <option value="15">15 years</option>
+          </select>
+        </div>
+      </div>
+      <p id="calc-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
+      <div class="flex flex-wrap gap-2 pt-1">
+        <button type="button" id="share" class="fc-btn">Copy shareable link</button>
+        <button type="button" id="print" class="fc-btn fc-btn--ghost">Print results</button>
+      </div>
+      <div class="rounded-lg bg-navy-50 p-3 text-xs leading-relaxed text-navy-700">
+        <strong>How it works:</strong> you pay half your monthly payment every two
+        weeks. There are 26 two-week periods in a year, so you make the equivalent
+        of 13 monthly payments instead of 12 — one full extra payment a year, every
+        year, without feeling it.
+      </div>
+    </form>
+
+    <div class="p-5 sm:p-6">
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="rounded-lg bg-navy-50 p-4">
+          <p class="text-xs font-semibold tracking-wide text-navy-600 uppercase">Monthly plan</p>
+          <p class="mt-1 text-2xl font-bold text-navy-900" id="m-pay">—</p>
+          <p class="text-sm text-navy-700">per month · paid off in <span id="m-time">—</span></p>
+          <p class="mt-1 text-sm text-navy-700">Total interest: <strong id="m-int">—</strong></p>
+        </div>
+        <div class="rounded-lg bg-accent-50 p-4">
+          <p class="text-xs font-semibold tracking-wide text-accent-800 uppercase">Biweekly plan</p>
+          <p class="mt-1 text-2xl font-bold text-accent-800" id="b-pay" aria-live="polite">—</p>
+          <p class="text-sm text-accent-800">every 2 weeks · paid off in <span id="b-time">—</span></p>
+          <p class="mt-1 text-sm text-accent-800">Total interest: <strong id="b-int">—</strong></p>
+        </div>
+      </div>
+      <p id="savings" class="mt-3 rounded-lg bg-navy-900 p-4 text-sm font-medium text-white">—</p>
+
+      <h2 class="mt-8 text-sm font-semibold tracking-wide text-navy-600 uppercase">Balance over time</h2>
+      <div class="mt-2 overflow-x-auto">
+        <svg id="chart" viewBox="0 0 640 240" class="h-auto w-full min-w-[420px]" role="img" aria-label="Mortgage balance by year, biweekly vs monthly payments"></svg>
+      </div>
+      <p class="mt-1 text-xs text-navy-600">Solid: biweekly · Dashed: monthly.</p>
+      <p class="mt-4 text-xs leading-relaxed text-navy-600">
+        Model: interest accrues per two-week period at (annual rate ÷ 26); results
+        match lender "accelerated biweekly" plans closely, though daily-accrual
+        servicers differ slightly. Watch for third-party biweekly programs that
+        charge setup fees — you can DIY the same result for free by adding
+        1/12 of your payment as a monthly extra.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { pmt, amortizeLoan, amortizeBiweekly } from '../lib/loan.js';
+  import { fmt0, fmt2, num, byId, input, yrMo, drawBalanceChart, rowsToSeries, urlState, wireActions, onInput } from '../lib/ui.js';
+
+  const url = urlState(['amount', 'rate', 'term']);
+
+  function recalc() {
+    const amount = num(input('amount'));
+    const rate = num(input('rate'));
+    const term = parseInt(input('term').value, 10);
+    const err = byId('calc-error');
+    let msg = null;
+    if (amount <= 0) msg = 'Enter a loan amount above $0.';
+    else if (rate < 0 || rate > 25) msg = 'Enter a rate between 0% and 25%.';
+    if (msg) { err.textContent = msg; err.classList.remove('hidden'); return; }
+    err.classList.add('hidden');
+
+    const payment = pmt(amount, rate, term * 12);
+    const monthly = amortizeLoan({ principal: amount, annualRate: rate, payment });
+    const bw = amortizeBiweekly(amount, rate, term);
+
+    byId('m-pay').textContent = fmt2.format(payment);
+    byId('m-time').textContent = yrMo(monthly.months);
+    byId('m-int').textContent = fmt0.format(monthly.totalInterest);
+    byId('b-pay').textContent = fmt2.format(bw.halfPayment);
+    byId('b-time').textContent = yrMo(Math.round(bw.years * 12));
+    byId('b-int').textContent = fmt0.format(bw.totalInterest);
+
+    const saved = monthly.totalInterest - bw.totalInterest;
+    const monthsSaved = monthly.months - Math.round(bw.years * 12);
+    byId('savings').textContent = `Biweekly payments knock ${yrMo(monthsSaved)} off the loan and save ${fmt0.format(saved)} in interest — with the same total outlay per year plus one extra payment.`;
+
+    // Resample the per-period biweekly balances onto a monthly axis so both
+    // series share the chart's month-based x-axis.
+    const bwMonths = Math.ceil(bw.periods * (12 / 26));
+    const bwSeries = [amount];
+    for (let m = 1; m <= bwMonths; m++) {
+      const idx = Math.min(bw.balances.length - 1, Math.round((m * 26) / 12));
+      bwSeries.push(bw.balances[idx]);
+    }
+    drawBalanceChart(byId('chart'), [
+      { values: rowsToSeries(monthly.rows, amount), dashed: true },
+      { values: bwSeries },
+    ], amount);
+    url.sync();
+  }
+
+  url.load();
+  onInput('calc-form', recalc);
+  wireActions('#calc');
+  recalc();
+</script>

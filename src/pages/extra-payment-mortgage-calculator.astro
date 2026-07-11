@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ExtraPaymentMortgageCalculator from '../components/ExtraPaymentMortgageCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'Mortgage Calculator with Extra Payments — Monthly & One-Time | Payoff Logic';
+const description =
+  'Free extra-payment mortgage calculator: add a monthly amount, a one-time lump sum, or both — see your new payoff date, years removed, and total interest saved, with the full schedule.';
+
+const faqs = [
+  {
+    q: 'What happens if I pay an extra $200 a month on my mortgage?',
+    a: 'On a $300,000 loan at 6.5% for 30 years, an extra $200/month pays the mortgage off about 6 years early and saves roughly $87,000 in interest. The exact effect depends on your balance and rate — enter your numbers above and the comparison updates instantly.',
+  },
+  {
+    q: 'Does paying extra principal reduce my monthly payment?',
+    a: 'No — your required payment stays the same; the loan just ends sooner. The exception is a "recast": some servicers will re-amortize the loan after a large lump sum (often $5,000+ and a ~$250 fee), which lowers the required payment while keeping the term. If your goal is a lower bill rather than an earlier payoff, ask your servicer about recasting.',
+  },
+  {
+    q: 'Is one big lump sum better than monthly extras?',
+    a: 'Dollar-for-dollar, money applied earlier saves more, because it stops accruing interest immediately. A $12,000 lump sum today beats $1,000/month for the next 12 months — slightly. Practically, do whichever you’ll actually stick to; the calculator lets you model both together.',
+  },
+  {
+    q: 'What is the extra-payment equivalent of biweekly payments?',
+    a: 'Paying half your payment every two weeks equals 13 full payments per year — the same as adding 1/12 of your monthly payment as a monthly extra. On a $1,900 payment, that’s about $158/month. Compare directly with our biweekly mortgage calculator.',
+  },
+  {
+    q: 'Should I pay extra on my mortgage or invest the money?',
+    a: 'Paying a 6.5% mortgage early is a guaranteed, tax-free 6.5% return on that money. Whether markets will beat that is uncertain; a diversified portfolio historically has, over long horizons, but with risk. Most planners suggest first maxing employer 401(k) match and paying off high-interest debt, then splitting between the mortgage and investing based on your risk comfort. We show the mortgage side of the math precisely; the investing side is your call.',
+  },
+  {
+    q: 'Do extra payments trigger prepayment penalties?',
+    a: 'Almost never on loans originated after 2014 — qualified mortgages can’t have them after year three, and most have none at all. Check your closing disclosure or ask your servicer, and always mark extra amounts as "apply to principal."',
+  },
+  {
+    q: 'When in the month should I send the extra payment?',
+    a: 'With standard monthly-accrual mortgages, anything received before the next due date lands the same way; what matters is that it posts as principal before that month’s interest is computed. Sending it together with your regular payment is the simplest reliable pattern.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic Extra Payment Mortgage Calculator',
+  path: '/extra-payment-mortgage-calculator/',
+  description,
+  crumbName: 'Extra Payment Mortgage Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'Extra Payment Mortgage Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">Mortgage Calculator with Extra Payments</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        Model a recurring monthly extra, a one-time lump sum, or both — and see the
+        payoff date move, the years disappear, and the interest saved, with the complete
+        amortization schedule. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: extra-payment, above-fold right (desktop sidebar) -->
+
+    <ExtraPaymentMortgageCalculator />
+
+    <!-- AD_SLOT: extra-payment, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Why the savings are so large</h2>
+        <p class="mt-3">
+          A 30-year mortgage front-loads interest: in the early years, most of each
+          payment is interest because the balance is at its peak. Extra payments attack
+          exactly that peak. Every extra dollar reduces the balance that every future
+          month's interest is computed on, so the effect compounds — which is why a few
+          hundred dollars a month can erase five or six figures of interest and years of
+          payments. The chart above makes the compounding visible: the gap between the
+          curves widens over time.
+        </p>
+        <p class="mt-3">
+          Three practical rules: tell your servicer extras are <strong>principal-only</strong>;
+          keep your emergency fund intact before accelerating a low-rate loan; and if
+          you carry any high-interest debt, that comes first — run it through the
+          <a href="/debt-snowball-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">debt snowball calculator</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="extra-payment-mortgage-calculator" slugs={['mortgage-payoff-calculator', 'biweekly-mortgage-calculator', 'mortgage-calculator', 'loan-payoff-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice.
+        See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

@@ -79,7 +79,10 @@ const schema = [
   },
 ];
 
-const related = TOOLS.filter((t) => t.slug !== 'mortgage-calculator');
+// Hub → every spoke: all mortgage-cluster tools + the refinance hub.
+const related = TOOLS.filter(
+  (t) => t.slug !== 'mortgage-calculator' && (t.cluster === 'mortgage' || t.slug === 'refinance-calculator')
+);
 ---
 
 <BaseLayout title={title} description={description} schema={schema}>
@@ -173,8 +176,8 @@ const related = TOOLS.filter((t) => t.slug !== 'mortgage-calculator');
       </section>
 
       <section>
-        <h2 class="text-xl font-bold text-navy-900">Related calculators</h2>
-        <p class="mt-3">These companion tools are in active development:</p>
+        <h2 class="text-xl font-bold text-navy-900">All mortgage calculators</h2>
+        <p class="mt-3">Specialized tools for specific decisions — each shares this page's verified math engine approach:</p>
         <ul class="mt-2 list-disc space-y-1 pl-6">
           {
             related.map((t) => (

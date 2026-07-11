@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FhaCalculator from '../components/FhaCalculator.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+import { calcSchema } from '../lib/seo';
+
+const title = 'FHA Loan Calculator with MIP (Upfront + Annual) | Payoff Logic';
+const description =
+  'Free FHA loan calculator with both mortgage insurance charges done right: the 1.75% upfront MIP and the annual MIP with the 11-year/life-of-loan rule, plus taxes and insurance.';
+
+const faqs = [
+  {
+    q: 'How much is FHA mortgage insurance?',
+    a: 'Two charges. Upfront MIP is 1.75% of the base loan, almost always financed into the loan. Annual MIP for 30-year loans is 0.55% per year with less than 5% down, or 0.50% with 5% or more down, charged monthly on the declining balance (rates per HUD Mortgagee Letter 2023-05, still in effect). On a $290,000 loan, that starts around $130–$135/month.',
+  },
+  {
+    q: 'When does FHA MIP go away?',
+    a: 'It depends on your down payment. With 10% or more down, MIP cancels automatically after 11 years. With less than 10% down — which includes the common 3.5% minimum — MIP lasts the life of the loan. The standard exit is refinancing into a conventional loan once you reach 20% equity.',
+  },
+  {
+    q: 'What is the minimum down payment for an FHA loan?',
+    a: '3.5% with a credit score of 580 or higher; 10% with scores of 500–579. The 3.5% minimum is FHA’s signature feature and the reason it is the default program for many first-time buyers.',
+  },
+  {
+    q: 'FHA vs. conventional — which is cheaper?',
+    a: 'It hinges on your credit score and down payment. FHA MIP rates don’t vary with credit, so FHA often wins for scores below roughly 680 with small down payments. Conventional PMI is credit-priced and cancellable at 20% equity, so it usually wins for strong credit — no life-of-loan insurance. Compare your quote in our full mortgage calculator (with PMI) against this page.',
+  },
+  {
+    q: 'Are there FHA loan limits?',
+    a: 'Yes — set by county each year, from a national floor to a much higher ceiling in expensive markets. Check the HUD limit for your county before planning around a price; loans above the standard tier also carry slightly higher MIP rates than shown here.',
+  },
+  {
+    q: 'Can I pay the upfront MIP in cash instead of financing it?',
+    a: 'Yes, though almost everyone finances it. Paying the 1.75% at closing keeps the loan smaller and saves the interest on it over the term; financing it preserves cash. This calculator models the typical financed case.',
+  },
+  {
+    q: 'Does this calculator include property taxes and insurance?',
+    a: 'Yes — enter your local property-tax rate and annual homeowners premium and the payment shows the full picture: principal, interest, MIP, taxes, and insurance. FHA loans require an escrow account, so you will pay these monthly with the mortgage.',
+  },
+];
+
+const schema = calcSchema({
+  name: 'Payoff Logic FHA Loan Calculator',
+  path: '/fha-loan-calculator/',
+  description,
+  crumbName: 'FHA Loan Calculator',
+  faqs,
+});
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <Breadcrumbs crumbs={[{ label: 'FHA Loan Calculator' }]} />
+
+  <div class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+    <header class="py-5">
+      <h1 class="text-2xl font-bold text-navy-900 sm:text-3xl">FHA Loan Calculator</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-relaxed text-navy-700 sm:text-base">
+        FHA payments have two insurance charges most calculators fudge: the 1.75%
+        upfront MIP added to your loan, and the annual MIP whose rate and duration
+        depend on your down payment. This calculator applies HUD's actual rules —
+        including the 11-year vs. life-of-loan cutoff. Free, no signup.
+      </p>
+    </header>
+
+    <!-- AD_SLOT: fha, above-fold right (desktop sidebar) -->
+
+    <FhaCalculator />
+
+    <!-- AD_SLOT: fha, below results -->
+
+    <article class="mx-auto mt-12 max-w-3xl space-y-6 text-base leading-relaxed text-navy-700">
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">The two FHA costs to plan around</h2>
+        <p class="mt-3">
+          <strong>The financed UFMIP quietly raises your loan.</strong> Put 3.5% down
+          on a $300,000 home and you'd expect a $289,500 loan — but the 1.75% upfront
+          premium brings it to $294,566. You start with less equity than your down
+          payment suggests, which matters if you need to sell early.
+        </p>
+        <p class="mt-3">
+          <strong>Life-of-loan MIP is the real price of the low down payment.</strong>
+          At under 10% down, the annual MIP never cancels — unlike conventional PMI,
+          which ends at 78% loan-to-value automatically. Over a full 30 years that's
+          tens of thousands of dollars, and it's why the standard FHA playbook is:
+          buy with FHA, build equity, then refinance to conventional at 20% equity.
+          Model that second step in our
+          <a href="/refinance-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">refinance calculator</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
+        <div class="mt-4 space-y-5">
+          {faqs.map((f) => (
+            <div>
+              <h3 class="font-semibold text-navy-900">{f.q}</h3>
+              <p class="mt-1">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedTools currentSlug="fha-loan-calculator" slugs={['va-loan-calculator', 'mortgage-calculator', 'house-affordability-calculator', 'refinance-calculator']} />
+
+      <p class="rounded-lg bg-navy-50 p-4 text-sm">
+        <strong>Disclaimer:</strong> Educational purposes only — not financial advice or
+        a loan offer. MIP rates per HUD ML 2023-05; county loan limits and lender
+        overlays apply. See our <a href="/terms/" class="underline hover:text-navy-900">Terms of Use</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

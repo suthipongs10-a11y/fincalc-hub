@@ -3,9 +3,14 @@ import { TOOLS } from '../config';
 
 interface Props {
   currentSlug: string;
+  /** Curated related slugs (SEO_PLAN: ~3–5 contextual links). Falls back to same-cluster tools + core tools. */
+  slugs?: string[];
 }
-const { currentSlug } = Astro.props;
-const related = TOOLS.filter((t) => t.slug !== currentSlug);
+const { currentSlug, slugs } = Astro.props;
+const current = TOOLS.find((t) => t.slug === currentSlug);
+const related = slugs
+  ? slugs.map((s) => TOOLS.find((t) => t.slug === s)).filter((t) => !!t)
+  : TOOLS.filter((t) => t.slug !== currentSlug && (t.cluster === current?.cluster || t.core)).slice(0, 6);
 ---
 
 <section>
