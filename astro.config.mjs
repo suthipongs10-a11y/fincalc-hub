@@ -2,10 +2,9 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
-// Site URL is a placeholder until the owner picks a final domain (see STATUS.md).
-// Cloudflare Pages will serve the default *.pages.dev URL until then.
+// Live domain (registered 2026-07-11, Cloudflare Registrar + Pages).
 export default defineConfig({
-  site: 'https://fincalc-hub.pages.dev',
+  site: 'https://payofflogic.com',
   output: 'static',
   trailingSlash: 'always',
   vite: {

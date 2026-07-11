@@ -59,20 +59,11 @@
    can start collecting data early — recommended before M2 finishes
 
 ## Pending decisions (owner)
-- [ ] Domain name — DECIDE BEFORE M2 (recommended 2026-07-11).
-      ⚠ Finding: fincalchub.com is TAKEN by an active financial-calculator
-      site (brand collision — working name must change at rebrand).
-      Registry lookups (RDAP/DoH) are blocked from this environment; owner
-      must verify availability at the registrar (Cloudflare Registrar
-      recommended — at-cost pricing, integrates with Pages).
-      Round 1 (payoffmath/truemonthly/payoffcalc) all taken per owner.
-      Round 2 shortlist (Claude's order; no active site found in search,
-      owner must still verify at registrar): 1) monthlymath.com
-      2) payofflogic.com 3) clearmonthly.com 4) payoffkit.com
-      5) payoffworks.com 6) payoffcompass.com 7) loanmathlab.com
-      8) realmonthly.com — invented fallbacks (near-certain available):
-      amortiq.com / payoffly.com. AVOID payoffpilot.com (active debt-relief
-      company) and "MoneyMath*" (crowded: moneymath.tools active).
+- [x] Domain name — DECIDED & LIVE 2026-07-11: **payofflogic.com**
+      (Cloudflare Registrar; Pages project lives in the same account as the
+      zone — apex-domain requirement. Production branch temporarily set to
+      claude/m0-milestone-398sab, see README §Deploying). Brand: Payoff
+      Logic. Rebrand applied across src/, config, README, CLAUDE.md.
       Avoid: single-vertical names (mortgagemath.*) since site spans 4
       clusters; avoid .io for YMYL trust.
       After registering: update `site` in astro.config.mjs, SITE.url +
@@ -80,8 +71,9 @@
 - [ ] Author entity name for About page (real name or pen name).
       Placeholder in use: "FinCalc Hub Editorial Team" (`SITE.author` in src/config.ts).
 - [ ] Public contact email: currently the owner's Gmail is published on
-      /contact/ (`SITE.contactEmail`). Conservative alternative once domain
-      exists: a domain address (e.g. contact@<domain>). Swap in src/config.ts.
+      /contact/ (`SITE.contactEmail`). Domain now exists → recommended:
+      set up contact@payofflogic.com (Cloudflare Email Routing, free,
+      forwards to Gmail) and swap in src/config.ts.
 - [ ] Approve SEO_PLAN.md phasing additions (M2.5 variant tools, M3.5
       loan-amount pages, M4.5/M4.75 remaining tools+guides) → if approved,
       fold into BUILD_PLAN.md.
@@ -94,6 +86,11 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — Domain payofflogic.com registered & live on Cloudflare Pages
+  (new Pages project in the domain's account; production branch set to the
+  working branch after initial deploy failed building empty `main`).
+  Rebranded FinCalc Hub → Payoff Logic across src/, config, README,
+  CLAUDE.md. Canonicals/JSON-LD now point at https://payofflogic.com.
 - 2026-07-11 — Owner approved SEO_PLAN (phasing + schema policy). Folded
   into BUILD_PLAN.md (M2.5/M3.5/M4.5/M4.75) and CLAUDE.md §4.5. Built M1:
   flagship /mortgage-calculator/ — engine in src/lib/mortgage.js (plain JS,

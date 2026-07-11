@@ -1,15 +1,15 @@
 /**
- * Site-wide constants. Working name + placeholder contact email until the
- * owner finalizes the domain and author entity (see STATUS.md → Pending
- * decisions). Swap values here once decided — nothing else needs to change.
+ * Site-wide constants. Brand: Payoff Logic (payofflogic.com, live since
+ * 2026-07-11). Contact email + author entity still pending owner decision
+ * (see STATUS.md) — swap values here once decided.
  */
 export const SITE = {
-  name: 'FinCalc Hub',
+  name: 'Payoff Logic',
   tagline: 'Free financial calculators you can actually trust',
-  url: 'https://fincalc-hub.pages.dev',
+  url: 'https://payofflogic.com',
   contactEmail: 'tanakonp99@gmail.com',
   /** Placeholder author entity until owner picks a real/pen name. */
-  author: 'FinCalc Hub Editorial Team',
+  author: 'Payoff Logic Editorial Team',
   launchedYear: 2026,
 } as const;
 

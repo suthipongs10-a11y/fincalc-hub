@@ -1,4 +1,4 @@
-# CLAUDE.md — FinCalc Hub (working name)
+# CLAUDE.md — Payoff Logic (payofflogic.com)
 
 > Single source of truth. Read this file + STATUS.md at the start of EVERY session.
 > Follow milestone gates in BUILD_PLAN.md. Never skip ahead without owner approval.
