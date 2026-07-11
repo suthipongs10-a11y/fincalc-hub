@@ -60,6 +60,12 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — Competitor/opportunity analysis (COMPETITOR_ANALYSIS.md):
+  live SERP sampling shows variant-calculator keywords have page-1 slots
+  held by white-label bank widgets → HIGH opportunity tier confirmed.
+  Video strategy added to SEO_PLAN.md §5: facade embeds only (Lighthouse),
+  below-tool placement, transcripts, VideoObject schema, no video rich
+  results expected (watch-page rule), 12 videos in wave V-1 with M4.
 - 2026-07-11 — Project docs created (CLAUDE.md, BUILD_PLAN.md, STATUS.md).
   No code yet.
 - 2026-07-11 — M0 built: Astro+Tailwind scaffold, design tokens, base layout,

@@ -338,7 +338,65 @@ after 6–9 months, prune or improve zero-impression pages.
   goal remains possible mainly via calculator-intent + programmatic
   long-tails, not via guides.
 
-## 5. Sources
+## 5. Video layer (added 2026-07-11, research-based)
+
+Owner goal: a topic-explainer video embedded on each page for SEO. The
+evidence says video helps — but not the way most guides claim, and one
+mistake would break our Lighthouse gate. Rules:
+
+### 5.1 What video actually does for us (and doesn't)
+
+- **Not a direct ranking factor.** Google has never confirmed embedded
+  video as a ranking signal; popular stats ("53× more likely to rank") are
+  correlation marketing [V1]. Real, documented benefits: engagement/dwell
+  (~2.6× time-on-page per Wistia data [V1]), a second discovery channel
+  (YouTube search + suggested), E-E-A-T experience signal (a real human
+  explaining the math), and AI-search citability.
+- **No video rich results for us — by design.** Since the 2023–2024 video
+  indexing changes, Google shows video thumbnails/Video-mode results ONLY
+  for "watch pages" where the video is the main content [V2]. Our pages'
+  main content is the calculator/guide, so GSC will report
+  "video is not the main content of the page" — that is EXPECTED and fine.
+  We embed for users and engagement, not for video SERP features.
+- **YouTube search is the second win.** Question long-tails ("debt
+  snowball vs avalanche", "how does PMI work") have real YouTube demand;
+  ranking there is far easier than Google page 1 and every video funnels
+  viewers to the exact page (link + pinned comment).
+
+### 5.2 Non-negotiable implementation rules
+
+1. **Facade embed only.** A standard YouTube iframe loads 1.3–2.6 MB of
+   third-party JS across 20+ requests — instant Lighthouse-gate failure.
+   Use the `lite-youtube-embed` facade (thumbnail + click-to-load;
+   ~800 ms average LCP improvement vs direct embeds) [V3]. Build once as
+   an Astro component (`<VideoEmbed id="..." title="..." />`).
+2. **Placement: below the tool / mid-guide.** The calculator stays the
+   main above-fold content (that's our AIO moat and our "not a watch page"
+   choice is deliberate). Video sits in the explainer section.
+3. **Transcript on the page.** Every video gets a collapsible transcript
+   under it: free long-tail text, accessibility, AI-citable. The
+   transcript may not duplicate the page copy — it's the spoken-style
+   complement.
+4. **`VideoObject` schema** on pages with video (name, description,
+   thumbnailUrl, uploadDate, duration, embedUrl) — valid and helps Google
+   understand the asset; do not expect a rich result (see above).
+5. **YouTube channel = brand entity.** Channel name = site name; every
+   description links to the exact matching page; video title = the page's
+   question-form keyword, not clickbait.
+
+### 5.3 Production order (effort-ranked, ~56 possible; start with 12)
+
+| Wave | Videos | Why first |
+|---|---|---|
+| V-1 (with M4) | 10 ★ guides' topics + snowball-vs-avalanche + how-amortization-works | Question topics = real YouTube search demand; guides face the worst AIO click loss, video+citability is their compensation |
+| V-2 | 5 cluster-hub tool pages (walkthrough: "how to use / what the results mean") | Dwell time on money pages |
+| V-3 | Remaining guides, then variant tools if V-1/V-2 show YouTube traction | Scale only on evidence |
+
+State/amount programmatic pages get NO per-page videos (one generic
+"how we calculate" video reused via the component if desired) — 81
+near-duplicate videos would be spam on both platforms.
+
+## 6. Sources
 
 | # | Source | Status |
 |---|---|---|
@@ -357,6 +415,9 @@ after 6–9 months, prune or improve zero-impression pages.
 | S13 | GetPassionfruit pSEO rollout guide + Omnius pSEO examples (phased ≤50–100 pages; ≥400 words non-generic; 20/80 traffic skew) + Backlinko pSEO 2026 | Reference guidance |
 | S14 | LeadGen Economy — E-E-A-T author-entity signals 2026 (Person schema, sameAs) | Unverified; adopted as cheap conservative practice |
 | S15 | NoGood — programmatic SEO guide (NerdWallet [state] mortgage calculator pattern) | Unverified |
+| V1 | ContentPowered "Are Video Embeds an SEO Ranking Factor?" + Wistia engagement data via draft.dev / keywordkick 2026 stats roundups | Directional; ranking-factor myth debunk is well-corroborated |
+| V2 | Search Engine Land + Search Engine Roundtable — Google video-mode/watch-page requirement expansion; Google Search Console video indexing docs (support.google.com/webmasters/answer/9495631) | Strong (trade press + primary docs) |
+| V3 | lite-youtube-embed (Paul Irish) facade pattern; corewebvitals.io facade LCP data; accreditly.io CWV embed guides | Strong for mechanism; LCP delta figure unverified |
 
 > Verification caveat: the adversarial-verification phase of the research
 > run was cut short by a session usage limit — only the schema claims (S1)
