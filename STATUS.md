@@ -20,7 +20,7 @@
 2. Accuracy sign-off on guides (M4 gate item) — all figures are
    engine-computed, but tone/claims deserve human review
 3. Decisions still pending: author entity name (placeholder "Payoff Logic
-   Editorial Team"), contact email swap (Cloudflare Email Routing)
+   Editorial Team") — contact email DONE (contact@payofflogic.com)
 4. GSC: sitemap should clear "Couldn't fetch" within 72h; now 143 URLs
 5. When ready for AdSense: apply (site meets the 5-tools+10-guides+legal
    bar many times over); M5 ad-slot insertion is ready via AD_SLOT markers
@@ -194,8 +194,8 @@
 2. After approval → M3.5: 29 loan-amount pages (/mortgage-payment/{amount}/)
    + hub — but per BUILD_PLAN gate, review GSC indexation of M3 pages
    before shipping the next programmatic wave
-3. Owner in progress: Cloudflare Web Analytics, contact@payofflogic.com
-   (then swap SITE.contactEmail in src/config.ts)
+3. Owner in progress: Cloudflare Web Analytics.
+   contact@payofflogic.com DONE 2026-07-11 (swapped in src/config.ts)
 
 ## Pending decisions (owner)
 - [x] Domain name — DECIDED & LIVE 2026-07-11: **payofflogic.com**
@@ -209,10 +209,9 @@
       SITE.name in src/config.ts, rerun build.
 - [ ] Author entity name for About page (real name or pen name).
       Placeholder in use: "FinCalc Hub Editorial Team" (`SITE.author` in src/config.ts).
-- [ ] Public contact email: currently the owner's Gmail is published on
-      /contact/ (`SITE.contactEmail`). Domain now exists → recommended:
-      set up contact@payofflogic.com (Cloudflare Email Routing, free,
-      forwards to Gmail) and swap in src/config.ts.
+- [x] Public contact email — DECIDED 2026-07-11: **contact@payofflogic.com**
+      (owner set up routing; `SITE.contactEmail` swapped in src/config.ts,
+      shows on /contact/).
 - [ ] Approve SEO_PLAN.md phasing additions (M2.5 variant tools, M3.5
       loan-amount pages, M4.5/M4.75 remaining tools+guides) → if approved,
       fold into BUILD_PLAN.md.

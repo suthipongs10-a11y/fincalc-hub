@@ -1,13 +1,13 @@
 /**
  * Site-wide constants. Brand: Payoff Logic (payofflogic.com, live since
- * 2026-07-11). Contact email + author entity still pending owner decision
- * (see STATUS.md) — swap values here once decided.
+ * 2026-07-11). Author entity still pending owner decision (see STATUS.md)
+ * — swap the value here once decided.
  */
 export const SITE = {
   name: 'Payoff Logic',
   tagline: 'Free financial calculators you can actually trust',
   url: 'https://payofflogic.com',
-  contactEmail: 'tanakonp99@gmail.com',
+  contactEmail: 'contact@payofflogic.com',
   /** Placeholder author entity until owner picks a real/pen name. */
   author: 'Payoff Logic Editorial Team',
   launchedYear: 2026,
