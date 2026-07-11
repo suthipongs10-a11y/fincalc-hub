@@ -8,7 +8,7 @@
   pages, 29 amount pages, 33 guides, hubs, legal. Built autonomously
   overnight per owner instruction (2026-07-11); M5 (AdSense insertion)
   remains owner-triggered.
-- **Last commit:** `M4.75: remaining 23 guides (33 total)`
+- **Last commit:** `Add ads.txt for AdSense verification` (pub-3381605860539529)
 - **Build status:** `npm run build` clean (143 pages + sitemap) · ALL 7
   test suites pass (mortgage/m2/m25/m3-data/m3-similarity/m35/m45) ·
   0 broken internal links (143 pages scanned) · Lighthouse 100×4
@@ -225,6 +225,8 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-11 — ads.txt added (owner supplied AdSense publisher ID
+  pub-3381605860539529) → live at /ads.txt for the AdSense application.
 - 2026-07-11 — M3 built: states.json (50 states, sourced, spot-check gate
   caught stale 2022 tax data → corrected to verified 2023 + Bankrate 2025
   anchors, locked in tests), /[state]/mortgage-calculator/ template with
