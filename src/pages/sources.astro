@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+import statesData from '../data/states.json';
+import autoTaxData from '../data/auto-sales-tax.json';
+
+const title = `Data Sources | ${SITE.name}`;
+const description =
+  'Every dataset behind Payoff Logic’s calculators, cited to its source with the year it represents: property taxes, home values, insurance averages, vehicle sales tax, and FHA/VA/FHFA loan parameters.';
+
+// Pull real vintages/sources straight from the data files so this page can never
+// drift from what the calculators actually use.
+const statesMeta = statesData.meta;
+const autoMeta = autoTaxData.meta;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    url: SITE.url + '/sources/',
+    description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Data Sources', item: SITE.url + '/sources/' },
+    ],
+  },
+];
+
+const datasets = [
+  {
+    heading: 'State property-tax rates',
+    used: 'Prefilled in the mortgage calculator and every state mortgage page.',
+    vintage: statesMeta.vintage.tax,
+    tools: [
+      { href: '/mortgage-calculator/', label: 'Mortgage calculator' },
+      { href: '/mortgage-calculator/by-state/', label: 'Mortgage by state' },
+    ],
+  },
+  {
+    heading: 'Typical home values',
+    used: 'Prefilled home price on state mortgage pages.',
+    vintage: statesMeta.vintage.home,
+    tools: [{ href: '/mortgage-calculator/by-state/', label: 'Mortgage by state' }],
+  },
+  {
+    heading: 'Homeowners insurance averages',
+    used: 'Prefilled insurance figure in mortgage payment estimates.',
+    vintage: statesMeta.vintage.ins,
+    tools: [{ href: '/mortgage-calculator/', label: 'Mortgage calculator' }],
+  },
+  {
+    heading: 'Vehicle sales-tax rates & trade-in rules',
+    used: 'State tax logic in the auto loan calculator.',
+    vintage:
+      'State base sales-tax rate on vehicle purchases, and whether the state grants a trade-in tax credit (2025–2026).',
+    tools: [
+      { href: '/auto-loan-calculator/', label: 'Auto loan calculator' },
+      { href: '/guides/trade-in-sales-tax/', label: 'Trade-ins & sales tax guide' },
+    ],
+  },
+  {
+    heading: 'FHA loan parameters',
+    used: 'Upfront and annual MIP rates and durations in the FHA calculator.',
+    vintage:
+      'HUD Mortgagee Letter 2023-05: upfront MIP 1.75%; annual MIP 0.15–0.55% by loan-to-value and term; 11-year vs. life-of-loan duration. Unchanged as of July 2026.',
+    tools: [{ href: '/fha-loan-calculator/', label: 'FHA loan calculator' }],
+  },
+  {
+    heading: 'VA funding fee schedule',
+    used: 'Funding-fee tiers in the VA calculator.',
+    vintage:
+      'VA.gov permanent funding-fee schedule effective April 7, 2023: first use 1.25–2.15%, subsequent use 1.25–3.30% by down payment; exemptions apply. Unchanged as of July 2026.',
+    tools: [{ href: '/va-loan-calculator/', label: 'VA loan calculator' }],
+  },
+  {
+    heading: 'Conforming loan limit',
+    used: 'The jumbo-loan threshold used on loan-amount pages.',
+    vintage: 'FHFA 2025 baseline conforming loan limit: $806,500. Loans above this are jumbo.',
+    tools: [{ href: '/mortgage-payment/', label: 'Payments by amount' }],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Data Sources</h1>
+    <p class="mt-2 text-sm text-navy-500">Last reviewed: July 19, 2026</p>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        The calculators on {SITE.name} do the math on numbers you enter — but several
+        of them prefill real-world reference figures to save you time. This page lists
+        every one of those datasets, the source it comes from, and the year it
+        represents. Our approach to this data is described in our
+        <a href="/editorial-policy/" class="text-navy-900 underline hover:text-navy-600">Editorial Policy &amp; Methodology</a>.
+      </p>
+
+      <div class="rounded-lg border border-navy-100 bg-navy-50/60 p-4 text-sm">
+        <p>
+          <strong class="text-navy-900">Important:</strong> prefilled figures are
+          planning defaults, not quotes for your situation. Property taxes vary by
+          county and city, insurance varies by home and insurer, home values move
+          monthly, and rates change constantly. Every prefilled value stays fully
+          editable — replace it with your real numbers.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8 space-y-6">
+      {datasets.map((d) => (
+        <section class="rounded-lg border border-navy-100 bg-white p-5 shadow-sm">
+          <h2 class="text-lg font-semibold text-navy-900">{d.heading}</h2>
+          <p class="mt-1 text-sm text-navy-600">{d.used}</p>
+          <p class="mt-3 text-sm leading-relaxed text-navy-700">
+            <span class="font-semibold text-navy-900">What it represents:</span> {d.vintage}
+          </p>
+          <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+            {d.tools.map((t) => (
+              <a href={t.href} class="text-accent-700 underline hover:text-navy-900">{t.label}</a>
+            ))}
+          </p>
+        </section>
+      ))}
+    </div>
+
+    <div class="mt-10 space-y-6 text-base leading-relaxed text-navy-700">
+      <h2 class="text-xl font-bold text-navy-900">Full source list</h2>
+
+      <div>
+        <p class="font-semibold text-navy-900">Property tax, home value &amp; insurance</p>
+        <ul class="mt-2 list-disc space-y-1 pl-6 text-sm">
+          {statesMeta.sources.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="mt-2 text-sm text-navy-600">{statesMeta.caveat}</p>
+      </div>
+
+      <div>
+        <p class="font-semibold text-navy-900">Vehicle sales tax &amp; trade-in rules</p>
+        <ul class="mt-2 list-disc space-y-1 pl-6 text-sm">
+          {autoMeta.sources.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="mt-2 text-sm text-navy-600">{autoMeta.caveat}</p>
+      </div>
+
+      <div>
+        <p class="font-semibold text-navy-900">Government loan programs</p>
+        <ul class="mt-2 list-disc space-y-1 pl-6 text-sm">
+          <li>U.S. Department of Housing and Urban Development (HUD), Mortgagee Letter 2023-05 (FHA MIP).</li>
+          <li>U.S. Department of Veterans Affairs (VA.gov), VA funding fee schedule effective April 7, 2023.</li>
+          <li>Federal Housing Finance Agency (FHFA), 2025 conforming loan limits.</li>
+        </ul>
+      </div>
+
+      <p class="text-sm text-navy-600">
+        Data compiled {statesMeta.compiled}. Found a figure that looks off?
+        <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">Tell us</a>
+        — see our
+        <a href="/editorial-policy/" class="text-navy-900 underline hover:text-navy-600">correction policy</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

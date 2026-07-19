@@ -4,10 +4,11 @@
 
 ## Current state
 - **Milestone:** ALL BUILD MILESTONES COMPLETE (M0–M4.75). Site is
-  content-complete per SEO_PLAN: **143 pages** — 23 calculators, 50 state
-  pages, 29 amount pages, 33 guides, hubs, legal. Built autonomously
-  overnight per owner instruction (2026-07-11); M5 (AdSense insertion)
-  remains owner-triggered.
+  content-complete per SEO_PLAN: **146 pages** — 23 calculators, 50 state
+  pages, 29 amount pages, 33 guides, hubs, legal + 3 trust pages
+  (editorial-policy/sources/disclaimer, added 2026-07-19). Built
+  autonomously overnight per owner instruction (2026-07-11); M5 (AdSense
+  insertion) remains owner-triggered.
 - **Last commit:** `Add ads.txt for AdSense verification` (pub-3381605860539529)
 - **Build status:** `npm run build` clean (143 pages + sitemap) · ALL 7
   test suites pass (mortgage/m2/m25/m3-data/m3-similarity/m35/m45) ·
@@ -224,6 +225,15 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-19 — Trust/transparency pages added (owner request, low-risk work
+  during AdSense review): /editorial-policy/ (methodology + verification +
+  independence + correction policy), /sources/ (every prefilled dataset
+  cited from the data files' own meta — states.json/auto-sales-tax.json +
+  HUD ML 2023-05/VA.gov/FHFA — with vintages), /disclaimer/ (standalone
+  YMYL disclaimer). Wired into footer + cross-linked from About. Now 146
+  pages; build clean, 0 broken internal links (146 scanned), Lighthouse
+  99/100/100/100 mobile on /sources/. No new financial claims — describes
+  process/sources only, so zero accuracy risk to AdSense review.
 - 2026-07-11 — Mobile nav fixed (owner feedback): Header now shows a
   hamburger (`<details>`-based, no framework JS; outside-click/Escape
   close) opening a full-width panel below the header on <640px; desktop

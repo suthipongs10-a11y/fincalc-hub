@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `Editorial Policy & Methodology | ${SITE.name}`;
+const description =
+  'How Payoff Logic builds and verifies its calculators: the same tested math engines behind every tool, cited data with review dates, editorial independence, and our correction policy.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    url: SITE.url + '/editorial-policy/',
+    description,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.name,
+      url: SITE.url,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Editorial Policy', item: SITE.url + '/editorial-policy/' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Editorial Policy &amp; Methodology</h1>
+    <p class="mt-2 text-sm text-navy-500">Last reviewed: July 19, 2026</p>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        {SITE.name} publishes financial calculators and explanatory guides. Because
+        these are money topics, we hold the content to a standard we can defend: every
+        number a tool produces comes from math we have tested, and every piece of
+        reference data we prefill is cited to a named source with the date we last
+        reviewed it. This page explains exactly how that works so you can judge the
+        site for yourself.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">How our calculators are built and verified</h2>
+      <p>
+        Each calculator runs on a small, dedicated math engine — for example, one for
+        mortgage amortization, one for loan payoff, one for FHA and VA loans. That same
+        engine code is exercised by an automated test suite that runs before anything
+        ships. The tests check results two ways:
+      </p>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          <strong>Against known-correct reference examples</strong> — payments and
+          balances computed independently (from lender tables, government worksheets,
+          or published examples) that the engine must reproduce.
+        </li>
+        <li>
+          <strong>Against closed-form identities</strong> — mathematical relationships
+          that must always hold (for instance, that a full amortization schedule pays
+          the balance to exactly zero), which catch errors a single spot-check would miss.
+        </li>
+      </ul>
+      <p>
+        The engine that our automated tests verify is the <em>same</em> code that runs
+        in your browser — we do not maintain a separate "display" formula that could
+        drift from the tested one. All math runs on your device; nothing you type is
+        sent to us or stored.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">How we handle reference data</h2>
+      <p>
+        Some tools prefill real-world figures — state property-tax rates, typical home
+        values, homeowners-insurance averages, vehicle sales-tax rules, and government
+        loan parameters. For that data we follow three rules:
+      </p>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>
+          <strong>Named sources, with dates.</strong> Each dataset records where it
+          came from and the year it represents. See our
+          <a href="/sources/" class="text-navy-900 underline hover:text-navy-600">Data Sources</a>
+          page for the full list.
+        </li>
+        <li>
+          <strong>Defaults, not quotes.</strong> Prefilled figures are planning
+          starting points, and every one of them stays editable — your county, your
+          insurer, and today's rates will differ, so the tools are built to be
+          overwritten with your real numbers.
+        </li>
+        <li>
+          <strong>Scheduled review.</strong> Rate and average figures are dated so we
+          — and you — can see their vintage at a glance and refresh them on a regular
+          cadence.
+        </li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-navy-900">Editorial independence</h2>
+      <p>
+        {SITE.name} is independent. We are not a lender, broker, or financial-advisory
+        firm. No bank, lender, or advertiser pays to change a calculator result, alter
+        a guide's conclusion, or receive favorable placement in our math. Advertising
+        and any affiliate links are kept separate from — and never influence — the
+        numbers a tool returns or the recommendations in a guide. Advertisers never see
+        the values you enter.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Our correction policy</h2>
+      <p>
+        We would rather be accurate than look infallible. If you find a math error, a
+        stale figure, or a claim that reads wrong, tell us and we will investigate. When
+        we confirm a substantive error, we fix it promptly and update the affected
+        page's review date. Corrections that change a result meaningfully are noted so
+        the change is transparent, not silent.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Not financial advice</h2>
+      <p>
+        Everything here is for general educational purposes and is not financial, legal,
+        or tax advice. Our tools show you the math behind a decision; the decision itself
+        depends on your full situation and is best made with a qualified professional.
+        See our
+        <a href="/disclaimer/" class="text-navy-900 underline hover:text-navy-600">full disclaimer</a>
+        and
+        <a href="/terms/" class="text-navy-900 underline hover:text-navy-600">Terms of Use</a>.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Questions or corrections</h2>
+      <p>
+        Spotted something, or want a calculator that doesn't exist yet? We read
+        everything —
+        <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">get in touch</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

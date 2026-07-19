@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const title = `Disclaimer | ${SITE.name}`;
+const description =
+  'Payoff Logic provides financial calculators and guides for general educational purposes only — not financial, legal, or tax advice. Read our full disclaimer.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    url: SITE.url + '/disclaimer/',
+    description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: 'Disclaimer', item: SITE.url + '/disclaimer/' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <h1 class="text-3xl font-bold text-navy-900">Disclaimer</h1>
+    <p class="mt-2 text-sm text-navy-500">Last updated: July 19, 2026</p>
+
+    <div class="mt-6 space-y-6 text-base leading-relaxed text-navy-700">
+      <p>
+        The calculators, guides, and other content on {SITE.name} (the "Site") are
+        provided for <strong>general educational and informational purposes only</strong>.
+        Nothing on the Site is financial, investment, legal, tax, or accounting advice,
+        and nothing here should be treated as a substitute for advice from a licensed
+        professional who understands your individual circumstances. {SITE.name} is not a
+        lender, mortgage broker, or registered financial advisor.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Results are estimates</h2>
+      <p>
+        Every calculator result is an estimate based solely on the values you enter and
+        the stated assumptions of that tool. Real loan terms, interest rates, property
+        taxes, insurance premiums, fees, and program rules vary by lender, location,
+        credit profile, and market conditions — and can differ materially from any
+        estimate shown here. We test our calculators against verified reference examples
+        (see our
+        <a href="/editorial-policy/" class="text-navy-900 underline hover:text-navy-600">Editorial Policy &amp; Methodology</a>),
+        but we do not guarantee that any result is error-free, complete, or suitable for
+        your particular purpose.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Prefilled data may be out of date</h2>
+      <p>
+        Some tools prefill reference figures such as state property-tax rates, home
+        values, insurance averages, and government loan parameters. These are planning
+        defaults tied to a specific vintage — listed on our
+        <a href="/sources/" class="text-navy-900 underline hover:text-navy-600">Data Sources</a>
+        page — and remain fully editable. Always verify current figures for your own
+        situation with the relevant lender, insurer, or government agency.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">No professional relationship</h2>
+      <p>
+        Using the Site does not create any advisor–client, fiduciary, or professional
+        relationship between you and {SITE.name}. Before acting on any number or idea
+        you find here, consult a qualified professional who can review your full
+        financial picture.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Third-party links and advertising</h2>
+      <p>
+        The Site may link to third-party websites and may display advertising. We do not
+        control, and are not responsible for, the content or practices of third-party
+        sites, and a link or advertisement is not an endorsement. Any affiliate links
+        are separate from — and never influence — the math a calculator returns or the
+        conclusions in a guide.
+      </p>
+
+      <h2 class="text-xl font-bold text-navy-900">Your responsibility</h2>
+      <p>
+        You are solely responsible for how you use the Site and for any decisions you
+        make. To the fullest extent permitted by law, {SITE.name} disclaims liability
+        for any loss or damage arising from reliance on any calculator result or
+        content. Your complete terms are set out in our
+        <a href="/terms/" class="text-navy-900 underline hover:text-navy-600">Terms of Use</a>.
+      </p>
+
+      <p>
+        Questions? <a href="/contact/" class="text-navy-900 underline hover:text-navy-600">Contact us</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
