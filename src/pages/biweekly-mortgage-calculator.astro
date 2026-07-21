@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import BiweeklyMortgageCalculator from '../components/BiweeklyMortgageCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Biweekly Mortgage Calculator — Years & Interest Saved | Payoff Logic';
 const description =
@@ -87,6 +88,11 @@ const schema = calcSchema({
           and compare.
         </p>
       </section>
+
+      <HowItWorks formulas={[{"label":"Per-period math","math":"period rate = annual rate ÷ 26 · payment = half the monthly payment"},{"label":"Why it works","math":"26 half-payments a year = 13 full monthly payments instead of 12"}]} vars={[]}>
+        <p class="mt-3">A true biweekly plan is modeled at biweekly granularity, not approximated monthly:</p>
+        <p class="mt-3" slot="after">That extra annual payment is pure principal, which is why the schedule shortens by years rather than months. The comparison amortizes both schedules — monthly and biweekly — with the same engine and reports the measured difference.</p>
+      </HowItWorks>
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

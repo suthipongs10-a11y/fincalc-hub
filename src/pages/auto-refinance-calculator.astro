@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import AutoRefiCalculator from '../components/AutoRefiCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Auto Refinance Calculator — Should You Refi Your Car Loan? | Payoff Logic';
 const description =
@@ -64,6 +65,11 @@ const schema = calcSchema({
           rate cut plus same payment equals a much earlier title in hand.
         </p>
       </section>
+      <HowItWorks formulas={[{"label":"Monthly savings","math":"savings = current payment − M(remaining balance, new rate, new term)"},{"label":"Lifetime result","math":"lifetime = remaining cost of current loan − (new loan total + fees)"}]} vars={[]}>
+        <p class="mt-3">The comparison amortizes your remaining loan against the new offer:</p>
+        <p class="mt-3" slot="after">Watch the term reset: stretching the remaining months lowers the payment while often raising the total. The lifetime line is the honest number — the payment line is the marketing one.</p>
+      </HowItWorks>
+
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
         <div class="mt-4 space-y-5">

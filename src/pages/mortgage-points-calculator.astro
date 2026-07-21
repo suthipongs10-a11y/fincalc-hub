@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import PointsCalculator from '../components/PointsCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Mortgage Points Calculator — Are Discount Points Worth It? | Payoff Logic';
 const description =
@@ -63,6 +64,11 @@ const schema = calcSchema({
           before writing the check.
         </p>
       </section>
+      <HowItWorks formulas={[{"label":"Cost of points","math":"cost = loan × points × 1%"},{"label":"Break-even","math":"break-even months = cost ÷ (M at base rate − M at reduced rate)"}]} vars={[]}>
+        <p class="mt-3">Discount points are a bet on how long you&rsquo;ll keep the loan — and the tool prices the bet:</p>
+        <p class="mt-3" slot="after">Both payments come from the standard amortization formula on the tested engine. Hold the loan past break-even and points profit; refinance or sell before it and they&rsquo;re a loss — our <a href="/guides/mortgage-points-worth-it/" class="font-medium text-navy-900 underline hover:text-navy-600">points guide</a> pairs this with your realistic time in the home.</p>
+      </HowItWorks>
+
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
         <div class="mt-4 space-y-5">

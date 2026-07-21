@@ -1,0 +1,44 @@
+---
+/**
+ * "How this calculator works" section for tool pages: prose (default slot),
+ * formula boxes, a variable legend, and optional follow-up prose ("after"
+ * slot). Formulas are plain-text with Unicode superscripts — no math library,
+ * per the keep-JS-minimal rule.
+ */
+interface Formula {
+  label: string;
+  math: string;
+}
+interface FVar {
+  sym: string;
+  desc: string;
+}
+const { formulas = [], vars = [] } = Astro.props as { formulas: Formula[]; vars: FVar[] };
+---
+
+<section>
+  <h2 class="text-xl font-bold text-navy-900">How this calculator works</h2>
+  <slot />
+  <div class="mt-4 space-y-3">
+    {
+      formulas.map((f) => (
+        <div class="overflow-x-auto rounded-lg border border-navy-100 bg-navy-50 px-4 py-3">
+          <p class="text-xs font-semibold tracking-wide text-navy-600 uppercase">{f.label}</p>
+          <p class="mt-1 font-mono text-sm whitespace-nowrap text-navy-900">{f.math}</p>
+        </div>
+      ))
+    }
+  </div>
+  {
+    vars.length ? (
+      <ul class="mt-3 space-y-1 text-sm">
+        {vars.map((v) => (
+          <li>
+            <span class="font-mono font-semibold text-navy-900">{v.sym}</span> — {v.desc}
+          </li>
+        ))}
+      </ul>
+    ) : null
+  }
+  <slot name="after" />
+</section>

@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import DebtSnowballCalculator from '../components/DebtSnowballCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Debt Snowball Calculator — Snowball vs. Avalanche Side by Side | Payoff Logic';
 const description =
@@ -100,6 +101,11 @@ const schema = calcSchema({
           <li><strong>Re-run after each payoff</strong> (or share the link with yourself — your inputs are saved in the URL).</li>
         </ul>
       </section>
+
+      <HowItWorks formulas={[{"label":"Each debt, every month","math":"interest = balance × APR ÷ 12, then payments apply"},{"label":"When a debt reaches $0","math":"its entire payment rolls into the next target debt (the snowball)"}]} vars={[]}>
+        <p class="mt-3">With several debts and a rollover rule there is no single formula — so the tool runs your plan as a month-by-month simulation, the same way the payments would actually happen:</p>
+        <p class="mt-3" slot="after">The engine runs your identical inputs twice — smallest-balance-first (snowball) and highest-APR-first (avalanche) — so the comparison you see is measured from real schedules, not asserted. Both runs are covered by our automated tests.</p>
+      </HowItWorks>
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

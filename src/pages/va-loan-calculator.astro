@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import VaCalculator from '../components/VaCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'VA Loan Calculator with Funding Fee — Zero Down, No PMI | Payoff Logic';
 const description =
@@ -91,6 +92,11 @@ const schema = calcSchema({
           <a href="/mortgage-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">full mortgage calculator</a>.
         </p>
       </section>
+
+      <HowItWorks formulas={[{"label":"Funding fee","math":"fee = loan amount × tier % · financed: P = loan + fee"},{"label":"Monthly payment","math":"M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)"}]} vars={[]}>
+        <p class="mt-3">VA loans carry no monthly mortgage insurance — the program&rsquo;s cost concentrates in one financed fee:</p>
+        <p class="mt-3" slot="after">Tiers per the VA.gov schedule: first use 2.15% (under 5% down), 1.50% (5–9.99% down), 1.25% (10%+ down); subsequent use 3.30% under 5% down; veterans receiving disability compensation are exempt. The calculator applies these rules automatically — sources cited on our <a href="/sources/" class="font-medium text-navy-900 underline hover:text-navy-600">Data Sources</a> page.</p>
+      </HowItWorks>
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

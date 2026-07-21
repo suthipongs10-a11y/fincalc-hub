@@ -119,6 +119,19 @@ const related = TOOLS.filter(
           on, most of each payment is interest; over time the split flips toward principal.
           That shift is what the chart and the year-by-year schedule above make visible.
         </p>
+        <div class="mt-4 overflow-x-auto rounded-lg border border-navy-100 bg-navy-50 px-4 py-3">
+          <p class="text-xs font-semibold tracking-wide text-navy-600 uppercase">Monthly principal &amp; interest</p>
+          <p class="mt-1 font-mono text-sm whitespace-nowrap text-navy-900">M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)</p>
+        </div>
+        <div class="mt-3 overflow-x-auto rounded-lg border border-navy-100 bg-navy-50 px-4 py-3">
+          <p class="text-xs font-semibold tracking-wide text-navy-600 uppercase">Full monthly payment</p>
+          <p class="mt-1 font-mono text-sm whitespace-nowrap text-navy-900">PITI = M + property tax ÷ 12 + insurance ÷ 12 + PMI + HOA</p>
+        </div>
+        <ul class="mt-3 space-y-1 text-sm">
+          <li><span class="font-mono font-semibold text-navy-900">P</span> — loan amount (home price − down payment)</li>
+          <li><span class="font-mono font-semibold text-navy-900">r</span> — monthly rate (annual rate ÷ 12, as a decimal)</li>
+          <li><span class="font-mono font-semibold text-navy-900">n</span> — number of payments (term in years × 12)</li>
+        </ul>
         <p class="mt-3">
           But principal and interest is only part of what you will actually pay each month.
           Lenders collect property taxes and homeowners insurance into escrow, add PMI when

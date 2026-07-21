@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import CarAffordabilityCalculator from '../components/CarAffordabilityCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'How Much Car Can I Afford? — Car Affordability Calculator | Payoff Logic';
 const description =
@@ -62,6 +63,11 @@ const schema = calcSchema({
           for the term-length math.
         </p>
       </section>
+      <HowItWorks formulas={[{"label":"Loan your budget supports","math":"P = M × ((1 + r)ⁿ − 1) ÷ (r(1 + r)ⁿ)"},{"label":"Price ceiling","math":"price = P + down + trade-in, net of your state’s tax and fees"}]} vars={[{"sym":"M","desc":"your monthly payment budget"},{"sym":"r","desc":"monthly rate — APR ÷ 12"},{"sym":"n","desc":"loan term in months"}]}>
+        <p class="mt-3">Instead of price to payment, this tool solves the inverse problem — payment budget to price ceiling:</p>
+        <p class="mt-3" slot="after">Because sales tax scales with the very price being solved for, the engine bisection-searches the price until the resulting payment lands exactly on your budget — your state&rsquo;s tax rule (trade-in credit or not) included.</p>
+      </HowItWorks>
+
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
         <div class="mt-4 space-y-5">

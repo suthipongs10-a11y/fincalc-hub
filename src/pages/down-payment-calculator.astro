@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import DownPaymentCalculator from '../components/DownPaymentCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Down Payment Calculator — 3.5% to 20% Scenarios Compared | Payoff Logic';
 const description =
@@ -63,6 +64,11 @@ const schema = calcSchema({
           <a href="/va-loan-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">VA calculator</a>.
         </p>
       </section>
+      <HowItWorks formulas={[{"label":"The basics","math":"down = price × percent · loan (P) = price − down"},{"label":"Payment at each tier","math":"M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)"}]} vars={[]}>
+        <p class="mt-3">The mechanics are simple; the insight is in comparing the tiers side by side:</p>
+        <p class="mt-3" slot="after">Below 20% down, conventional loans add PMI while your loan-to-value stays above the cancellation thresholds — often the biggest real difference between tiers, and the calculator shows it explicitly rather than hiding it in fine print.</p>
+      </HowItWorks>
+
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
         <div class="mt-4 space-y-5">

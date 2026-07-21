@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import GenericLoanCalculator from '../components/GenericLoanCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Student Loan Payoff Calculator — Extra Payments & Time Saved | Payoff Logic';
 const description =
@@ -61,6 +62,11 @@ const schema = calcSchema({
           extras post as principal-only.
         </p>
       </section>
+      <HowItWorks formulas={[{"label":"Monthly payment","math":"M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)"},{"label":"Extra payments","math":"every extra dollar cuts the balance, so next month’s interest = smaller balance × r"}]} vars={[{"sym":"P","desc":"amount borrowed (principal)"},{"sym":"r","desc":"monthly interest rate — annual rate ÷ 12, as a decimal"},{"sym":"n","desc":"number of monthly payments (years × 12)"},{"sym":"M","desc":"the fixed monthly payment"}]}>
+        <p class="mt-3">Standard repayment amortizes exactly like any fixed loan, and extra payments follow the same principal math:</p>
+        <p class="mt-3" slot="after">This models fixed-payment plans — standard federal 10-year and most private loans. Income-driven federal plans follow different rules this calculator doesn&rsquo;t model; for those it&rsquo;s still useful as the cost of a fixed payoff plan to compare against.</p>
+      </HowItWorks>
+
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
         <div class="mt-4 space-y-5">

@@ -225,6 +225,16 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-21 — "How this calculator works" sections on all 23 tool pages
+  (owner request): new HowItWorks.astro component (formula boxes + variable
+  legend + prose); every page now shows the actual formula its engine uses
+  (PMT, closed-form payoff, FHA/VA rules, 28/36 bisection, simulations
+  described as simulations). Content written from the real engine code —
+  rentVsBuy described per code (no investment-offset on rent side).
+  Flagship mortgage page got formula boxes inside its existing explainer
+  section. Fixed 3 double-escaped entities (props escape, slots don't).
+  Guides audit: 33 published (owner asked 10–15 → already exceeded).
+  All 7 suites pass, 0 broken links, Lighthouse 100×4 on modified page.
 - 2026-07-19 — Trust/transparency pages added (owner request, low-risk work
   during AdSense review): /editorial-policy/ (methodology + verification +
   independence + correction policy), /sources/ (every prefilled dataset

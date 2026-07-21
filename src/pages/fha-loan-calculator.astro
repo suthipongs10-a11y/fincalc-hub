@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import FhaCalculator from '../components/FhaCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'FHA Loan Calculator with MIP (Upfront + Annual) | Payoff Logic';
 const description =
@@ -92,6 +93,11 @@ const schema = calcSchema({
           <a href="/refinance-calculator/" class="font-medium text-navy-900 underline hover:text-navy-600">refinance calculator</a>.
         </p>
       </section>
+
+      <HowItWorks formulas={[{"label":"Upfront MIP (usually financed)","math":"UFMIP = base loan × 1.75% · P = base loan + UFMIP"},{"label":"Monthly MIP","math":"MIP = current balance × annual MIP rate ÷ 12"}]} vars={[]}>
+        <p class="mt-3">FHA math is standard amortization plus HUD&rsquo;s mortgage-insurance rules (Mortgagee Letter 2023-05):</p>
+        <p class="mt-3" slot="after">The annual MIP rate depends on down payment and term (0.55% under 5% down, 0.50% at 5%+ on 30-year loans), recalculated on the declining balance; it runs 11 years with 10%+ down, otherwise the life of the loan. Every parameter is cited on our <a href="/sources/" class="font-medium text-navy-900 underline hover:text-navy-600">Data Sources</a> page.</p>
+      </HowItWorks>
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

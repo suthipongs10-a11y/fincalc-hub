@@ -5,6 +5,7 @@ import Illustration from '../components/Illustration.astro';
 import RefinanceCalculator from '../components/RefinanceCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
+import HowItWorks from '../components/HowItWorks.astro';
 
 const title = 'Refinance Calculator — Break-Even Month & Lifetime Savings | Payoff Logic';
 const description =
@@ -94,6 +95,11 @@ const schema = calcSchema({
           payment close to current while cutting lifetime interest dramatically.
         </p>
       </section>
+
+      <HowItWorks formulas={[{"label":"Break-even","math":"break-even months = closing costs ÷ monthly payment savings"},{"label":"Lifetime comparison","math":"lifetime result = remaining cost of current loan − (new loan total + closing costs)"}]} vars={[]}>
+        <p class="mt-3">Two computed numbers decide most refinances:</p>
+        <p class="mt-3" slot="after">Both payments come from the standard amortization formula (M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)) on the same tested engine. The decision rule: hold the loan past the break-even month and the refinance pays for itself; the lifetime line shows what a term reset really costs.</p>
+      </HowItWorks>
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>
