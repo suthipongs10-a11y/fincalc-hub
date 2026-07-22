@@ -8,8 +8,7 @@ export const SITE = {
   tagline: 'Free financial calculators you can actually trust',
   url: 'https://payofflogic.com',
   contactEmail: 'contact@payofflogic.com',
-  /** Placeholder author entity until owner picks a real/pen name. */
-  author: 'Payoff Logic Editorial Team',
+  author: 'Thanakorn Praisee',
   launchedYear: 2026,
 } as const;
 

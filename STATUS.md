@@ -208,8 +208,10 @@
       clusters; avoid .io for YMYL trust.
       After registering: update `site` in astro.config.mjs, SITE.url +
       SITE.name in src/config.ts, rerun build.
-- [ ] Author entity name for About page (real name or pen name).
-      Placeholder in use: "FinCalc Hub Editorial Team" (`SITE.author` in src/config.ts).
+- [x] Author entity — DECIDED 2026-07-22: **Thanakorn Praisee**
+      (`SITE.author`). About page bio (honest: independent developer +
+      personal-finance writer, explicitly NOT a licensed advisor), Person
+      schema on About + all guide Article schemas (was Organization).
 - [x] Public contact email — DECIDED 2026-07-11: **contact@payofflogic.com**
       (owner set up routing; `SITE.contactEmail` swapped in src/config.ts,
       shows on /contact/).
@@ -225,6 +227,13 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-22 — AdSense first application REJECTED: "low value content"
+  (classic first-pass rejection for young tool sites; ads.txt went green
+  as predicted). Plan: do NOT resubmit immediately — reapply ~Aug 11–15
+  after indexed pages reach 60–80 (currently ~30, GSC 1.28K impressions,
+  avg position 73.3). Author entity shipped same day (see decisions).
+  Owner side: Request Indexing top 10 URLs, Bing Webmaster, organic
+  sharing for first traffic; Media.net as parallel backup.
 - 2026-07-21 — "How this calculator works" sections on all 23 tool pages
   (owner request): new HowItWorks.astro component (formula boxes + variable
   legend + prose); every page now shows the actual formula its engine uses

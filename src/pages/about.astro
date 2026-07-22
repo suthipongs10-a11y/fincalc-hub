@@ -14,6 +14,15 @@ const schema = [
     url: `${SITE.url}/about/`,
     description,
   },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.author,
+    url: `${SITE.url}/about/`,
+    jobTitle: 'Founder & Editor',
+    worksFor: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    knowsAbout: ['mortgage amortization', 'loan payoff math', 'debt repayment strategies', 'personal finance calculators'],
+  },
 ];
 ---
 
@@ -30,11 +39,25 @@ const schema = [
         comparisons — with no account, no download, and no sales pitch.
       </p>
 
-      <h2 class="text-xl font-bold text-navy-900">Who we are</h2>
+      <h2 class="text-xl font-bold text-navy-900">Who's behind this site</h2>
       <p>
-        {SITE.name} is built and maintained by the {SITE.author}. We are
-        independent: we are not a lender, broker, or financial advisory firm,
-        and no bank or lender pays to influence our results or content.
+        {SITE.name} is built, tested, and edited by <strong>{SITE.author}</strong>,
+        an independent developer and personal-finance writer. Thanakorn builds
+        every calculator on this site from the underlying loan math — amortization,
+        payoff formulas, and government-program rules — and verifies each one
+        against published reference examples before it ships (the process is
+        documented in our
+        <a href="/editorial-policy/" class="text-navy-900 underline hover:text-navy-600">editorial policy</a>).
+        The guides are written the same way: every figure in them is computed by
+        the same tested engines that power the tools, not copied from other sites.
+      </p>
+      <p>
+        We are independent: {SITE.name} is not a lender, broker, or financial
+        advisory firm, and no bank or lender pays to influence our results or
+        content. Thanakorn is not a licensed financial advisor — which is exactly
+        why this site sticks to what can be verified: the math. What a loan
+        costs, when PMI cancels, how a payoff date moves — these have exact
+        answers, and the site's job is to show them transparently.
       </p>
 
       <h2 class="text-xl font-bold text-navy-900">How we keep the math honest</h2>
