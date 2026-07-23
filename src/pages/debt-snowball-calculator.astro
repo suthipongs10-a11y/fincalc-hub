@@ -6,6 +6,7 @@ import DebtSnowballCalculator from '../components/DebtSnowballCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Debt Snowball Calculator — Snowball vs. Avalanche Side by Side | Payoff Logic';
 const description =
@@ -106,6 +107,11 @@ const schema = calcSchema({
         <p class="mt-3">With several debts and a rollover rule there is no single formula — so the tool runs your plan as a month-by-month simulation, the same way the payments would actually happen:</p>
         <p class="mt-3" slot="after">The engine runs your identical inputs twice — smallest-balance-first (snowball) and highest-APR-first (avalanche) — so the comparison you see is measured from real schedules, not asserted. Both runs are covered by our automated tests.</p>
       </HowItWorks>
+
+      <WorkedExample setup="Three debts — a $2,000 medical bill at 0%, a $6,000 credit card at 24.99%, and a $9,000 car loan at 7% — with $300/month extra on top of minimums. Here the two methods genuinely differ, because the smallest debt is not the most expensive one." rows={[{"label":"Snowball payoff time","value":"25 months"},{"label":"Snowball total interest","value":"$2,450"},{"label":"Avalanche payoff time","value":"24 months"},{"label":"Avalanche total interest","value":"$1,869"},{"label":"Avalanche saves","value":"$581","strong":true}]}>
+        <p class="mt-3">Snowball attacks the $2,000 medical bill first (cleared in month 6) for the fast psychological win; avalanche attacks the 24.99% credit card first to kill the most expensive interest. Here avalanche saves <strong>$581</strong> and finishes a month sooner — the mathematically optimal path. The right choice is whichever you will actually stick with; the gap is real but small, and a plan you follow beats a better plan you abandon. See <a href="/guides/snowball-vs-avalanche/" class="font-medium text-navy-900 underline hover:text-navy-600">the full comparison</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

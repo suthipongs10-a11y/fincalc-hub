@@ -6,6 +6,7 @@ import ExtraPaymentMortgageCalculator from '../components/ExtraPaymentMortgageCa
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Mortgage Calculator with Extra Payments — Monthly & One-Time | Payoff Logic';
 const description =
@@ -97,6 +98,11 @@ const schema = calcSchema({
         <p class="mt-3">Interest is charged on the balance every month — extra payments work by shrinking that base earlier than scheduled:</p>
         <p class="mt-3" slot="after">The engine amortizes the loan twice — with and without your extra amount — and reports the measured difference in months and interest. Results are cross-checked in our automated tests against the closed-form payoff formula, so &ldquo;months saved&rdquo; is exact, not estimated.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $320,000 loan at 6.5% over 30 years, with and without an extra $200 applied to principal every month." rows={[{"label":"Regular P&I payment","value":"$2,022.62"},{"label":"Interest, no extra","value":"$408,142"},{"label":"Interest with +$200/mo","value":"$302,714"},{"label":"Interest saved","value":"$105,429","strong":true},{"label":"Time saved","value":"6 yr 7 mo (79 months)"}]}>
+        <p class="mt-3">An extra <strong>$200 a month</strong> — about $2,400 a year — erases $105,429 in interest and retires the loan nearly seven years early. It works because every extra dollar goes entirely to principal, so it never accrues another month of interest. The catch: tell your servicer to apply extra to principal, not to prepay next month’s bill. See <a href="/guides/how-extra-payments-work/" class="font-medium text-navy-900 underline hover:text-navy-600">how extra payments really work</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

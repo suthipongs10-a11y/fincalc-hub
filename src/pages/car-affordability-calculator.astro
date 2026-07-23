@@ -6,6 +6,7 @@ import CarAffordabilityCalculator from '../components/CarAffordabilityCalculator
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'How Much Car Can I Afford? — Car Affordability Calculator | Payoff Logic';
 const description =
@@ -67,6 +68,11 @@ const schema = calcSchema({
         <p class="mt-3">Instead of price to payment, this tool solves the inverse problem — payment budget to price ceiling:</p>
         <p class="mt-3" slot="after">Because sales tax scales with the very price being solved for, the engine bisection-searches the price until the resulting payment lands exactly on your budget — your state&rsquo;s tax rule (trade-in credit or not) included.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $500/month payment budget with $3,000 down and no trade-in, at 7% in a 6% sales-tax state, comparing a 60-month and a 48-month loan." rows={[{"label":"Max price at 60 months","value":"$28,251","strong":true},{"label":"Loan at 60 months","value":"$25,251"},{"label":"Max price at 48 months","value":"$23,880"},{"label":"Cost of the shorter term","value":"~$4,400 less car"}]}>
+        <p class="mt-3">The same $500 budget buys a <strong>$28,251 car at 60 months</strong> but only $23,880 at 48 months — the longer term stretches your dollar but keeps you paying (and at risk of going underwater) longer. Budget-first beats payment-first: solving for the price your payment supports, tax included, keeps showroom gravity from pulling you into a bigger loan. Pair it with the 20/4/10 rule for a sanity check.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

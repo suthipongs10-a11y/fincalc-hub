@@ -6,6 +6,7 @@ import AffordabilityCalculator from '../components/AffordabilityCalculator.astro
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'How Much House Can I Afford? — Home Affordability Calculator | Payoff Logic';
 const description =
@@ -112,6 +113,11 @@ const schema = calcSchema({
         <p class="mt-3">The tool applies the 28/36 rule most lenders use, then works backwards to the biggest price that fits:</p>
         <p class="mt-3" slot="after">Your binding cap is the lower of the two. Because property tax and insurance scale with the home&rsquo;s price, the maximum price can&rsquo;t be solved in one step — the engine bisection-searches the price until the full PITI payment lands exactly on your cap, and the result is verified in our tests against hand-computed cases.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $120,000 household income with $500/month in existing debt payments, $60,000 saved for a down payment, at 6.5% over 30 years — using the 28/36 rule." rows={[{"label":"Front-end cap (28% of income)","value":"$2,800"},{"label":"Back-end cap (36% minus debts)","value":"$3,100"},{"label":"Binding limit","value":"$2,800 (front-end)","strong":true},{"label":"Max home price","value":"$399,038"},{"label":"That payment breaks down to","value":"PI $2,143 + tax $366 + ins $150 + PMI $141"}]}>
+        <p class="mt-3">Two caps apply and the <strong>lower one wins</strong> — here the 28% housing cap ($2,800) binds before the 36% total-debt cap ($3,100). Working backward from $2,800 of full PITI, the maximum price is about $399,038. Notice PMI ($141) is in the mix because $60,000 is under 20% down on that price; a larger down payment removes it and lifts the ceiling. This is a budget answer, not a loan pre-approval — lenders may approve more than is comfortable.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

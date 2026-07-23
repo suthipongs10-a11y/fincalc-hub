@@ -6,6 +6,7 @@ import PmiCalculator from '../components/PmiCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'PMI Calculator — Monthly Cost & Exact Removal Date | Payoff Logic';
 const description =
@@ -66,6 +67,11 @@ const schema = calcSchema({
         <p class="mt-3">Monthly PMI is straightforward; the valuable output is the exact cancellation month, which requires the full schedule:</p>
         <p class="mt-3" slot="after">The 78% automatic date and the 80% request date (Homeowners Protection Act) come from walking the amortization schedule. Add extra payments and the engine re-amortizes to show how much sooner both dates arrive.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $400,000 home with $30,000 down (7.5%), a $370,000 loan at 6.5% over 30 years, with PMI at 0.5%/year." rows={[{"label":"Loan-to-value at start","value":"92.5%"},{"label":"Monthly PMI","value":"$154.17"},{"label":"PMI auto-cancels at payment","value":"124 (about year 11)","strong":true},{"label":"Total PMI paid if you wait","value":"$18,962"}]}>
+        <p class="mt-3">PMI costs <strong>$154 a month</strong> here and, left alone, auto-cancels around <strong>payment 124</strong> when the balance reaches 78% of the original value — after nearly $19,000 paid. You can request cancellation earlier at 80% LTV, or force it years sooner with extra principal or a new appraisal after appreciation. PMI is not money wasted, though: it is the price of buying without a full 20%, which in a rising market can beat waiting. See <a href="/guides/pmi-explained/" class="font-medium text-navy-900 underline hover:text-navy-600">PMI explained</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

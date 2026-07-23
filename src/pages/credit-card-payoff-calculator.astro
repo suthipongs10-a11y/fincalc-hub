@@ -6,6 +6,7 @@ import CreditCardPayoffCalculator from '../components/CreditCardPayoffCalculator
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Credit Card Payoff Calculator — Time or Payment, Your Choice | Payoff Logic';
 const description =
@@ -66,6 +67,11 @@ const schema = calcSchema({
         <p class="mt-3">The model compounds monthly at APR ÷ 12 and answers the question in either direction — payment to time, or target date to required payment:</p>
         <p class="mt-3" slot="after">Card issuers actually accrue daily, which lands within a few dollars of monthly compounding on typical balances — the timeline is what matters. If your payment doesn&rsquo;t beat the monthly interest, the tool says so plainly instead of showing a date.</p>
       </HowItWorks>
+
+      <WorkedExample setup="An $8,000 card balance at 22.99% APR, paying a fixed $250/month versus a fixed $350/month." rows={[{"label":"First month’s interest alone","value":"$153.27"},{"label":"Payoff time at $250/mo","value":"4 yr 3 mo (51 months)"},{"label":"Total interest at $250/mo","value":"$4,509"},{"label":"Payoff time at $350/mo","value":"31 months"},{"label":"Interest saved at $350/mo","value":"$1,883","strong":true}]}>
+        <p class="mt-3">At $250/month, <strong>$153 of the very first payment is pure interest</strong> — only $97 touches the balance, which is why payoff drags to over four years and costs $4,509. Raising the fixed payment to $350 cuts the timeline by 20 months and saves $1,883. The key is holding the payment <em>fixed</em>: card minimums shrink as the balance falls, which is the trap. See <a href="/guides/minimum-payments-trap/" class="font-medium text-navy-900 underline hover:text-navy-600">why minimum payments keep you in debt</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

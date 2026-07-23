@@ -6,6 +6,7 @@ import VaCalculator from '../components/VaCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'VA Loan Calculator with Funding Fee — Zero Down, No PMI | Payoff Logic';
 const description =
@@ -97,6 +98,11 @@ const schema = calcSchema({
         <p class="mt-3">VA loans carry no monthly mortgage insurance — the program&rsquo;s cost concentrates in one financed fee:</p>
         <p class="mt-3" slot="after">Tiers per the VA.gov schedule: first use 2.15% (under 5% down), 1.50% (5–9.99% down), 1.25% (10%+ down); subsequent use 3.30% under 5% down; veterans receiving disability compensation are exempt. The calculator applies these rules automatically — sources cited on our <a href="/sources/" class="font-medium text-navy-900 underline hover:text-navy-600">Data Sources</a> page.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $350,000 home with $0 down, first-time VA use, funding fee financed, at 6.5% over 30 years." rows={[{"label":"Base loan","value":"$350,000"},{"label":"Funding fee (2.15%, first use)","value":"$7,525"},{"label":"Total loan","value":"$357,525"},{"label":"Monthly payment","value":"$2,259.80","strong":true},{"label":"No monthly mortgage insurance","value":"$0"}]}>
+        <p class="mt-3">The VA loan needs <strong>no down payment and charges no monthly mortgage insurance</strong> — its cost is the one-time 2.15% funding fee ($7,525), financed into the loan here. Veterans receiving disability compensation are exempt from the fee entirely. The fee rises to 3.3% on subsequent uses with no down payment, so putting even 5% down (which cuts it to 1.5%) can pay off. See <a href="/guides/va-funding-fee-explained/" class="font-medium text-navy-900 underline hover:text-navy-600">the VA funding fee explained</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

@@ -6,6 +6,7 @@ import AutoRefiCalculator from '../components/AutoRefiCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Auto Refinance Calculator — Should You Refi Your Car Loan? | Payoff Logic';
 const description =
@@ -69,6 +70,11 @@ const schema = calcSchema({
         <p class="mt-3">The comparison amortizes your remaining loan against the new offer:</p>
         <p class="mt-3" slot="after">Watch the term reset: stretching the remaining months lowers the payment while often raising the total. The lifetime line is the honest number — the payment line is the marketing one.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $28,000 auto balance with 48 months left, refinanced from a dealer-marked-up 9% down to 6.5% over the same 48 months." rows={[{"label":"Current payment (9%)","value":"$696.78"},{"label":"New payment (6.5%)","value":"$664.02"},{"label":"Monthly savings","value":"$32.76"},{"label":"Total interest saved","value":"$1,573","strong":true}]}>
+        <p class="mt-3">Keeping the same 48-month term and only cutting the rate saves <strong>$1,573</strong> in interest with no downside — the honest way to refinance a car. The trap to avoid is <em>stretching</em> the term to chase a lower payment: that can raise total interest even at a better rate, and deepen negative equity. Match or shorten the remaining term, and auto refinancing is close to free money for borrowers who were rate-marked-up at the dealer.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

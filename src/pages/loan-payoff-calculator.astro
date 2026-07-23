@@ -6,6 +6,7 @@ import LoanPayoffCalculator from '../components/LoanPayoffCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Loan Payoff Calculator — Time & Interest Saved with Extra Payments | Payoff Logic';
 const description =
@@ -110,6 +111,11 @@ const schema = calcSchema({
         <p class="mt-3">Enter a balance, rate, and monthly payment, and the payoff month follows directly from the amortization identity — the same relationship every lender&rsquo;s schedule obeys:</p>
         <p class="mt-3" slot="after">If M is not larger than the first month&rsquo;s interest (balance × r), the balance can never fall — the calculator flags that plainly instead of showing a misleading date. Extra payments go straight to principal in the schedule, and the totals are verified in our automated tests against this closed-form formula.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $20,000 loan at 6.5% APR with a fixed $400 monthly payment, then the same loan with $450/month." rows={[{"label":"Payoff time at $400/mo","value":"4 yr 11 mo (59 months)"},{"label":"Total interest at $400/mo","value":"$3,388"},{"label":"Payoff time at $450/mo","value":"51 months"},{"label":"Total interest at $450/mo","value":"$2,942"},{"label":"Interest saved by +$50/mo","value":"$446","strong":true},{"label":"Months saved","value":"8"}]}>
+        <p class="mt-3">Adding just <strong>$50 a month</strong> — every dollar of it going straight to principal — pays the loan off eight months sooner and saves $446 in interest. That is the leverage of extra payments: the earlier a dollar lands, the more future interest it erases. The bigger the gap between your payment and the monthly interest, the faster the balance falls.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

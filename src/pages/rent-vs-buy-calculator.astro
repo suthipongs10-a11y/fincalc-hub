@@ -6,6 +6,7 @@ import RentVsBuyCalculator from '../components/RentVsBuyCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Rent vs. Buy Calculator — Cumulative Cost with a Crossover Year | Payoff Logic';
 const description =
@@ -70,6 +71,11 @@ const schema = calcSchema({
         <p class="mt-3">The comparison totals the real cumulative cost of each path over your horizon — not just rent versus payment:</p>
         <p class="mt-3" slot="after">Equity comes from the real amortization schedule plus appreciation at your assumed rate, minus selling costs — so owning&rsquo;s net cost can even go negative once equity outruns outlays. The crossover reported is the first year owning&rsquo;s net cost drops below renting&rsquo;s.</p>
       </HowItWorks>
+
+      <WorkedExample setup="Renting at $2,200/month (rising 3%/year) versus buying a $400,000 home with $80,000 down at 6.5%, with 3% appreciation, over a 10-year horizon." rows={[{"label":"Mortgage P&I","value":"$2,022.62"},{"label":"5-year net cost — rent","value":"$140,161"},{"label":"5-year net cost — buy","value":"$132,662"},{"label":"10-year net cost — rent","value":"$302,646"},{"label":"10-year net cost — buy","value":"$208,061"},{"label":"Buying pulls ahead in year","value":"5","strong":true}]}>
+        <p class="mt-3">Buying looks more expensive up front (down payment plus closing costs), so in the early years renting can win. Here the paths cross in <strong>year 5</strong>, and by year 10 buying’s net cost is nearly $95,000 lower — because the mortgage builds equity while rent buys nothing, and appreciation compounds. The timeline dominates everything: sell too soon and transaction costs erase the advantage. Change appreciation or rent-growth and watch the crossover move.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

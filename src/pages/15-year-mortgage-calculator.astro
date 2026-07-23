@@ -6,6 +6,7 @@ import FifteenYearCalculator from '../components/FifteenYearCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = '15-Year Mortgage Calculator — 15 vs. 30 Year Comparison | Payoff Logic';
 const description =
@@ -92,6 +93,11 @@ const schema = calcSchema({
         <p class="mt-3">Both terms run the identical amortization formula — only the number of payments (and your quoted rate) changes:</p>
         <p class="mt-3" slot="after">Totals, five-year equity, and lifetime interest are read from the two complete schedules, not approximations. Enter a real quote for each term — 15-year money usually prices meaningfully below 30-year.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $320,000 loan compared two ways: 30 years at 6.5% versus 15 years at 5.75% (shorter terms usually price lower)." rows={[{"label":"30-year payment","value":"$2,022.62"},{"label":"15-year payment","value":"$2,657.31"},{"label":"Payment difference","value":"+$634.69/mo"},{"label":"30-year total interest","value":"$408,142"},{"label":"15-year total interest","value":"$158,316"},{"label":"Interest saved with 15-year","value":"$249,826","strong":true}]}>
+        <p class="mt-3">The 15-year payment is $635 higher each month, but it saves <strong>$249,826</strong> in interest and owns the home free and clear in half the time. The trade-off is flexibility: the 30-year keeps your required payment low, and you can always pay it like a 15-year in good months while retaining the option to pay less in tight ones. See <a href="/guides/15-vs-30-year-mortgage/" class="font-medium text-navy-900 underline hover:text-navy-600">the real 15-vs-30 math</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

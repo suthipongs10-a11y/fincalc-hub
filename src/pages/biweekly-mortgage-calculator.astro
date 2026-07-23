@@ -6,6 +6,7 @@ import BiweeklyMortgageCalculator from '../components/BiweeklyMortgageCalculator
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Biweekly Mortgage Calculator — Years & Interest Saved | Payoff Logic';
 const description =
@@ -93,6 +94,11 @@ const schema = calcSchema({
         <p class="mt-3">A true biweekly plan is modeled at biweekly granularity, not approximated monthly:</p>
         <p class="mt-3" slot="after">That extra annual payment is pure principal, which is why the schedule shortens by years rather than months. The comparison amortizes both schedules — monthly and biweekly — with the same engine and reports the measured difference.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $320,000 loan at 6.5% over 30 years, paid the normal monthly way versus a true biweekly plan (half the payment every two weeks)." rows={[{"label":"Monthly payment","value":"$2,022.62"},{"label":"Biweekly payment (half)","value":"$1,011.31"},{"label":"Interest, monthly plan","value":"$408,142"},{"label":"Interest, biweekly plan","value":"$314,146"},{"label":"Interest saved","value":"$93,997","strong":true},{"label":"Paid off in","value":"~24.2 years (70 months early)"}]}>
+        <p class="mt-3">26 half-payments a year equal <strong>13 full monthly payments</strong> instead of 12 — that one extra payment, all principal, saves nearly $94,000 and shaves almost six years off. The same result comes from simply adding one-twelfth (about $169) to each monthly payment. Confirm your servicer applies biweekly payments immediately rather than holding them, or the benefit disappears.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

@@ -1,0 +1,238 @@
+{
+  "mortgage-calculator": {
+    "loan": "$320,000",
+    "pi": "$2,022.62",
+    "tax": "$366.67",
+    "ins": "$150.00",
+    "piti": "$2,539.28",
+    "totalInterest": "$408,142"
+  },
+  "loan-payoff-calculator": {
+    "months": 59,
+    "span": "4 yr 11 mo (59 months)",
+    "interest": "$3,388",
+    "monthsExtra": 51,
+    "interestExtra": "$2,942",
+    "intSaved": "$446",
+    "moSaved": 8
+  },
+  "debt-snowball-calculator": {
+    "snowMonths": 25,
+    "snowInt": "$2,450",
+    "avaMonths": 24,
+    "avaInt": "$1,869",
+    "intDiff": "$581",
+    "snowFirst": "Medical bill",
+    "snowFirstMonth": 6,
+    "avaFirst": "Credit card"
+  },
+  "refinance-calculator": {
+    "curPay": "$2,138.60",
+    "newPay": "$1,847.15",
+    "moSave": "$291.45",
+    "be": 16,
+    "life": "$49,096"
+  },
+  "auto-loan-calculator": {
+    "taxable": "$27,000",
+    "tax": "$1,620",
+    "loan": "$24,220",
+    "pay": "$479.59",
+    "interest": "$4,555"
+  },
+  "house-affordability-calculator": {
+    "front": "$2,800",
+    "back": "$3,100",
+    "budget": "$2,800",
+    "binding": "front",
+    "maxPrice": "$399,038",
+    "pi": "$2,143",
+    "tax": "$366",
+    "ins": "$150",
+    "pmi": "$141"
+  },
+  "extra-payment-mortgage-calculator": {
+    "loan": "$320,000",
+    "pi": "$2,022.62",
+    "baseInt": "$408,142",
+    "extraInt": "$302,714",
+    "intSaved": "$105,429",
+    "moSaved": 79,
+    "spanSaved": "6 yr 7 mo (79 months)"
+  },
+  "biweekly-mortgage-calculator": {
+    "loan": "$320,000",
+    "monthly": "$2,022.62",
+    "half": "$1,011.31",
+    "monthlyInt": "$408,142",
+    "biInt": "$314,146",
+    "intSaved": "$93,997",
+    "biYears": "24.2",
+    "moSaved": 70
+  },
+  "15-year-mortgage-calculator": {
+    "loan": "$320,000",
+    "p30": "$2,022.62",
+    "p15": "$2,657.31",
+    "diff": "$634.69",
+    "i30": "$408,142",
+    "i15": "$158,316",
+    "intSaved": "$249,826"
+  },
+  "fha-loan-calculator": {
+    "base": "$289,500",
+    "ufmip": "$5,066",
+    "totalLoan": "$294,566",
+    "mipRate": 0.55,
+    "firstMIP": "$135.01",
+    "pay": "$1,861.86",
+    "pitiWithMip": "$1,996.87",
+    "mipLife": "the life of the loan"
+  },
+  "va-loan-calculator": {
+    "base": "$350,000",
+    "feePct": 2.15,
+    "fee": "$7,525",
+    "totalLoan": "$357,525",
+    "pay": "$2,259.80",
+    "interest": "$456,003"
+  },
+  "mortgage-payoff-calculator": {
+    "bal": "$250,000",
+    "pay": "$1,580.17",
+    "baseMonths": 360,
+    "baseSpan": "30 yr 0 mo (360 months)",
+    "extraMonths": 236,
+    "extraSpan": "19 yr 8 mo (236 months)",
+    "moSaved": 124,
+    "intSaved": "$125,514"
+  },
+  "credit-card-payoff-calculator": {
+    "bal": "$8,000",
+    "apr": 22.99,
+    "pay": "$250",
+    "months": 51,
+    "span": "4 yr 3 mo (51 months)",
+    "interest": "$4,509",
+    "pay2": "$350",
+    "months2": 31,
+    "interest2": "$2,626",
+    "intSaved": "$1,883",
+    "firstInt": "$153.27"
+  },
+  "rent-vs-buy-calculator": {
+    "pay": "$2,022.62",
+    "crossover": 5,
+    "y5rent": "$140,161",
+    "y5own": "$132,662",
+    "y10rent": "$302,646",
+    "y10own": "$208,061"
+  },
+  "down-payment-calculator": {
+    "price": "$400,000",
+    "tiers": [
+      {
+        "p": 3,
+        "down": "$12,000",
+        "loan": "$388,000",
+        "pi": "$2,452.42",
+        "pmi": "$161.67",
+        "total": "$2,614.09"
+      },
+      {
+        "p": 5,
+        "down": "$20,000",
+        "loan": "$380,000",
+        "pi": "$2,401.86",
+        "pmi": "$158.33",
+        "total": "$2,560.19"
+      },
+      {
+        "p": 10,
+        "down": "$40,000",
+        "loan": "$360,000",
+        "pi": "$2,275.44",
+        "pmi": "$150.00",
+        "total": "$2,425.44"
+      },
+      {
+        "p": 20,
+        "down": "$80,000",
+        "loan": "$320,000",
+        "pi": "$2,022.62",
+        "pmi": "$0.00",
+        "total": "$2,022.62"
+      }
+    ]
+  },
+  "pmi-calculator": {
+    "price": "$400,000",
+    "down": "$30,000",
+    "downPct": "7.5",
+    "loan": "$370,000",
+    "pmiMonthly": "$154.17",
+    "cancelMonth": 124,
+    "cancelSpan": "10 yr 3 mo (123 months)",
+    "totalPmi": "$18,962"
+  },
+  "personal-loan-calculator": {
+    "p": "$15,000",
+    "rate": 11,
+    "n": 48,
+    "pay": "$387.68",
+    "interest": "$3,609",
+    "total": "$18,609"
+  },
+  "student-loan-payoff-calculator": {
+    "p": "$30,000",
+    "rate": 5.5,
+    "pay": "$325.58",
+    "baseInt": "$9,069",
+    "extraMonths": 86,
+    "extraSpan": "7 yr 2 mo (86 months)",
+    "intSaved": "$2,753",
+    "moSaved": 34
+  },
+  "car-affordability-calculator": {
+    "budget": "$500",
+    "maxPrice60": "$28,251",
+    "loan60": "$25,251",
+    "maxPrice48": "$23,880"
+  },
+  "mortgage-points-calculator": {
+    "cost": "$6,400",
+    "payBase": "$2,075.51",
+    "payReduced": "$1,970.30",
+    "moSave": "$105.22",
+    "be": 61,
+    "beSpan": "5 yr 1 mo (61 months)",
+    "life": "$31,479"
+  },
+  "debt-consolidation-calculator": {
+    "principal": "$14,000",
+    "fee": "$420",
+    "curInt": "$11,912",
+    "curMonths": 73,
+    "newPay": "$478.95",
+    "newInt": "$3,242",
+    "newMonths": 36,
+    "intSaved": "$8,670"
+  },
+  "cash-out-refinance-calculator": {
+    "curPay": "$1,662.29",
+    "newPrincipal": "$295,000",
+    "newPay": "$1,962.64",
+    "payDiff": "$300.35",
+    "costOfCash": "$147,915"
+  },
+  "auto-refinance-calculator": {
+    "bal": "$28,000",
+    "curRate": 9,
+    "newRate": 6.5,
+    "curPay": "$696.78",
+    "newPay": "$664.02",
+    "moSave": "$32.76",
+    "intSaved": "$1,573",
+    "months": 48
+  }
+}

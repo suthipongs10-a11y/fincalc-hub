@@ -6,6 +6,7 @@ import GenericLoanCalculator from '../components/GenericLoanCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Personal Loan Calculator — Payment, Interest & Early Payoff | Payoff Logic';
 const description =
@@ -65,6 +66,11 @@ const schema = calcSchema({
         <p class="mt-3">A personal loan is plain amortization — fixed payment, fixed term:</p>
         <p class="mt-3" slot="after">One caution the formula can&rsquo;t see: origination fees are often deducted from your proceeds, so the effective APR runs above the note rate. Compare offers on APR — then enter the note rate here for the payment.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $15,000 personal loan at 11% APR over 48 months." rows={[{"label":"Monthly payment","value":"$387.68","strong":true},{"label":"Total interest","value":"$3,609"},{"label":"Total repaid","value":"$18,609"}]}>
+        <p class="mt-3">Fixed payment, fixed term: $387.68 a month clears the loan in four years at a total interest cost of $3,609. One number the payment hides — <strong>origination fees</strong>, often deducted from your proceeds, push the effective APR above the note rate. Always compare offers on APR, then enter the note rate here for the payment. A personal loan can be a smart consolidation tool when its APR undercuts your card rates.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

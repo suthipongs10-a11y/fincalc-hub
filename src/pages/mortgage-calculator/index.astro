@@ -4,6 +4,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Illustration from '../../components/Illustration.astro';
 import MortgageCalculator from '../../components/MortgageCalculator.astro';
 import { SITE, TOOLS } from '../../config';
+import WorkedExample from '../../components/WorkedExample.astro';
 
 const title = 'Mortgage Calculator with Taxes, Insurance & PMI — Free | Payoff Logic';
 const description =
@@ -177,6 +178,11 @@ const related = TOOLS.filter(
           confirm your loan has no prepayment penalty — most modern U.S. mortgages do not.
         </p>
       </section>
+
+      <WorkedExample setup="A $400,000 home with $80,000 down (20%) at a 6.5% rate over 30 years, with property tax at 1.1% of value and insurance at $1,800/year." rows={[{"label":"Loan amount","value":"$320,000"},{"label":"Principal & interest","value":"$2,022.62"},{"label":"Property tax","value":"$366.67"},{"label":"Home insurance","value":"$150.00"},{"label":"Total monthly payment (PITI)","value":"$2,539.28","strong":true},{"label":"Total interest over 30 years","value":"$408,142"}]}>
+        <p class="mt-3">The headline number most sites quote is the $2,022.62 principal-and-interest figure — but the real monthly cost is <strong>$2,539.28</strong> once taxes and insurance are added, over $500 higher. With 20% down there is no PMI, so it does not appear here; drop the down payment below 20% and a PMI line joins the payment until your balance reaches 78% of the price. Note too that the loan costs <strong>$408,142 in interest</strong> across its life — more than the amount borrowed. Adjust any field above to see all six numbers move together.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

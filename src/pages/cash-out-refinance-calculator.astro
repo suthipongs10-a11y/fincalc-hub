@@ -6,6 +6,7 @@ import CashOutRefiCalculator from '../components/CashOutRefiCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Cash-Out Refinance Calculator — What the Cash Really Costs | Payoff Logic';
 const description =
@@ -67,6 +68,11 @@ const schema = calcSchema({
         <p class="mt-3">A cash-out refinance replaces your loan with a bigger one; the tool computes what the cash truly costs:</p>
         <p class="mt-3" slot="after">The new payment amortizes P at the new rate and term. The true cost of the cash is the lifetime difference between keeping your current loan and taking the new one — reported alongside the payment change so a term reset can&rsquo;t hide it.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $250,000 balance at 6.5% with 26 years left, taking $40,000 cash out into a new 30-year loan at 7% with $5,000 in closing costs financed." rows={[{"label":"Current payment","value":"$1,662.29"},{"label":"New loan (balance + cash + costs)","value":"$295,000"},{"label":"New payment","value":"$1,962.64"},{"label":"Payment increase","value":"+$300.35/mo"},{"label":"True lifetime cost of the cash","value":"$147,915","strong":true}]}>
+        <p class="mt-3">Pulling out $40,000 raises the payment by $300 — but the eye-opener is the <strong>$147,915 lifetime cost</strong>. That is because a cash-out refinance reprices your <em>entire</em> balance at the new (higher) rate and resets the term to 30 years, so the cheap existing debt gets repriced too. When your current rate is below market, a HELOC or home-equity loan that leaves the first mortgage untouched is often far cheaper. See <a href="/guides/cash-out-vs-heloc/" class="font-medium text-navy-900 underline hover:text-navy-600">cash-out vs. HELOC</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

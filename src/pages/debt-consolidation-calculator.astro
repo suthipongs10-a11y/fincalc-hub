@@ -6,6 +6,7 @@ import ConsolidationCalculator from '../components/ConsolidationCalculator.astro
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Debt Consolidation Calculator — Does This Offer Actually Save Money? | Payoff Logic';
 const description =
@@ -67,6 +68,11 @@ const schema = calcSchema({
         <p class="mt-3">An honest comparison needs both paths fully computed, so the engine does exactly that:</p>
         <p class="mt-3" slot="after">The verdict compares measured totals, because a lower rate on a longer term can still cost more — the exact trap covered in our <a href="/guides/debt-consolidation-when-it-helps/" class="font-medium text-navy-900 underline hover:text-navy-600">consolidation guide</a>.</p>
       </HowItWorks>
+
+      <WorkedExample setup="Three cards — $6,000 at 22.99%, $4,500 at 19.99%, and $3,500 at 24.99% ($14,000 total) — versus one 36-month consolidation loan at 12% with a 3% origination fee." rows={[{"label":"Cards, interest if kept (minimums)","value":"$11,912"},{"label":"Cards, payoff time","value":"73 months"},{"label":"Consolidation payment","value":"$478.95"},{"label":"Consolidation total interest (incl. fee)","value":"$3,242"},{"label":"Interest saved","value":"$8,670","strong":true}]}>
+        <p class="mt-3">Rolling $14,000 of card debt into a <strong>12% loan cuts the interest from $11,912 to $3,242</strong> and turns a 73-month grind into a fixed 36-month payoff — because a real rate cut plus a firm end date is exactly when consolidation works. The trap is behavioral: if the paid-off cards get run up again, you now owe both. Consolidation is a rate cut, not a debt cut. See <a href="/guides/debt-consolidation-when-it-helps/" class="font-medium text-navy-900 underline hover:text-navy-600">when it helps vs. hurts</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

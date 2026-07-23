@@ -6,6 +6,7 @@ import PointsCalculator from '../components/PointsCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Mortgage Points Calculator — Are Discount Points Worth It? | Payoff Logic';
 const description =
@@ -68,6 +69,11 @@ const schema = calcSchema({
         <p class="mt-3">Discount points are a bet on how long you&rsquo;ll keep the loan — and the tool prices the bet:</p>
         <p class="mt-3" slot="after">Both payments come from the standard amortization formula on the tested engine. Hold the loan past break-even and points profit; refinance or sell before it and they&rsquo;re a loss — our <a href="/guides/mortgage-points-worth-it/" class="font-medium text-navy-900 underline hover:text-navy-600">points guide</a> pairs this with your realistic time in the home.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $320,000 loan over 30 years, buying 2 discount points ($6,400) to cut the rate from 6.75% to 6.25%." rows={[{"label":"Cost of 2 points","value":"$6,400"},{"label":"Payment at 6.75%","value":"$2,075.51"},{"label":"Payment at 6.25%","value":"$1,970.30"},{"label":"Monthly savings","value":"$105.22"},{"label":"Break-even","value":"5 yr 1 mo (61 months)","strong":true},{"label":"Lifetime savings if held","value":"$31,479"}]}>
+        <p class="mt-3">The points cost $6,400 and save $105/month, so they pay for themselves in <strong>61 months</strong> — a little over five years. Keep the loan past that and the points profit ($31,479 over the full term); refinance or sell before it and you lose money. Points are a bet on how long you will hold this exact loan, so the honest question is your realistic time in the home. See <a href="/guides/mortgage-points-worth-it/" class="font-medium text-navy-900 underline hover:text-navy-600">when points are worth it</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

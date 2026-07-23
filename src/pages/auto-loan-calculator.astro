@@ -7,6 +7,7 @@ import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import taxData from '../data/auto-sales-tax.json';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Auto Loan Calculator with Trade-In & Sales Tax by State | Payoff Logic';
 const description =
@@ -109,6 +110,11 @@ const schema = calcSchema({
         <p class="mt-3">The calculator builds the amount you actually finance — including your state&rsquo;s sales-tax rule — then amortizes it:</p>
         <p class="mt-3" slot="after">State rates and trade-in-credit rules load from our cited dataset (<a href="/sources/" class="font-medium text-navy-900 underline hover:text-navy-600">Data Sources</a>) and every prefilled value stays editable for your county&rsquo;s combined rate.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $35,000 vehicle with $5,000 down and an $8,000 trade-in (nothing owed on it) in a 6% sales-tax state that credits trade-ins, plus $600 in fees, financed at 7% over 60 months." rows={[{"label":"Taxable amount (after trade credit)","value":"$27,000"},{"label":"Sales tax","value":"$1,620"},{"label":"Amount financed","value":"$24,220"},{"label":"Monthly payment","value":"$479.59","strong":true},{"label":"Total interest","value":"$4,555"}]}>
+        <p class="mt-3">Because this state credits the trade-in, tax is charged on $27,000 (price minus trade), not the full $35,000 — saving $480 in tax versus a no-credit state. The trade-in and down payment together drop the financed amount to $24,220, landing a <strong>$479.59 payment</strong>. The state rule matters: see <a href="/guides/trade-in-sales-tax/" class="font-medium text-navy-900 underline hover:text-navy-600">trade-ins and sales tax by state</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

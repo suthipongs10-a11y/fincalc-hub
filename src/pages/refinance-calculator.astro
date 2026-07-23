@@ -6,6 +6,7 @@ import RefinanceCalculator from '../components/RefinanceCalculator.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 import { calcSchema } from '../lib/seo';
 import HowItWorks from '../components/HowItWorks.astro';
+import WorkedExample from '../components/WorkedExample.astro';
 
 const title = 'Refinance Calculator — Break-Even Month & Lifetime Savings | Payoff Logic';
 const description =
@@ -100,6 +101,11 @@ const schema = calcSchema({
         <p class="mt-3">Two computed numbers decide most refinances:</p>
         <p class="mt-3" slot="after">Both payments come from the standard amortization formula (M = P · r(1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)) on the same tested engine. The decision rule: hold the loan past the break-even month and the refinance pays for itself; the lifetime line shows what a term reset really costs.</p>
       </HowItWorks>
+
+      <WorkedExample setup="A $300,000 balance at 7.5% with 28 years left, refinanced to a new 30-year loan at 6.25% with $4,500 in closing costs paid upfront." rows={[{"label":"Current payment","value":"$2,138.60"},{"label":"New payment","value":"$1,847.15"},{"label":"Monthly savings","value":"$291.45","strong":true},{"label":"Break-even","value":"16 months"},{"label":"Lifetime savings","value":"$49,096"}]}>
+        <p class="mt-3">The refinance cuts $291.45 off the monthly payment and recovers its $4,500 cost in <strong>16 months</strong> — so if you keep the home past that point, the refinance pays for itself. The $49,096 lifetime figure looks huge, but part of it comes from resetting the clock back to 30 years; if you instead keep paying the old amount, you capture the rate savings without stretching the term. See <a href="/guides/when-to-refinance/" class="font-medium text-navy-900 underline hover:text-navy-600">when refinancing is worth it</a>.</p>
+      </WorkedExample>
+
 
       <section>
         <h2 class="text-xl font-bold text-navy-900">Frequently asked questions</h2>

@@ -227,6 +227,17 @@
       credentials + Person schema per 2026 YMYL practice) — decide by M4.
 
 ## Session history
+- 2026-07-22 — "Worked example" section added to all 23 tool pages
+  (owner asked for full 5-section content per tool; audit showed 4/5
+  sections already existed → to avoid duplicate formula/FAQ blocks and
+  scaled-templated-content risk, added ONLY the genuinely-missing piece).
+  New WorkedExample.astro (setup + figures table + takeaway prose). Every
+  figure computed by the real engines via scripts/worked-examples.mjs (kept
+  in repo) so examples can't drift from calculators. Snowball example
+  deliberately uses debts where snowball≠avalanche (avalanche saves $581).
+  All 7 suites pass, 0 broken links, Lighthouse 100×4 CLS 0.007. Site now
+  146 pages, every tool page has intro + formula + worked example + tips +
+  FAQ. Guides already at 33 (owner's 10–15 ask long exceeded).
 - 2026-07-22 — AdSense first application REJECTED: "low value content"
   (classic first-pass rejection for young tool sites; ads.txt went green
   as predicted). Plan: do NOT resubmit immediately — reapply ~Aug 11–15
